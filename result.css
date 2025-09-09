@@ -1,4 +1,3 @@
-/* ===== Tokens ===== */
 :root{
   --bg-a:#f9f4d8;
   --bg-b:#fcd4cf;
@@ -6,9 +5,8 @@
   --ink:#2b1f1a;
   --sub:#6f5c53;
 
-  /* 바깥(내 범위) = 연한 / 안쪽(평균 범위) = 진한 */
-  --ring-me:#ef785c;   /* 내 범위(바깥) */
-  --ring-avg:#c74f33;  /* 평균 범위(안쪽) */
+  --ring-me:#ef785c;   /* 내 범위 */
+  --ring-avg:#c74f33;  /* 평균 범위 */
 
   --rail:#edcfc2;
   --bar-a:#f2c45d;
@@ -26,148 +24,53 @@ html,body{
   color:var(--ink);
 }
 
-/* =========================================================
-   A) 기본 : 1728×958 캔버스(데스크톱/와이드) + 자동 스케일
-   ========================================================= */
-.stage-wrap{
-  position:fixed; inset:0;
-  display:grid; place-items:center;
-  overflow:hidden;
-}
-.stage{
-  width:1728px; height:958px;
-  background:linear-gradient(90deg,var(--bg-a),var(--bg-b));
-  transform-origin:center center;
-}
-@media (min-aspect-ratio:1728/958){
-  .stage{ transform: scale(calc(100vh / 958)); }
-}
-@media (max-aspect-ratio:1728/958){
-  .stage{ transform: scale(calc(100vw / 1728)); }
-}
+.stage-wrap{ position:fixed; inset:0; display:grid; place-items:center; overflow:hidden; }
+.stage{ width:1728px; height:958px; background:linear-gradient(90deg,var(--bg-a),var(--bg-b)); transform-origin:center center; }
+@media (min-aspect-ratio:1728/958){ .stage{ transform: scale(calc(100vh / 958)); } }
+@media (max-aspect-ratio:1728/958){ .stage{ transform: scale(calc(100vw / 1728)); } }
 
-/* Canvas contents */
-.frame{
-  position:relative;
-  width:1728px; height:958px;
-  padding:60px 88px 88px 88px;
-}
+.frame{ position:relative; width:1728px; height:958px; padding:60px 88px 88px 88px; }
+.page-title{ margin:0 0 26px; font-weight:900; font-size:48px; line-height:1.1; letter-spacing:-.02em; }
 
-/* 타이틀 */
-.page-title{
-  margin:0 0 26px;
-  font-weight:900;
-  font-size:48px;
-  line-height:1.1;
-  letter-spacing:-.02em;
-}
-
-/* 레이아웃 */
-.grid{
-  display:grid;
-  grid-template-columns:760px 1fr;
-  column-gap:92px;
-}
-
+.grid{ display:grid; grid-template-columns:760px 1fr; column-gap:92px; }
 .left{ position:relative; }
 
-/* 게이지 그룹 */
-.gauge-group{
-  display:flex;
-  flex-direction:column;
-  width: 100%;
-  transform: translateX(20px);
-}
-
-/* 게이지(2겹 원형) */
+/* 게이지 */
+.gauge-group{ display:flex; flex-direction:column; width:100%; transform: translateX(20px); }
 .gauge{
-  position:relative;
-  width:360px; height:360px;
-  display:flex; align-items:center; justify-content:center;
-  margin:6px 0 12px 0;
+  position:relative; width:360px; height:360px; display:flex; align-items:center; justify-content:center; margin:6px 0 12px 0;
 }
-
-/* 바깥 = 내 범위(연한) */
-.gauge .outer{
-  position:absolute; inset:0; border-radius:50%;
-  background:var(--ring-me);
-}
-/* 안쪽 = 평균 범위(진한) */
-.gauge .inner{
-  position:absolute; inset:60px; border-radius:50%;
-  background:var(--ring-avg);
-}
-/* 중앙 캐릭터 */
-.gauge .center{
-  position:absolute; inset:0; display:grid; place-items:center;
-}
+.gauge .outer{ position:absolute; inset:0; border-radius:50%; background:var(--ring-me); }
+.gauge .inner{ position:absolute; inset:60px; border-radius:50%; background:var(--ring-avg); }
+.gauge .center{ position:absolute; inset:0; display:grid; place-items:center; }
 .gauge .center img{ width:140px; height:auto; }
+.meter-text{ position:absolute; top:18px; left:50%; transform:translateX(-50%); font-size:20px; font-weight:700; }
 
-/* 라벨(바깥 원 안쪽 상단 중앙) : 20px */
-.meter-text{
-  position:absolute;
-  top:18px; left:50%;
-  transform:translateX(-50%);
-  font-size:20px; font-weight:700;
-}
-
-/* 범례(20px) */
-.legend{
-  position:relative;
-  width:360px; 
-  gap: 50px;
-  display:flex; align-items:center; justify-content:center;
-  margin:6px 0 12px 0;
-}
-.legend-item{
-  display:flex; align-items:center; gap:10px;
-  font-size:20px; font-weight:700; color:#4a3a33;
-}
+/* 범례 */
+.legend{ position:relative; width:360px; gap:50px; display:flex; align-items:center; justify-content:center; margin:6px 0 12px 0; }
+.legend-item{ display:flex; align-items:center; gap:10px; font-size:20px; font-weight:700; color:#4a3a33; }
 .dot{ width:14px; height:14px; border-radius:50%; }
-.dot.me{  background:var(--ring-me); }
+.dot.me{ background:var(--ring-me); }
 .dot.avg{ background:var(--ring-avg); }
 
-/* 점수/상위/배지 – 게이지 오른쪽 */
-.meta-wrap{
-  position:absolute; left:460px; top:76px; width:260px;
-}
-.score{
-  font-size:48px; font-weight:900; line-height:1.05; letter-spacing:-.02em;
-}
+/* 메타 */
+.meta-wrap{ position:absolute; left:460px; top:76px; width:260px; }
+.score{ font-size:48px; font-weight:900; line-height:1.05; letter-spacing:-.02em; }
 .score small{ font-size:32px; font-weight:900; margin-left:6px; }
 .rank{ margin-top:10px; font-size:32px; font-weight:900; }
-.chip{
-  margin-top:20px; display:inline-flex; align-items:center; justify-content:center;
-  height:66px; padding:0 24px; border-radius:16px;
-  background:var(--chip); color:#fff; font-size:32px; font-weight:900;
-}
+.chip{ margin-top:20px; display:inline-flex; align-items:center; justify-content:center; height:66px; padding:0 24px; border-radius:16px; background:var(--chip); color:#fff; font-size:32px; font-weight:900; }
 
-/* 본문 */
-.desc{
-  position:absolute; left:0; top:470px; width:760px;
-  font-size:24px; line-height:1.85; color:#2e221c;
-}
+/* 본문 설명 */
+.desc{ position:absolute; left:0; top:470px; width:760px; font-size:24px; line-height:1.85; color:#2e221c; }
 
 /* RIGHT */
-.right{
-  display:flex; flex-direction:column;
-  width:700px; gap:28px;
-}
+.right{ display:flex; flex-direction:column; width:700px; gap:28px; }
 .panel{
-  width:700px;
-  background:rgba(255,255,255,.55);
-  border:1px solid rgba(0,0,0,.06);
-  border-radius:16px;
-  padding:24px 24px 26px;
-  box-shadow:0 12px 30px rgba(0,0,0,.05);
+  width:700px; background:rgba(255,255,255,.55); border:1px solid rgba(0,0,0,.06);
+  border-radius:16px; padding:24px 24px 26px; box-shadow:0 12px 30px rgba(0,0,0,.05);
 }
-.panel.metrics, .panel.compare, .guide-wrap{ position:static; }
 .sec-title{ margin:0 0 12px; font-size:32px; font-weight:900; }
-
-.row{
-  display:grid; grid-template-columns:76px 1fr 60px;
-  align-items:center; gap:16px; margin:14px 0;
-}
+.row{ display:grid; grid-template-columns:76px 1fr 60px; align-items:center; gap:16px; margin:14px 0; }
 .label{ font-size:24px; font-weight:700; color:#3a2f2a; }
 .rail{ height:12px; width:100%; border-radius:999px; background:var(--rail); overflow:hidden; }
 .fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--bar-a),var(--bar-b)); width:0%; }
@@ -179,74 +82,40 @@ html,body{
 .cmp-text{ font-size:24px; }
 
 /* 생활 가이드 */
-.guide-wrap{
-  background:rgba(255,255,255,.55);
-  border:1px solid rgba(0,0,0,.06);
-  border-radius:16px;
-  padding:24px 24px 26px;
-  box-shadow:0 12px 30px rgba(0,0,0,.05);
-}
-.guide{
-  display:flex; align-items:flex-start; gap:12px;
-  font-size:24px; line-height:1.8; color:#2e221c;
-}
+.guide-wrap{ background:rgba(255,255,255,.55); border:1px solid rgba(0,0,0,.06); border-radius:16px; padding:24px 24px 26px; box-shadow:0 12px 30px rgba(0,0,0,.05); }
+.guide{ display:flex; align-items:flex-start; gap:12px; font-size:24px; line-height:1.8; color:#2e221c; }
 .guide img{ width:46px; height:46px; object-fit:contain; }
 
-/* CTA 버튼(30px) */
+/* CTA 버튼 */
 .cta{ position:absolute; left:50%; bottom:24px; transform:translateX(-50%); }
 .btn{
-  width:420px; height:86px; border-radius:999px;
-  font-size:30px; font-weight:900; color:#ef6b46;
+  width:420px; height:86px; border-radius:999px; font-size:30px; font-weight:900; color:#ef6b46;
   border:3px solid transparent;
-  background:
-    linear-gradient(#fff,#fff) padding-box,
-    linear-gradient(90deg,#f2c45d,#f26845) border-box;
-  box-shadow:0 8px 24px rgba(0,0,0,.06);
-  cursor:pointer;
+  background: linear-gradient(#fff,#fff) padding-box, linear-gradient(90deg,#f2c45d,#f26845) border-box;
+  box-shadow:0 8px 24px rgba(0,0,0,.06); cursor:pointer;
 }
-.btn:hover{
-  background:
-    linear-gradient(#fff9f4,#fff9f4) padding-box,
-    linear-gradient(90deg,#f2c45d,#f26845) border-box;
-}
+.btn:hover{ background: linear-gradient(#fff9f4,#fff9f4) padding-box, linear-gradient(90deg,#f2c45d,#f26845) border-box; }
 
-/* =========================================================
-   B) Fluid 모드(모바일/세로/좁은 화면)
-   ========================================================= */
+/* Fluid 모드 */
 body.fluid .stage-wrap{ position:relative; inset:auto; display:block; overflow:visible; }
 body.fluid .stage{ width:100vw; height:auto; transform:none; }
 body.fluid .frame{ width:100%; height:auto; padding: clamp(16px, 3vw, 28px); }
 body.fluid .page-title{ font-size: clamp(28px, 4.2vw, 48px); margin-bottom: clamp(12px, 2.4vw, 26px); }
-body.fluid .grid{ grid-template-columns: 1fr; column-gap: 0; row-gap: clamp(16px, 3vw, 28px); }
+body.fluid .grid{ grid-template-columns: 1fr; column-gap:0; row-gap: clamp(16px, 3vw, 28px); }
 
 body.fluid .gauge-group{
-  transform:none;
-  display:grid;
-  grid-template-areas:
-    "gauge meta"
-    "legend legend";
+  transform:none; display:grid;
+  grid-template-areas: "gauge meta" "legend legend";
   grid-template-columns: auto 1fr;
-  align-items:center;
-  justify-content:center;
+  align-items:center; justify-content:center;
   gap: clamp(8px, 7vw, 10px) clamp(20px, 7vw, 80px);
 }
-.gauge .center img { width: clamp(60px, 10vw, 140px); height:auto; }
-body.fluid .gauge{ 
-  grid-area: gauge;
-  width: clamp(220px, 34vw, 360px);
-  height: clamp(220px, 34vw, 360px);
-  margin: 0;
-}
+.gauge .center img{ width: clamp(60px, 10vw, 140px); height:auto; }
+body.fluid .gauge{ grid-area:gauge; width: clamp(220px, 34vw, 360px); height: clamp(220px, 34vw, 360px); margin:0; }
+body.fluid .gauge .outer{ position:absolute; inset:0; border-radius:50%; background:var(--ring-me); }
+body.fluid .gauge .inner{ position:absolute; inset:18%; border-radius:50%; background:var(--ring-avg); }
 
-body.fluid .gauge .outer { position:absolute; inset:0; border-radius:50%; background:var(--ring-me); }
-body.fluid .gauge .inner { position:absolute; inset:18%; border-radius:50%; background:var(--ring-avg); }
-
-body.fluid .legend{
-  grid-area: legend;
-  width: clamp(220px, 34vw, 360px);
-  margin: clamp(8px,2vw,12px) 0 0;
-  gap: clamp(18px, 3vw, 50px);
-}
+body.fluid .legend{ grid-area: legend; width: clamp(220px, 34vw, 360px); margin: clamp(8px,2vw,12px) 0 0; gap: clamp(18px, 3vw, 50px); }
 body.fluid .legend-item{ font-size: clamp(10px, 2.6vw, 20px); }
 body.fluid .meter-text{ font-size: clamp(10px, 2.6vw, 12px); }
 
@@ -254,50 +123,21 @@ body.fluid .meta-wrap{ grid-area: meta; position: static; width:auto; }
 body.fluid .score{ font-size: clamp(32px, 6vw, 48px); }
 body.fluid .score small{ font-size: clamp(18px, 3.8vw, 32px); }
 body.fluid .rank{ font-size: clamp(18px, 3.8vw, 32px); }
-body.fluid .chip{
-  height: clamp(44px, 6.4vh, 66px);
-  font-size: clamp(16px, 3.6vw, 32px);
-  padding: 0 clamp(14px, 3vw, 24px);
-  border-radius: 14px;
-  margin-top: clamp(10px, 2.2vw, 20px);
-}
+body.fluid .chip{ height: clamp(44px, 6.4vh, 66px); font-size: clamp(16px, 3.6vw, 32px); padding: 0 clamp(14px, 3vw, 24px); border-radius: 14px; margin-top: clamp(10px, 2.2vw, 20px); }
 
-/* 본문 */
 body.fluid .desc{ position: static; width: 100%; font-size: clamp(16px, 2.4vw, 24px); }
-
-/* RIGHT 패널 */
 body.fluid .right{ width:100%; gap: clamp(14px, 3vw, 24px); }
 body.fluid .panel{ width:100%; padding: clamp(14px, 2.6vw, 24px); }
 body.fluid .sec-title{ font-size: clamp(18px, 3.8vw, 32px); margin-bottom: clamp(8px, 1.6vw, 12px); }
 
-body.fluid .row{
-  grid-template-columns: clamp(52px, 12vw, 76px) 1fr clamp(44px, 10vw, 60px);
-  gap: clamp(10px, 2.2vw, 16px);
-  margin: clamp(8px, 1.8vw, 14px) 0;
-}
+body.fluid .row{ grid-template-columns: clamp(52px, 12vw, 76px) 1fr clamp(44px, 10vw, 60px); gap: clamp(10px, 2.2vw, 16px); margin: clamp(8px, 1.8vw, 14px) 0; }
 body.fluid .label, body.fluid .val{ font-size: clamp(14px, 2.8vw, 24px); }
 body.fluid .cmp-row{ gap: clamp(10px, 2vw, 16px); }
 body.fluid .big{ font-size: clamp(18px, 3.6vw, 32px); }
 body.fluid .cmp-text{ font-size: clamp(14px, 2.8vw, 24px); }
 body.fluid .tri{ font-size: clamp(16px, 3.2vw, 28px); }
 
-/* CTA 버튼 */
-body.fluid .cta{
-  padding: 40px 0px 0px 0px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  margin-top: clamp(12px, 2.6vw, 20px);
-}
-body.fluid .btn{
-  width: clamp(240px, 48vw, 420px);
-  height: clamp(50px, 7.2vh, 86px);
-  font-size: clamp(16px, 2.8vw, 30px);
-}
-
-/* =============================
-   A4 인쇄 전용
-   =============================*/
+/* 인쇄(A4) */
 @page { size: A4 portrait; margin: 0; }
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
