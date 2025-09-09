@@ -1,3 +1,7 @@
+/* =========================
+   style.css (full, refined)
+   ========================= */
+
 /* 기본 설정 */
 :root {
   --bg-start:#f3e6a4;  /* 좌측 옐로우 톤 */
@@ -5,25 +9,41 @@
   --text:#2b2b2b;
   --muted:#8b8b8b;
   --white:#ffffff;
+
   --cta-bg:#ffffff;
   --cta-text:#c4532d;
   --cta-ring:#ff8a59;
+
   --radius:999px;
+
+  /* CTA 텍스트 시각 보정(아래로 살짝 내리기) */
+  --cta-shift-y: 2px; /* 1~3px 선호 */
 }
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+
 body {
   margin: 0;
   color: var(--text);
   font-family: ui-sans-serif, system-ui, -apple-system, "Apple SD Gothic Neo",
                "Noto Sans KR", "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   background: linear-gradient(90deg, var(--bg-start), var(--bg-end));
+
+  /* iOS 노치 안전영역 */
+  padding-left: max(env(safe-area-inset-left,0px), 0px);
+  padding-right: max(env(safe-area-inset-right,0px), 0px);
 }
 
 /* 히어로 레이아웃 */
 .hero {
-  min-height: 100vh;
+  /* 모바일 브라우저 툴바로 인한 vh 이슈 대응 */
+  min-height: 100dvh;   /* 지원 브라우저 우선 */
+  min-height: 100vh;    /* 폴백 */
+
   display: grid;
   grid-template-columns: 1fr minmax(280px, 720px) 1fr; /* 좌/중앙/우 */
   align-items: center;
@@ -40,7 +60,9 @@ body {
   align-items: center;
   justify-items: center;
   position: relative;
-  top: -40px; /* 약간 위로 */
+
+  /* top:-40px 대신 transform 사용 → 레이아웃 안정 */
+  transform: translateY(-40px);
 }
 
 .eyebrow {
@@ -57,39 +79,79 @@ body {
   font-size: clamp(26px, 4.2vw, 40px);
 }
 
-/* CTA 버튼 */
-.cta {
-  margin-top: 8px;
-  height: 48px;
-  padding: 0 22px;
-  border: 2px solid rgba(196,83,45,0.35);
-  border-radius: var(--radius);
+/* CTA 버튼(링크/버튼 공통) — 보더 끊김 방지: inset shadow 방식 */
+a.cta,
+button.cta{
+  position: relative;                 /* ::before 보더용 기준 */
+  display: inline-flex;
+  align-items: center;                /* 수직 중앙 */
+  justify-content: center;            /* 수평 중앙 */
+
+  height: 56px;
+  padding: 0 28px;
+  line-height: 1;                     /* 폰트 기본 행간 제거 */
+  padding-top: var(--cta-shift-y);    /* 시각 보정: 살짝 아래로 */
+
   background: var(--cta-bg);
   color: var(--cta-text);
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
+
+  border: 0;
+  border-radius: var(--radius);
+
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: .01em;
   text-decoration: none;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  transition: transform .06s ease, box-shadow .12s ease, border-color .12s ease;
+  cursor: pointer;
+
+  /* 바깥 그림자만 (보더와 분리) */
+  box-shadow: 0 10px 24px rgba(0,0,0,.10);
+
+  /* 서브픽셀 렌더링 이슈 완화 */
+  transform: translateZ(0);
+  -webkit-tap-highlight-color: transparent;
+
+  transition: transform .06s ease, box-shadow .12s ease;
 }
-.cta:hover {
-  transform: translateY(-1px);
-  border-color: var(--cta-ring);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+
+/* 실제 보더는 inset box-shadow로 → 끊김/두께 불균형 해결 */
+a.cta::before,
+button.cta::before{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow: inset 0 0 0 2px #f26845; /* 기본 링 */
 }
-.cta:active {
-  transform: translateY(0);
+
+a.cta:hover::before,
+button.cta:hover::before{
+  box-shadow: inset 0 0 0 2px var(--cta-ring);
 }
-.cta:focus-visible {
+a.cta:hover,
+button.cta:hover{ transform: translateY(-1px); }
+a.cta:active,
+button.cta:active{ transform: translateY(0); }
+
+a.cta:focus-visible,
+button.cta:focus-visible{
   outline: 3px solid var(--cta-ring);
   outline-offset: 2px;
+}
+
+/* 폰트 메트릭 지원 브라우저에선 보정 제거 */
+@supports (leading-trim: both) and (text-edge: cap) {
+  a.cta, button.cta{
+    leading-trim: both;
+    text-edge: cap alphabetic;
+    padding-top: 0;
+  }
 }
 
 /* 좌/우 이미지 영역 */
 .hero-fig {
   display: flex;
-  align-items: end;
+  align-items: flex-end;    /* end → flex-end (명시) */
   justify-content: center;
   min-height: 220px;
   pointer-events: none;
@@ -109,8 +171,17 @@ body {
   .hero-fig img { max-width: min(85%, 280px); }
 }
 @media (max-width: 720px) {
-  .hero { grid-template-columns: 1fr; grid-auto-rows: auto; gap: 12px; }
-  .hero-center { top: 0; }
+  .hero {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: 12px;
+  }
+  .hero-center { transform: none; } /* 작은 화면은 중앙 고정 */
   .hero-fig.left, .hero-fig.right { order: 3; min-height: 0; }
   .hero-fig img { max-width: 180px; }
+}
+
+/* 모션 최소화 환경 */
+@media (prefers-reduced-motion: reduce) {
+  a.cta, button.cta { transition: none; }
 }
