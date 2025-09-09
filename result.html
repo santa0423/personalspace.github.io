@@ -4,9 +4,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>나의 퍼스널 스페이스 범위</title>
-  <!-- 폰트 -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
-  <!-- 분리된 CSS -->
   <link rel="stylesheet" href="result.css"/>
 </head>
 <body>
@@ -22,7 +20,7 @@
               <div class="gauge">
                 <div class="outer"></div>
                 <div class="inner"></div>
-                <div class="meter-text" id="gaugeTitle">약 1.8m</div>
+                <div class="meter-text" id="gaugeTitle">0m</div>
                 <div class="center">
                   <img src="images/cactus.png" alt="캐릭터">
                 </div>
@@ -34,17 +32,14 @@
               </div>
 
               <div class="meta-wrap">
-                <div class="score">78<small>점</small></div>
-                <div class="rank">상위 25%</div>
-                <div class="chip">넓은 경계형</div>
+                <div class="score">0<small>점</small></div>
+                <div class="rank">-</div>
+                <div class="chip">-</div>
               </div>
             </div>
 
             <p class="desc">
-              당신은 넓은 경계형으로, 주변과의 간격을 여유 있게 두며 안정감을 추구합니다.
-              특히 물리적 영역에서 경계에 더 민감하여 거리 유지가 중요한 편이에요.
-              심리적·온라인 영역에서는 비교적 유연하지만, 상황에 따라 예민해질 수 있습니다.
-              따라서 일상에서 자신만의 공간을 존중받을 때 더욱 편안함을 느낍니다.
+              테스트를 완료하시면 퍼스널 스페이스 분석 결과가 여기에 표시됩니다.
             </p>
           </div>
 
@@ -52,17 +47,17 @@
           <div class="right">
             <div class="panel metrics">
               <h3 class="sec-title">항목 별 민감도</h3>
-              <div class="row"><div class="label">물리적</div><div class="rail"><div class="fill" id="bar1"></div></div><div class="val" id="v1">85점</div></div>
-              <div class="row"><div class="label">심리적</div><div class="rail"><div class="fill" id="bar2"></div></div><div class="val" id="v2">20점</div></div>
-              <div class="row"><div class="label">온라인</div><div class="rail"><div class="fill" id="bar3"></div></div><div class="val" id="v3">20점</div></div>
+              <div class="row"><div class="label">물리적</div><div class="rail"><div class="fill" id="bar1"></div></div><div class="val" id="v1">0점</div></div>
+              <div class="row"><div class="label">심리적</div><div class="rail"><div class="fill" id="bar2"></div></div><div class="val" id="v2">0점</div></div>
+              <div class="row"><div class="label">온라인</div><div class="rail"><div class="fill" id="bar3"></div></div><div class="val" id="v3">0점</div></div>
             </div>
 
             <div class="panel compare">
               <h3 class="sec-title">비교 지표</h3>
               <div class="cmp-row">
-                <div>전체 평균 점수 <span class="big" id="avgScore">65점</span></div>
-                <div class="tri">▲</div>
-                <div class="cmp-text" id="cmpText">평균보다 10점 높습니다.</div>
+                <div>전체 평균 점수 <span class="big" id="avgScore">0점</span></div>
+                <div class="tri" id="tri">-</div>
+                <div class="cmp-text" id="cmpText">테스트를 먼저 진행해 주세요.</div>
               </div>
             </div>
 
@@ -70,18 +65,16 @@
               <h3 class="sec-title">생활 가이드</h3>
               <div class="guide">
                 <img src="images/bulb.png" alt="전구">
-                <div>물리적 공간의 침범에 예민하므로 충분한 거리를 유지하도록 하세요!</div>
+                <div>테스트를 완료하시면 생활 가이드가 표시됩니다.</div>
               </div>
             </div>
-            
           </div>
-                  <!-- CTA -->
-        <div class="cta">
+
+          <!-- CTA -->
+          <div class="cta">
             <button class="btn" id="printBtn">결과 인쇄하기</button>
           </div>
         </section>
-
-
       </div>
     </div>
   </div>

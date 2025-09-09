@@ -10,7 +10,7 @@
   <!-- 상단 헤더: sticky -->
   <header class="top-header">
     <div class="header">
-      <button class="back">＜ 이전&nbsp;</button>
+      <button class="back" onclick="history.back()">＜ 이전&nbsp;</button>
       <span class="step" id="stepText">(0/20)</span>
     </div>
     <div class="meter">
@@ -18,12 +18,12 @@
     </div>
   </header>
 
-  <!-- 본문: 3개씩 보이는 영역 (스크롤은 body가 담당) -->
+  <!-- 본문 -->
   <main class="content container">
     <div id="questionList"></div>
   </main>
 
-  <!-- 하단 결과 버튼 -->
+  <!-- 하단 결과 버튼(고정) -->
   <div class="result-wrap">
     <button id="resultBtn" disabled>결과보기</button>
   </div>
@@ -33,15 +33,13 @@
     <div class="loading-card">
       <h1 class="loading-title">당신의 퍼스널 스페이스는?</h1>
       <img src="images/cactus.png" alt="로딩 캐릭터" class="loading-img" />
-      <div class="loading-bar">
-        <div class="loading-fill"></div>
-      </div>
+      <div class="loading-bar"><div class="loading-fill"></div></div>
       <p class="loading-sub">결과 나오는 중…</p>
     </div>
   </div>
 
   <script>
-    // 문항 + 양끝 라벨 정의
+    // ===== 문항 정의 =====
     const QUESTIONS = [
       { text: "1. 늦은 밤 혹은 휴일에 업무 메신저 알림이 울리면 불쾌하다.", left: "그렇지 않다", right: "그렇다" },
       { text: "2. SNS에서 상대방이 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.", left: "그렇지 않다", right: "그렇다" },
@@ -65,9 +63,9 @@
       { text: "20. 다른 사람과 너무 가까이 있어야 하는 상황에서 호흡이 어렵고 몸을 긴장하게 된다.", left: "그렇지 않다", right: "그렇다" }
     ];
 
-    const list      = document.getElementById('questionList');
-    const bar       = document.getElementById('progressBar');
-    const stepText  = document.getElementById('stepText');
+    const list = document.getElementById('questionList');
+    const bar = document.getElementById('progressBar');
+    const stepText = document.getElementById('stepText');
     const resultBtn = document.getElementById('resultBtn');
     const loadingLayer = document.getElementById('loadingLayer');
 
@@ -104,14 +102,16 @@
     sections.forEach((sec, i) => {
       if (i > 0) setDisabled(sec, true);
       sec.addEventListener('change', (e) => {
-        if (e.target.matches('input[type="radio"]')) {
-          const next = sections[i+1];
-          if (next && next.classList.contains('disabled')) {
-            setDisabled(next, false);
-            next.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          updateProgress();
+        if (!e.target.matches('input[type="radio"]')) return;
+        const next = sections[i+1];
+        if (next && next.classList.contains('disabled')) {
+          setDisabled(next, false);
+          next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (!next) {
+          // 마지막 문항도 중앙으로 스크롤(푸터 가림 방지)
+          sections[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        updateProgress();
       });
     });
 
@@ -122,11 +122,13 @@
 
     function updateProgress() {
       const answered = sections.reduce((acc, sec) =>
-        acc + (sec.querySelector('input[type="radio"]:checked') ? 1 : 0), 0);
+        acc + (sec.querySelector('input[type="radio"]')?.checked || sec.querySelector('input[type="radio"]:checked') ? 1 : (sec.querySelector('input[type="radio"]:checked') ? 1 : 0)), 0);
+      // 위 한 줄이 복잡하면 아래 두 줄을 사용하세요:
+      // const answered = sections.reduce((acc, sec) => acc + (sec.querySelector('input[type="radio"]:checked') ? 1 : 0), 0);
       const pct = Math.round(answered / sections.length * 100);
-      bar.style.width      = pct + '%';
+      bar.style.width = pct + '%';
       stepText.textContent = `(${answered}/${sections.length})`;
-      resultBtn.disabled   = answered !== sections.length;
+      resultBtn.disabled = answered !== sections.length;
     }
 
     // 카테고리 매핑
@@ -146,29 +148,29 @@
     }
 
     function calcScores(answers){
-      const sum = (arr)=>arr.reduce((a,b)=>a+(b??0),0);
+      const sum  = (arr)=>arr.reduce((a,b)=>a+(b??0),0);
       const pick = (idxArr)=>idxArr.map(n=>answers[n-1]??0);
 
-      const physicalVals   = pick(MAP.physical);
-      const psychVals      = pick(MAP.psychological);
-      const onlineVals     = pick(MAP.online);
+      const physicalVals = pick(MAP.physical);
+      const psychVals    = pick(MAP.psychological);
+      const onlineVals   = pick(MAP.online);
 
-      const maxPhysical    = MAP.physical.length    * 5;
-      const maxPsych       = MAP.psychological.length*5;
-      const maxOnline      = MAP.online.length      * 5;
+      const maxPhysical  = MAP.physical.length     * 5;
+      const maxPsych     = MAP.psychological.length* 5;
+      const maxOnline    = MAP.online.length       * 5;
 
       const sPhysical = sum(physicalVals);
       const sPsych    = sum(psychVals);
       const sOnline   = sum(onlineVals);
 
       const pctPhysical = Math.round(sPhysical / maxPhysical * 100);
-      const pctPsych    = Math.round(sPsych / maxPsych * 100);
-      const pctOnline   = Math.round(sOnline / maxOnline * 100);
+      const pctPsych    = Math.round(sPsych    / maxPsych    * 100);
+      const pctOnline   = Math.round(sOnline   / maxOnline   * 100);
 
       const rank = [
-        {key:'physical', label:'물리 민감형', score:pctPhysical},
-        {key:'psychological', label:'심리 민감형', score:pctPsych},
-        {key:'online', label:'온라인 민감형', score:pctOnline},
+        {key:'physical',      label:'물리 민감형',   score:pctPhysical},
+        {key:'psychological', label:'심리 민감형',   score:pctPsych},
+        {key:'online',        label:'온라인 민감형', score:pctOnline},
       ].sort((a,b)=>b.score-a.score);
 
       const balanced = Math.abs(rank[0].score - rank[2].score) <= 8;
@@ -184,20 +186,30 @@
       };
     }
 
-    // 결과보기 클릭: 로딩 → 결과 계산 → 저장 → 이동
+    // 결과보기: 로딩 → 저장 → 이동
     resultBtn.addEventListener('click', () => {
       if (resultBtn.disabled) return;
-      const answers = collectAnswers();
-
       loadingLayer.style.display = 'flex';
+      const answers = collectAnswers();
       setTimeout(()=>{
         const result = calcScores(answers);
         sessionStorage.setItem('ps-result', JSON.stringify(result));
         location.href = 'result.html';
-      }, 1400);
+      }, 1200);
     });
 
     updateProgress();
+
+    // ===== 푸터(고정 버튼) 높이를 CSS 변수에 반영해 겹침 방지 =====
+    function syncFooterHeight(){
+      const footer = document.querySelector('.result-wrap');
+      const h = footer ? Math.ceil(footer.getBoundingClientRect().height) : 0;
+      document.documentElement.style.setProperty('--footer-h', h + 'px');
+    }
+    window.addEventListener('load', syncFooterHeight);
+    window.addEventListener('resize', syncFooterHeight);
+    window.addEventListener('orientationchange', syncFooterHeight);
+    setTimeout(syncFooterHeight, 120); // 폰트 로드 등 레이아웃 변동 보정
   </script>
 </body>
 </html>

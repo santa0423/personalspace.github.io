@@ -211,35 +211,14 @@ html,body{
 }
 
 /* =========================================================
-   B) Fluid 모드 : 모바일/세로/좁은 화면에서 자연스러운 재배치
-   - body.fluid 클래스로 활성화 (JS에서 자동 토글)
+   B) Fluid 모드(모바일/세로/좁은 화면)
    ========================================================= */
-body.fluid .stage-wrap{
-  position:relative; inset:auto;
-  display:block; overflow:visible;
-}
-body.fluid .stage{
-  width:100vw; height:auto;
-  transform:none;
-}
-body.fluid .frame{
-  width:100%; height:auto;
-  padding: clamp(16px, 3vw, 28px);
-}
+body.fluid .stage-wrap{ position:relative; inset:auto; display:block; overflow:visible; }
+body.fluid .stage{ width:100vw; height:auto; transform:none; }
+body.fluid .frame{ width:100%; height:auto; padding: clamp(16px, 3vw, 28px); }
+body.fluid .page-title{ font-size: clamp(28px, 4.2vw, 48px); margin-bottom: clamp(12px, 2.4vw, 26px); }
+body.fluid .grid{ grid-template-columns: 1fr; column-gap: 0; row-gap: clamp(16px, 3vw, 28px); }
 
-/* 글자 크기/요소 크기를 clamp로 유동화 */
-body.fluid .page-title{
-  font-size: clamp(28px, 4.2vw, 48px);
-  margin-bottom: clamp(12px, 2.4vw, 26px);
-}
-
-/* 2단 → 1단 */
-body.fluid .grid{
-  grid-template-columns: 1fr;
-  column-gap: 0; row-gap: clamp(16px, 3vw, 28px);
-}
-
-/* 게이지/메타를 하나의 그리드로 재배치 : [게이지 | 메타] → 아래에 범례 */
 body.fluid .gauge-group{
   transform:none;
   display:grid;
@@ -251,10 +230,7 @@ body.fluid .gauge-group{
   justify-content:center;
   gap: clamp(8px, 7vw, 10px) clamp(20px, 7vw, 80px);
 }
-.gauge .center img {
-  width: clamp(60px, 10vw, 140px);
-  height: auto;
-}
+.gauge .center img { width: clamp(60px, 10vw, 140px); height:auto; }
 body.fluid .gauge{ 
   grid-area: gauge;
   width: clamp(220px, 34vw, 360px);
@@ -262,21 +238,8 @@ body.fluid .gauge{
   margin: 0;
 }
 
-body.fluid .gauge .outer {
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  background:var(--ring-me);
-}
-
-/* 안쪽 = 평균 범위(진한) */
-body.fluid .gauge .inner {
-  position:absolute;
-  inset:18%;                /* 화면 크기에 따라 비율로 줄어듦 */
-  border-radius:50%;
-  background:var(--ring-avg);
-}
-
+body.fluid .gauge .outer { position:absolute; inset:0; border-radius:50%; background:var(--ring-me); }
+body.fluid .gauge .inner { position:absolute; inset:18%; border-radius:50%; background:var(--ring-avg); }
 
 body.fluid .legend{
   grid-area: legend;
@@ -287,12 +250,7 @@ body.fluid .legend{
 body.fluid .legend-item{ font-size: clamp(10px, 2.6vw, 20px); }
 body.fluid .meter-text{ font-size: clamp(10px, 2.6vw, 12px); }
 
-body.fluid .meta-wrap{
-  
-  grid-area: meta;
-  position: static;
-  width:auto;
-}
+body.fluid .meta-wrap{ grid-area: meta; position: static; width:auto; }
 body.fluid .score{ font-size: clamp(32px, 6vw, 48px); }
 body.fluid .score small{ font-size: clamp(18px, 3.8vw, 32px); }
 body.fluid .rank{ font-size: clamp(18px, 3.8vw, 32px); }
@@ -305,13 +263,9 @@ body.fluid .chip{
 }
 
 /* 본문 */
-body.fluid .desc{
-  position: static;
-  width: 100%;
-  font-size: clamp(16px, 2.4vw, 24px);
-}
+body.fluid .desc{ position: static; width: 100%; font-size: clamp(16px, 2.4vw, 24px); }
 
-/* RIGHT 패널 넓이/폰트 유동 */
+/* RIGHT 패널 */
 body.fluid .right{ width:100%; gap: clamp(14px, 3vw, 24px); }
 body.fluid .panel{ width:100%; padding: clamp(14px, 2.6vw, 24px); }
 body.fluid .sec-title{ font-size: clamp(18px, 3.8vw, 32px); margin-bottom: clamp(8px, 1.6vw, 12px); }
@@ -321,9 +275,7 @@ body.fluid .row{
   gap: clamp(10px, 2.2vw, 16px);
   margin: clamp(8px, 1.8vw, 14px) 0;
 }
-body.fluid .label, 
-body.fluid .val{ font-size: clamp(14px, 2.8vw, 24px); }
-
+body.fluid .label, body.fluid .val{ font-size: clamp(14px, 2.8vw, 24px); }
 body.fluid .cmp-row{ gap: clamp(10px, 2vw, 16px); }
 body.fluid .big{ font-size: clamp(18px, 3.6vw, 32px); }
 body.fluid .cmp-text{ font-size: clamp(14px, 2.8vw, 24px); }
@@ -342,126 +294,45 @@ body.fluid .btn{
   height: clamp(50px, 7.2vh, 86px);
   font-size: clamp(16px, 2.8vw, 30px);
 }
-/* =============================
-   A4 인쇄 전용 (제목 크게 + 상단 여백 축소)
-   =============================*/
-   @page { size: A4 portrait; margin: 0; }
 
-   @media print {
-     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-   
-     html, body {
-       width:210mm !important; height:297mm !important;
-       margin:0 !important; background:#fff !important; overflow:hidden !important;
-       display:block !important;
-     }
-   
-     .stage-wrap,.stage {
-       position:static !important; inset:auto !important; display:block !important;
-       width:100% !important; height:auto !important; transform:none !important; background:none !important;
-     }
-   
-     .frame {
-       box-sizing:border-box; width:210mm !important; height:297mm !important;
-       margin:0 !important; padding:10mm 12mm 14mm 12mm !important; /* 상단 padding 14mm → 10mm */
-       background:linear-gradient(90deg,var(--bg-a),var(--bg-b)) !important;
-       display:flex !important; flex-direction:column !important;
-       gap:2mm !important;
-     }
-   
-     /* 제목 */
-     .page-title{
-       margin:0 0 8mm 0 !important;       /* 상단 간격 조금 더 줄임 */
-       font-size:24pt !important;         /* 제목 키움 */
-       line-height:1.2 !important;
-     }
-   
-     .gauge-group {
-       display:grid !important;
-       grid-template-areas:
-         "gauge meta"
-         "legend meta" !important;
-       grid-template-columns: 96mm max-content !important;
-       column-gap: 6mm !important;
-       justify-content:start !important; justify-items:start !important;
-       width:auto !important; max-width:100% !important;
-       transform:none !important; align-items:center !important;
-       row-gap:4mm !important; margin:0 !important;
-     }
-   
-     .gauge {
-       grid-area:gauge !important;
-       width:96mm !important; height:96mm !important;
-       margin:0 !important; position:relative !important;
-       justify-self:start !important;
-       align-self:start !important;
-     }
-   
-     .meter-text{ top:4mm !important; font-size:12pt !important; }
-     .gauge .center img{ width:34mm !important; height:auto !important; }
-   
-     .legend {
-       grid-area:legend !important;
-       display:flex !important; justify-content:center !important; gap:12mm !important;
-       margin:0 !important; width:96mm !important;
-     }
-     .legend-item{ font-size:11pt !important; }
-     .dot{ width:4mm !important; height:4mm !important; }
-   
-     .meta-wrap{
-       grid-area:meta !important;
-       display:flex !important; flex-direction:column !important; gap:6mm !important;
-       width:max-content !important; max-width:72mm !important;
-       transform: scale(1.15) !important;
-       transform-origin: top left !important;
-     }
-     .score{ font-size:46pt !important; }
-     .score small{ font-size:20pt !important; margin-left:2mm !important; }
-     .rank{ font-size:20pt !important; }
-     .chip{ font-size:18pt !important; padding:7mm 12mm !important; border-radius:5mm !important; }
-   
-     .desc {
-       position:static !important; width:100% !important;
-       margin:4mm 0 6mm 0 !important; font-size:12pt !important; line-height:1.65 !important;
-     }
-   
-     .grid{ display:block !important; column-gap:0 !important; }
-     .left,.right{ width:100% !important; }
-     .right{ display:block !important; gap:0 !important; }
-   
-     .panel, .guide-wrap {
-       width:100% !important; box-shadow:none !important;
-       background: rgba(255, 255, 255, 0.5) !important;
-       border-radius:4mm !important;
-       padding:3mm 4mm !important;
-       margin:5mm 0 !important;
-       page-break-inside:avoid !important;
-     }
-   
-     .panel + .panel,
-     .panel + .guide-wrap,
-     .guide-wrap + .panel{ margin-top:2mm !important; }
-   
-     .sec-title{ font-size:14pt !important; margin:0 0 3mm !important; }
-   
-     .panel.metrics{ min-height:40mm !important; }
-     .panel.metrics .row{ margin:3mm 0 !important; }
-     .panel.metrics .rail{ height:3mm !important; }
-     .panel.metrics .label, .panel.metrics .val{ font-size:12pt !important; }
-   
-     .panel.compare{ min-height:28mm !important; }
-     .panel.compare .big{ font-size:18pt !important; }
-     .panel.compare .cmp-text{ font-size:12pt !important; }
-   
-     /* 생활 가이드 */
-     .guide-wrap {
-       min-height:24mm !important;
-       line-height:1.6 !important;
-       font-size:unset !important;
-     }
-     .guide-wrap .sec-title{ font-size:14pt !important; }
-     .guide-wrap p, .guide-wrap span, .guide-wrap div{ font-size:12pt !important; line-height:1.6 !important; }
-   
-     .cta, .btn{ display:none !important; }
-   }
-   
+/* =============================
+   A4 인쇄 전용
+   =============================*/
+@page { size: A4 portrait; margin: 0; }
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  html, body { width:210mm !important; height:297mm !important; margin:0 !important; background:#fff !important; overflow:hidden !important; display:block !important; }
+  .stage-wrap,.stage { position:static !important; inset:auto !important; display:block !important; width:100% !important; height:auto !important; transform:none !important; background:none !important; }
+  .frame { box-sizing:border-box; width:210mm !important; height:297mm !important; margin:0 !important; padding:10mm 12mm 14mm 12mm !important; background:linear-gradient(90deg,var(--bg-a),var(--bg-b)) !important; display:flex !important; flex-direction:column !important; gap:2mm !important; }
+  .page-title{ margin:0 0 8mm 0 !important; font-size:24pt !important; line-height:1.2 !important; }
+  .gauge-group { display:grid !important; grid-template-areas: "gauge meta" "legend meta" !important; grid-template-columns: 96mm max-content !important; column-gap: 6mm !important; justify-content:start !important; justify-items:start !important; width:auto !important; max-width:100% !important; transform:none !important; align-items:center !important; row-gap:4mm !important; margin:0 !important; }
+  .gauge { grid-area:gauge !important; width:96mm !important; height:96mm !important; margin:0 !important; position:relative !important; justify-self:start !important; align-self:start !important; }
+  .meter-text{ top:4mm !important; font-size:12pt !important; }
+  .gauge .center img{ width:34mm !important; height:auto !important; }
+  .legend { grid-area:legend !important; display:flex !important; justify-content:center !important; gap:12mm !important; margin:0 !important; width:96mm !important; }
+  .legend-item{ font-size:11pt !important; }
+  .dot{ width:4mm !important; height:4mm !important; }
+  .meta-wrap{ grid-area:meta !important; display:flex !important; flex-direction:column !important; gap:6mm !important; width:max-content !important; max-width:72mm !important; transform: scale(1.15) !important; transform-origin: top left !important; }
+  .score{ font-size:46pt !important; }
+  .score small{ font-size:20pt !important; margin-left:2mm !important; }
+  .rank{ font-size:20pt !important; }
+  .chip{ font-size:18pt !important; padding:7mm 12mm !important; border-radius:5mm !important; }
+  .desc { position:static !important; width:100% !important; margin:4mm 0 6mm 0 !important; font-size:12pt !important; line-height:1.65 !important; }
+  .grid{ display:block !important; column-gap:0 !important; }
+  .left,.right{ width:100% !important; }
+  .right{ display:block !important; gap:0 !important; }
+  .panel, .guide-wrap { width:100% !important; box-shadow:none !important; background: rgba(255, 255, 255, 0.5) !important; border-radius:4mm !important; padding:3mm 4mm !important; margin:5mm 0 !important; page-break-inside:avoid !important; }
+  .panel + .panel, .panel + .guide-wrap, .guide-wrap + .panel{ margin-top:2mm !important; }
+  .sec-title{ font-size:14pt !important; margin:0 0 3mm !important; }
+  .panel.metrics{ min-height:40mm !important; }
+  .panel.metrics .row{ margin:3mm 0 !important; }
+  .panel.metrics .rail{ height:3mm !important; }
+  .panel.metrics .label, .panel.metrics .val{ font-size:12pt !important; }
+  .panel.compare{ min-height:28mm !important; }
+  .panel.compare .big{ font-size:18pt !important; }
+  .panel.compare .cmp-text{ font-size:12pt !important; }
+  .guide-wrap { min-height:24mm !important; line-height:1.6 !important; }
+  .guide-wrap .sec-title{ font-size:14pt !important; }
+  .guide-wrap p, .guide-wrap span, .guide-wrap div{ font-size:12pt !important; line-height:1.6 !important; }
+  .cta, .btn{ display:none !important; }
+}
