@@ -10,7 +10,37 @@
   --header-h:18vh;      /* 헤더 높이 */
   --footer-h:0px;       /* JS가 실제 높이를 반영 */
 }
+/* ===== 이전 버튼 – 그라디언트 보더 ===== */
+a.back, button.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
 
+  border: 2px solid transparent; /* 진짜 border는 투명 */
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(90deg, #f4c463, #f26845) border-box; /* 보더에만 그라디언트 */
+  color: #7a3b2e;
+  font-weight: 700;
+  font-size: 24px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .15s ease, background .15s ease;
+  line-height: 1;
+}
+a.back:hover, button.back:hover {
+  background:
+    linear-gradient(#fff9f4, #fff9f4) padding-box,
+    linear-gradient(90deg, #f4c463, #f26845) border-box;
+  transform: translateY(-1px);
+}
+a.back:focus-visible, button.back:focus-visible {
+  outline: 2px solid #f26845;
+  outline-offset: 2px;
+}
 /* 공통 */
 *{box-sizing:border-box;margin:0;padding:0}
 html, body{
