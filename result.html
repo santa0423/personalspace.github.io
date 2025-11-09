@@ -5,6 +5,8 @@
     <title>나의 팟 테스트 결과</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="result.css" />
+    <!-- html2canvas: 모바일에서 이미지 저장용 -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
   </head>
   <body>
     <div class="viewport">
@@ -68,7 +70,7 @@
 
           <!-- CTA -->
           <div class="cta-wrap">
-            <button class="btn primary" id="printBtn">인쇄해서 자세히 보기</button>
+            <button class="btn primary" id="actionBtn">인쇄해서 자세히 보기</button>
             <button class="btn ghost" id="homeBtn">
               <span class="chev">‹</span> 처음으로 돌아가기
             </button>
@@ -78,29 +80,6 @@
     </div>
 
     <script>
-      const QUESTIONS = [
-        "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
-        "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
-        "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
-        "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
-        "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
-        "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
-        "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
-        "엘리베이터에서 주로 계기판 근처에 탄다",
-        "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
-        "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
-        "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
-        "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
-        "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
-        "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
-        "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
-        "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
-        "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
-        "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
-        "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
-        "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
-      ];
-
       const TOUCH_IDX = [5,7,8,17,20].map(n=>n-1);
       const MIND_IDX  = [6,9,10,11,12,13,16,15].map(n=>n-1);
       const DIGI_IDX  = [2,3,4,18,19].map(n=>n-1);
@@ -114,7 +93,7 @@
       const typeStrong = document.getElementById('typeStrong');
       const insDetail = document.getElementById('insightDetail');
 
-      const printBtn = document.getElementById('printBtn');
+      const actionBtn = document.getElementById('actionBtn');
       const homeBtn = document.getElementById('homeBtn');
       const frame = document.getElementById('printArea');
 
@@ -159,23 +138,127 @@
       barMind.style.width = partAvg(MIND_IDX) + '%';
       barDig.style.width = partAvg(DIGI_IDX) + '%';
 
-      // 인쇄하기 버튼 → B5로 고정, 프레임 꽉차게
-      printBtn.addEventListener('click', () => {
-        frame.style.width = "176mm";
-        frame.style.height = "250mm";
-        frame.style.borderRadius = "0";
-        frame.style.boxShadow = "none";
-        window.print();
-        frame.style.width = "";
-        frame.style.height = "";
-        frame.style.borderRadius = "";
-        frame.style.boxShadow = "";
-      });
-
+      // 홈
       homeBtn.addEventListener('click', () => {
         localStorage.removeItem('keepod_answers');
         location.href = 'index.html';
       });
+
+      // ===== 모바일/데스크톱 분기 =====
+      function isMobileView() {
+        const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+        const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+        return (vw < 700) || (vh < 900);
+      }
+
+      // 데스크톱: 인쇄 / 모바일: 이미지 저장
+      function setActionBehavior() {
+        if (!isMobileView()) {
+          actionBtn.textContent = '인쇄해서 자세히 보기';
+          actionBtn.onclick = () => {
+            frame.style.width = "176mm";
+            frame.style.height = "250mm";
+            frame.style.borderRadius = "0";
+            frame.style.boxShadow = "none";
+            window.print();
+            frame.style.width = "";
+            frame.style.height = "";
+            frame.style.borderRadius = "";
+            frame.style.boxShadow = "";
+          };
+        } else {
+          actionBtn.textContent = '이미지로 저장하기';
+          actionBtn.onclick = async () => {
+            // 캡처용 클론을 화면 밖에 만들어 변형(scale) 영향 제거
+            const BASE_W = 564, BASE_H = 900;
+            const clone = frame.cloneNode(true);
+            clone.id = 'capture-clone';
+            Object.assign(clone.style, {
+              position: 'fixed',
+              left: '-99999px',
+              top: '0',
+              width: BASE_W + 'px',
+              height: BASE_H + 'px',
+              transform: 'none',
+              transformOrigin: 'top left',
+              borderRadius: '0',
+              boxShadow: 'none',
+              background: '#f6f6f6',
+              zIndex: '-1'
+            });
+            document.body.appendChild(clone);
+
+            try {
+              const canvas = await html2canvas(clone, {
+                backgroundColor: '#f6f6f6',
+                scale: Math.min(3, (window.devicePixelRatio || 2)), // 적당한 해상도
+                useCORS: true,
+                logging: false
+              });
+              const dataURL = canvas.toDataURL('image/png');
+
+              // iOS 사파리 대응: 새 탭 열기 fallback
+              const a = document.createElement('a');
+              a.href = dataURL;
+              a.download = `keepod_result_${Date.now()}.png`;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              // download 미지원 브라우저는 새창으로
+              if (!('download' in HTMLAnchorElement.prototype)) {
+                window.open(dataURL, '_blank');
+              }
+            } catch (e) {
+              alert('이미지 저장 중 문제가 발생했습니다. 스크린샷을 이용해 주세요.');
+              console.error(e);
+            } finally {
+              clone.remove();
+            }
+          };
+        }
+      }
+
+      window.addEventListener('resize', setActionBehavior);
+      window.addEventListener('orientationchange', setActionBehavior);
+
+      // ===== 모바일 세로 꽉 채우기 스케일 어댑터 =====
+      (function () {
+        const BASE_W = 564;
+        const BASE_H = 900;
+        const frameEl = document.querySelector('.frame');
+
+        function getViewport() {
+          const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+          const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+          return { vw, vh };
+        }
+        function applyScale() {
+          const { vw, vh } = getViewport();
+          const mobile = (vw < 700) || (vh < 900);
+
+          if (!mobile) {
+            frameEl.style.position = "static";
+            frameEl.style.transform = "none";
+            frameEl.style.width = BASE_W + "px";
+            frameEl.style.height = BASE_H + "px";
+          } else {
+            const scale = vh / BASE_H;
+            const tx = (vw - BASE_W * scale) / 2;
+            frameEl.style.width = BASE_W + "px";
+            frameEl.style.height = BASE_H + "px";
+            frameEl.style.position = "fixed";
+            frameEl.style.top = "0";
+            frameEl.style.left = "0";
+            frameEl.style.transformOrigin = "top left";
+            frameEl.style.transform = `translate(${tx}px, 0) scale(${scale})`;
+          }
+          // 버튼 동작(문구/핸들러)도 동시에 업데이트
+          setActionBehavior();
+        }
+        window.addEventListener("resize", applyScale);
+        window.addEventListener("orientationchange", applyScale);
+        applyScale();
+      })();
     </script>
   </body>
 </html>

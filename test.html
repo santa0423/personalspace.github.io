@@ -10,28 +10,11 @@
     <div class="viewport">
       <div class="frame">
         <div class="canvas">
-          <!-- 헤더 -->
-          <header class="header">
-            <div class="brand">Keepod</div>
-          </header>
-
-          <!-- divider = 진행바 -->
+          <header class="header"><div class="brand">Keepod</div></header>
           <div class="divider"><div class="fill"></div></div>
-
-          <!-- 진행도 -->
           <div class="progress">1 / 20</div>
-
-          <!-- 안내문 -->
-          <p class="hint" style="display:none;">
-            [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
-          </p>
-
-          <!-- 질문 카드 -->
-          <section class="question-card">
-            <p class="question"></p>
-          </section>
-
-          <!-- 5점 척도 -->
+          <p class="hint" style="display:none;">[자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]</p>
+          <section class="question-card"><p class="question"></p></section>
           <div class="scale">
             <div class="rail"></div>
             <button class="dot" data-value="1"></button>
@@ -39,28 +22,22 @@
             <button class="dot" data-value="3"></button>
             <button class="dot" data-value="4"></button>
             <button class="dot" data-value="5"></button>
-
             <div class="labels">
               <span>그렇지<br />않다</span>
               <span>보통이다</span>
               <span>그렇다</span>
             </div>
           </div>
-
-          <!-- CTA -->
           <div class="cta-wrap">
             <button class="next" disabled>다음</button>
-            <button class="back" type="button">
-              <span class="chev">‹</span> 이전으로 돌아가기
-            </button>
+            <button class="back" type="button"><span class="chev">‹</span> 이전으로 돌아가기</button>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      // ===== 질문 데이터 =====
-      const QUESTIONS = [
+      const QUESTIONS=[
         "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
         "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
         "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
@@ -83,113 +60,138 @@
         "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
       ];
 
-      const dots = Array.from(document.querySelectorAll('.dot'));
-      const nextBtn = document.querySelector('.next');
-      const backBtn = document.querySelector('.back');
-      const qEl = document.querySelector('.question');
-      const progEl = document.querySelector('.progress');
-      const fillEl = document.querySelector('.fill');
-      const hintEl = document.querySelector('.hint');
+      const dots=[...document.querySelectorAll('.dot')];
+      const nextBtn=document.querySelector('.next');
+      const backBtn=document.querySelector('.back');
+      const qEl=document.querySelector('.question');
+      const progEl=document.querySelector('.progress');
+      const fillEl=document.querySelector('.fill');
+      const hintEl=document.querySelector('.hint');
 
-      let index = 0;
-      let selectedDot = null;
-      let answers = Array(20).fill(null);
+      let index=0,selectedDot=null,answers=Array(20).fill(null);
 
-      // 전체 초기화
-      function resetAll() {
-        answers = Array(20).fill(null);
-        selectedDot = null;
-        index = 0;
-        fillEl.style.width = '0%';
-        nextBtn.disabled = true;
-        nextBtn.style.background = '#E4E4E4';
-        dots.forEach(d => d.classList.remove('active'));
+      function resetAll(){
+        answers=Array(20).fill(null);
+        selectedDot=null;
+        index=0;
+        fillEl.style.width='0%';
+        nextBtn.disabled=true;
+        nextBtn.style.background='#E4E4E4';
+        dots.forEach(d=>d.classList.remove('active'));
         localStorage.removeItem('keepod_answers');
       }
 
-      // ===== 화면 렌더 =====
-      function renderQuestion(i) {
-        qEl.innerHTML = QUESTIONS[i];
-        progEl.textContent = `${i + 1} / 20`;
-        hintEl.style.display = i >= 12 ? "block" : "none";
-        fillEl.style.width = `${(i / 20) * 100}%`;
+      function renderQuestion(i){
+        qEl.innerHTML=QUESTIONS[i];
+        progEl.textContent=`${i+1} / 20`;
+        hintEl.style.display=i>=12?"block":"none";
+        fillEl.style.width=`${(i/20)*100}%`;
 
-        dots.forEach(d => d.classList.remove('active'));
-        selectedDot = null;
-        if (answers[i] !== null) {
-          const found = dots.find(d => Number(d.dataset.value) === answers[i]);
-          if (found) {
+        dots.forEach(d=>d.classList.remove('active'));
+        selectedDot=null;
+
+        if(answers[i]!==null){
+          const found=dots.find(d=>Number(d.dataset.value)===answers[i]);
+          if(found){
             found.classList.add('active');
-            selectedDot = found;
-            nextBtn.disabled = false;
-            nextBtn.style.background = '#7CEA54';
+            selectedDot=found;
+            nextBtn.disabled=false;
+            nextBtn.style.background='#7CEA54';
           }
         } else {
-          nextBtn.disabled = true;
-          nextBtn.style.background = '#E4E4E4';
+          nextBtn.disabled=true;
+          nextBtn.style.background='#E4E4E4';
         }
 
-        // 1번 문항일 때만 '처음으로 돌아가기'
-        if (i === 0) {
-          backBtn.textContent = "‹ 처음으로 돌아가기";
-        } else {
-          backBtn.innerHTML = '<span class="chev">‹</span> 이전으로 돌아가기';
-        }
+        backBtn.innerHTML = i===0 ? "‹ 처음으로 돌아가기" : '<span class="chev">‹</span> 이전으로 돌아가기';
       }
 
-      // ===== 선택 시 =====
-      function applySelection(dot) {
-        dots.forEach(d => d.classList.remove('active'));
+      function applySelection(dot){
+        dots.forEach(d=>d.classList.remove('active'));
         dot.classList.add('active');
-        selectedDot = dot;
-        nextBtn.disabled = false;
-        nextBtn.style.background = '#7CEA54';
-        answers[index] = Number(dot.dataset.value);
-        fillEl.style.width = `${((index + 1) / 20) * 100}%`;
+        selectedDot=dot;
+        nextBtn.disabled=false;
+        nextBtn.style.background='#7CEA54';
+        answers[index]=Number(dot.dataset.value);
+        fillEl.style.width=`${((index+1)/20)*100}%`;
       }
 
-      // ===== 초기 렌더 =====
       renderQuestion(index);
 
-      // ===== 점 클릭 (토글) =====
-      dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          if (selectedDot === dot) {
+      dots.forEach(dot=>{
+        dot.addEventListener('click',()=>{
+          if(selectedDot===dot){
             dot.classList.remove('active');
-            selectedDot = null;
-            answers[index] = null;
-            nextBtn.disabled = true;
-            nextBtn.style.background = '#E4E4E4';
-            fillEl.style.width = `${(index / 20) * 100}%`;
+            selectedDot=null;
+            answers[index]=null;
+            nextBtn.disabled=true;
+            nextBtn.style.background='#E4E4E4';
+            fillEl.style.width=`${(index/20)*100}%`;
             return;
           }
           applySelection(dot);
         });
       });
 
-      // ===== 다음 버튼 =====
-      nextBtn.addEventListener('click', () => {
-        if (!selectedDot) return;
-        if (index < 19) {
+      nextBtn.addEventListener('click',()=>{
+        if(!selectedDot)return;
+        if(index<19){
           index++;
           renderQuestion(index);
         } else {
-          // ✅ 마지막 문항이면 결과페이지로 이동
-          localStorage.setItem('keepod_answers', JSON.stringify(answers));
-          location.href = "result.html";
+          localStorage.setItem('keepod_answers',JSON.stringify(answers));
+          location.href="result.html";
         }
       });
 
-      // ===== 이전 버튼 =====
-      backBtn.addEventListener('click', () => {
-        if (index === 0) {
+      backBtn.addEventListener('click',()=>{
+        if(index===0){
           resetAll();
-          location.href = "index.html";
+          location.href="index.html";
         } else {
           index--;
           renderQuestion(index);
         }
       });
+
+      // 모바일 스케일: 세로 가득 채우기
+      (function(){
+        const BASE_W=564,BASE_H=900;
+        const frame=document.querySelector('.frame');
+
+        function getViewport(){
+          const vw=(window.visualViewport&&window.visualViewport.width)||window.innerWidth;
+          const vh=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
+          return{vw,vh};
+        }
+
+        function apply(){
+          const {vw,vh}=getViewport();
+          const isMobile=(vw<700)||(vh<900);
+
+          if(!isMobile){
+            frame.style.position='static';
+            frame.style.transform='none';
+            frame.style.width=BASE_W+'px';
+            frame.style.height=BASE_H+'px';
+            return;
+          }
+
+          const scale=vh/BASE_H;
+          frame.style.width=BASE_W+'px';
+          frame.style.height=BASE_H+'px';
+          frame.style.position='fixed';
+          frame.style.top='0';
+          frame.style.left='0';
+          frame.style.transformOrigin='top left';
+          const tx=(vw-BASE_W*scale)/2;
+          frame.style.transform=`translate(${tx}px,0) scale(${scale})`;
+        }
+
+        window.addEventListener('resize',apply);
+        window.addEventListener('orientationchange',apply);
+        apply();
+      })();
     </script>
   </body>
 </html>
