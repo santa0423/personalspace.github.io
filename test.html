@@ -10,11 +10,28 @@
     <div class="viewport">
       <div class="frame">
         <div class="canvas">
-          <header class="header"><div class="brand">Keepod</div></header>
+          <!-- 헤더 -->
+          <header class="header">
+            <div class="brand">Keepod</div>
+          </header>
+
+          <!-- divider = 진행바 -->
           <div class="divider"><div class="fill"></div></div>
+
+          <!-- 진행도 -->
           <div class="progress">1 / 20</div>
-          <p class="hint" style="display:none;">[자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]</p>
-          <section class="question-card"><p class="question"></p></section>
+
+          <!-- 안내문 -->
+          <p class="hint" style="display:none;">
+            [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
+          </p>
+
+          <!-- 질문 카드 -->
+          <section class="question-card">
+            <p class="question"></p>
+          </section>
+
+          <!-- 5점 척도 -->
           <div class="scale">
             <div class="rail"></div>
             <button class="dot" data-value="1"></button>
@@ -22,22 +39,27 @@
             <button class="dot" data-value="3"></button>
             <button class="dot" data-value="4"></button>
             <button class="dot" data-value="5"></button>
+
             <div class="labels">
               <span>그렇지<br />않다</span>
               <span>보통이다</span>
               <span>그렇다</span>
             </div>
           </div>
+
+          <!-- CTA -->
           <div class="cta-wrap">
             <button class="next" disabled>다음</button>
-            <button class="back" type="button"><span class="chev">‹</span> 이전으로 돌아가기</button>
+            <button class="back" type="button">
+              <span class="chev">‹</span> 이전으로 돌아가기
+            </button>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      const QUESTIONS=[
+      const QUESTIONS = [
         "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
         "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
         "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
@@ -60,138 +82,179 @@
         "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
       ];
 
-      const dots=[...document.querySelectorAll('.dot')];
-      const nextBtn=document.querySelector('.next');
-      const backBtn=document.querySelector('.back');
-      const qEl=document.querySelector('.question');
-      const progEl=document.querySelector('.progress');
-      const fillEl=document.querySelector('.fill');
-      const hintEl=document.querySelector('.hint');
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const nextBtn = document.querySelector('.next');
+      const backBtn = document.querySelector('.back');
+      const qEl = document.querySelector('.question');
+      const progEl = document.querySelector('.progress');
+      const fillEl = document.querySelector('.fill');
+      const hintEl = document.querySelector('.hint');
 
-      let index=0,selectedDot=null,answers=Array(20).fill(null);
+      let index = 0;
+      let selectedDot = null;
+      let answers = Array(20).fill(null);
 
-      function resetAll(){
-        answers=Array(20).fill(null);
-        selectedDot=null;
-        index=0;
-        fillEl.style.width='0%';
-        nextBtn.disabled=true;
-        nextBtn.style.background='#E4E4E4';
-        dots.forEach(d=>d.classList.remove('active'));
+      function resetAll() {
+        answers = Array(20).fill(null);
+        selectedDot = null;
+        index = 0;
+        fillEl.style.width = '0%';
+        nextBtn.disabled = true;
+        nextBtn.style.background = '#E4E4E4';
+        dots.forEach(d => d.classList.remove('active'));
         localStorage.removeItem('keepod_answers');
       }
 
-      function renderQuestion(i){
-        qEl.innerHTML=QUESTIONS[i];
-        progEl.textContent=`${i+1} / 20`;
-        hintEl.style.display=i>=12?"block":"none";
-        fillEl.style.width=`${(i/20)*100}%`;
+      function renderQuestion(i) {
+        qEl.innerHTML = QUESTIONS[i];
+        progEl.textContent = `${i + 1} / 20`;
+        hintEl.style.display = i >= 12 ? "block" : "none";
+        fillEl.style.width = `${(i / 20) * 100}%`;
 
-        dots.forEach(d=>d.classList.remove('active'));
-        selectedDot=null;
-
-        if(answers[i]!==null){
-          const found=dots.find(d=>Number(d.dataset.value)===answers[i]);
-          if(found){
+        dots.forEach(d => d.classList.remove('active'));
+        selectedDot = null;
+        if (answers[i] !== null) {
+          const found = dots.find(d => Number(d.dataset.value) === answers[i]);
+          if (found) {
             found.classList.add('active');
-            selectedDot=found;
-            nextBtn.disabled=false;
-            nextBtn.style.background='#7CEA54';
+            selectedDot = found;
+            nextBtn.disabled = false;
+            nextBtn.style.background = '#7CEA54';
           }
         } else {
-          nextBtn.disabled=true;
-          nextBtn.style.background='#E4E4E4';
+          nextBtn.disabled = true;
+          nextBtn.style.background = '#E4E4E4';
         }
 
-        backBtn.innerHTML = i===0 ? "‹ 처음으로 돌아가기" : '<span class="chev">‹</span> 이전으로 돌아가기';
+        backBtn.innerHTML = i === 0 ? "‹ 처음으로 돌아가기" : '<span class="chev">‹</span> 이전으로 돌아가기';
       }
 
-      function applySelection(dot){
-        dots.forEach(d=>d.classList.remove('active'));
+      function applySelection(dot) {
+        dots.forEach(d => d.classList.remove('active'));
         dot.classList.add('active');
-        selectedDot=dot;
-        nextBtn.disabled=false;
-        nextBtn.style.background='#7CEA54';
-        answers[index]=Number(dot.dataset.value);
-        fillEl.style.width=`${((index+1)/20)*100}%`;
+        selectedDot = dot;
+        nextBtn.disabled = false;
+        nextBtn.style.background = '#7CEA54';
+        answers[index] = Number(dot.dataset.value);
+        fillEl.style.width = `${((index + 1) / 20) * 100}%`;
       }
 
       renderQuestion(index);
 
-      dots.forEach(dot=>{
-        dot.addEventListener('click',()=>{
-          if(selectedDot===dot){
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          if (selectedDot === dot) {
             dot.classList.remove('active');
-            selectedDot=null;
-            answers[index]=null;
-            nextBtn.disabled=true;
-            nextBtn.style.background='#E4E4E4';
-            fillEl.style.width=`${(index/20)*100}%`;
+            selectedDot = null;
+            answers[index] = null;
+            nextBtn.disabled = true;
+            nextBtn.style.background = '#E4E4E4';
+            fillEl.style.width = `${(index / 20) * 100}%`;
             return;
           }
           applySelection(dot);
         });
       });
 
-      nextBtn.addEventListener('click',()=>{
-        if(!selectedDot)return;
-        if(index<19){
+      nextBtn.addEventListener('click', () => {
+        if (!selectedDot) return;
+        if (index < 19) {
           index++;
           renderQuestion(index);
         } else {
-          localStorage.setItem('keepod_answers',JSON.stringify(answers));
-          location.href="result.html";
+          localStorage.setItem('keepod_answers', JSON.stringify(answers));
+          location.href = "result.html";
         }
       });
 
-      backBtn.addEventListener('click',()=>{
-        if(index===0){
+      backBtn.addEventListener('click', () => {
+        if (index === 0) {
           resetAll();
-          location.href="index.html";
+          location.href = "index.html";
         } else {
           index--;
           renderQuestion(index);
         }
       });
 
-      // 모바일 스케일: 세로 가득 채우기
-      (function(){
-        const BASE_W=564,BASE_H=900;
-        const frame=document.querySelector('.frame');
+    // ===== 하이브리드 스케일: 세로 꽉 채우기 + 좌우 안전(최대 3%만 가로 압축) =====
+(function () {
+  const BASE_W = 564;
+  const BASE_H = 900;
+  const MAX_SQUISH = 0.97; // 가로 최소 비율(=최대 3% 압축). 0.97~1 사이만 허용
+  const frameEl = document.querySelector('.frame');
 
-        function getViewport(){
-          const vw=(window.visualViewport&&window.visualViewport.width)||window.innerWidth;
-          const vh=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
-          return{vw,vh};
-        }
+  function vp() {
+    const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    return { vw, vh };
+  }
 
-        function apply(){
-          const {vw,vh}=getViewport();
-          const isMobile=(vw<700)||(vh<900);
+  function applyScale() {
+    const { vw, vh } = vp();
+    const isMobile = (vw < 700) || (vh < 900);
 
-          if(!isMobile){
-            frame.style.position='static';
-            frame.style.transform='none';
-            frame.style.width=BASE_W+'px';
-            frame.style.height=BASE_H+'px';
-            return;
-          }
+    if (!isMobile) {
+      // 태블릿/PC: 원본 픽셀 고정
+      frameEl.style.position = 'static';
+      frameEl.style.transform = 'none';
+      frameEl.style.width  = BASE_W + 'px';
+      frameEl.style.height = BASE_H + 'px';
+      return;
+    }
 
-          const scale=vh/BASE_H;
-          frame.style.width=BASE_W+'px';
-          frame.style.height=BASE_H+'px';
-          frame.style.position='fixed';
-          frame.style.top='0';
-          frame.style.left='0';
-          frame.style.transformOrigin='top left';
-          const tx=(vw-BASE_W*scale)/2;
-          frame.style.transform=`translate(${tx}px,0) scale(${scale})`;
-        }
+    // 1) 기본: 세로 꽉 채우기
+    const sH = vh / BASE_H;
+    const needW = BASE_W * sH;
 
-        window.addEventListener('resize',apply);
-        window.addEventListener('orientationchange',apply);
-        apply();
-      })();
+    if (needW <= vw) {
+      // 가로가 화면 안에 들어오면 그대로(위아래 빈 공간 0)
+      const tx = (vw - needW) / 2;
+      frameEl.style.width  = BASE_W + 'px';
+      frameEl.style.height = BASE_H + 'px';
+      frameEl.style.position = 'fixed';
+      frameEl.style.top = '0';
+      frameEl.style.left = '0';
+      frameEl.style.transformOrigin = 'top left';
+      frameEl.style.transform = `translate(${tx}px, 0) scale(${sH})`;
+      return;
+    }
+
+    // 2) 살짝만 가로 압축해서 폭 맞추기 (최대 3%)
+    const fitRatio = vw / needW; // 1보다 작으면 넘침
+    if (fitRatio >= MAX_SQUISH) {
+      // 세로 스케일은 유지하고, 가로만 fitRatio 만큼 압축
+      const tx = 0; // 가로 꽉 채웠으니 좌표는 0
+      frameEl.style.width  = BASE_W + 'px';
+      frameEl.style.height = BASE_H + 'px';
+      frameEl.style.position = 'fixed';
+      frameEl.style.top = '0';
+      frameEl.style.left = '0';
+      frameEl.style.transformOrigin = 'top left';
+      // scaleY는 sH, scaleX는 sH*fitRatio 와 동일 효과: scale(sH) 후 scaleX(fitRatio)
+      frameEl.style.transform = `translate(${tx}px, 0) scale(${sH}) scaleX(${fitRatio})`;
+      return;
+    }
+
+    // 3) 그래도 넘치면 어쩔 수 없이 contain (좌우/상하 모두 안전, 중앙 정렬)
+    const sW = vw / BASE_W;
+    const s = Math.min(sW, sH);
+    const tx = (vw - BASE_W * s) / 2;
+    const ty = (vh - BASE_H * s) / 2;
+    frameEl.style.width  = BASE_W + 'px';
+    frameEl.style.height = BASE_H + 'px';
+    frameEl.style.position = 'fixed';
+    frameEl.style.top = '0';
+    frameEl.style.left = '0';
+    frameEl.style.transformOrigin = 'top left';
+    frameEl.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+  }
+
+  window.addEventListener('resize', applyScale);
+  window.addEventListener('orientationchange', applyScale);
+  applyScale();
+})();
+
     </script>
   </body>
 </html>
