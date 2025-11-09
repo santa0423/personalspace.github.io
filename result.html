@@ -1,85 +1,181 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>나의 퍼스널 스페이스 범위</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="result.css"/>
-</head>
-<body>
-  <div class="stage-wrap">
-    <div class="stage">
-      <div class="frame">
-        <h1 class="page-title">나의 퍼스널 스페이스 범위</h1>
+  <head>
+    <meta charset="utf-8" />
+    <title>나의 팟 테스트 결과</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="result.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="frame" id="printArea">
+        <div class="canvas">
+          <!-- 상단 -->
+          <header class="top">
+            <h1 class="page-title">나의 팟 테스트 결과</h1>
+          </header>
 
-        <section class="grid">
-          <!-- LEFT -->
-          <div class="left">
-            <div class="gauge-group" role="group" aria-labelledby="gaugeTitle">
-              <div class="gauge">
-                <div class="outer" style="display:none"></div>
-                <div class="inner"></div>
-                <div class="meter-text" id="gaugeTitle">0m</div>
-                <div class="center">
-                  <img src="images/cactus.png" alt="캐릭터">
-                </div>
-              </div>
-
-              <div class="legend">
-                <div class="legend-item"><span class="dot me"></span>내 범위</div>
-                <div class="legend-item"><span class="dot avg"></span>평균 범위</div>
-              </div>
-
-              <div class="meta-wrap">
-                <div class="score">0<small>점</small></div>
-                <div class="rank">-</div>
-                <div class="chip">-</div>
-              </div>
+          <!-- 시드 & 레이어 -->
+          <section class="hero">
+            <div class="rings">
+              <div class="ring outer"></div>
+              <div class="ring inner"></div>
             </div>
+            <img class="seed" src="images/seed.png" alt="" onerror="this.classList.add('fallback')" />
+          </section>
 
-            <p class="desc">
-              테스트를 완료하시면 퍼스널 스페이스 분석 결과가 여기에 표시됩니다.
-            </p>
+          <!-- 범례 -->
+          <div class="legend">
+            <div class="lg"><span class="dot dot-avg"></span>평균</div>
+            <div class="lg"><span class="dot dot-me"></span>나</div>
           </div>
 
-          <!-- RIGHT -->
-          <div class="right">
-            <div class="panel metrics">
-              <h3 class="sec-title">항목 별 민감도</h3>
-              <div class="row"><div class="label">물리적</div><div class="rail"><div class="fill" id="bar1"></div></div><div class="val" id="v1">0점</div></div>
-              <div class="row"><div class="label">심리적</div><div class="rail"><div class="fill" id="bar2"></div></div><div class="val" id="v2">0점</div></div>
-              <div class="row"><div class="label">온라인</div><div class="rail"><div class="fill" id="bar3"></div></div><div class="val" id="v3">0점</div></div>
-            </div>
-
-            <div class="panel compare">
-              <h3 class="sec-title">비교 지표</h3>
-              <div class="cmp-row">
-                <div>전체 평균 점수 <span class="big" id="avgScore">0점</span></div>
-                <div class="tri" id="tri">-</div>
-                <div class="cmp-text" id="cmpText">테스트를 먼저 진행해 주세요.</div>
+          <!-- 요약 -->
+          <section class="summary">
+            <div class="score-card">
+              <div class="score-num" id="scoreTotal">--</div>
+              <div class="score-unit">점</div>
+              <div class="score-sub">
+                <span class="badge-up" id="rankText">상위 —%</span><br />
+                <span class="delta"><i>▲</i> <span id="deltaText">평균보다 —점 높습니다</span></span>
               </div>
             </div>
 
-            <div class="guide-wrap">
-              <h3 class="sec-title">생활 가이드</h3>
-              <div class="guide">
-                <img src="images/bulb.png" alt="전구">
-                <div>테스트를 완료하시면 생활 가이드가 표시됩니다.</div>
-              </div>
+            <article class="insight-card">
+              <p class="insight-text">
+                <b id="typeStrong">당신의 퍼스널 스페이스는 …</b><br />
+                <span id="insightDetail">결과를 계산하고 있어요.</span>
+              </p>
+            </article>
+          </section>
+
+          <!-- 영역별 -->
+          <section class="zones">
+            <h2 class="zones-title">나의 팟 영역</h2>
+            <div class="bar">
+              <span class="label">터치존</span>
+              <div class="rail"><div class="fill" id="barTouch"></div></div>
             </div>
-          </div>
+            <div class="bar">
+              <span class="label">마인드존</span>
+              <div class="rail"><div class="fill" id="barMind"></div></div>
+            </div>
+            <div class="bar">
+              <span class="label">디지털존</span>
+              <div class="rail"><div class="fill" id="barDigital"></div></div>
+            </div>
+          </section>
 
           <!-- CTA -->
-          <div class="cta">
-            <button class="btn" id="printBtn">결과 인쇄하기</button>
+          <div class="cta-wrap">
+            <button class="btn primary" id="printBtn">인쇄해서 자세히 보기</button>
+            <button class="btn ghost" id="homeBtn">
+              <span class="chev">‹</span> 처음으로 돌아가기
+            </button>
           </div>
-        </section>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- JS -->
-  <script src="result.js"></script>
-</body>
+    <script>
+      const QUESTIONS = [
+        "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
+        "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
+        "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
+        "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
+        "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
+        "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
+        "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
+        "엘리베이터에서 주로 계기판 근처에 탄다",
+        "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
+        "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
+        "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
+        "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
+        "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
+        "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
+        "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
+        "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
+        "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
+        "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
+        "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
+        "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
+      ];
+
+      const TOUCH_IDX = [5,7,8,17,20].map(n=>n-1);
+      const MIND_IDX  = [6,9,10,11,12,13,16,15].map(n=>n-1);
+      const DIGI_IDX  = [2,3,4,18,19].map(n=>n-1);
+
+      const scoreEl = document.getElementById('scoreTotal');
+      const rankText = document.getElementById('rankText');
+      const deltaText = document.getElementById('deltaText');
+      const barTouch = document.getElementById('barTouch');
+      const barMind = document.getElementById('barMind');
+      const barDig = document.getElementById('barDigital');
+      const typeStrong = document.getElementById('typeStrong');
+      const insDetail = document.getElementById('insightDetail');
+
+      const printBtn = document.getElementById('printBtn');
+      const homeBtn = document.getElementById('homeBtn');
+      const frame = document.getElementById('printArea');
+
+      let answers = [];
+      try {
+        const raw = localStorage.getItem('keepod_answers');
+        if (raw) answers = JSON.parse(raw);
+      } catch(e){}
+
+      if (!Array.isArray(answers) || answers.length !== 20) {
+        location.href = 'test.html?reset=1';
+      }
+
+      const cleaned = answers.map(v => (v == null ? 0 : Number(v)));
+      const sum = arr => arr.reduce((a,b)=>a+b,0);
+      const total = sum(cleaned);
+      const avg = total / 20;
+
+      const refAvg = 68;
+      const delta = total - refAvg;
+      const percentile = Math.max(0, Math.min(100, total));
+
+      scoreEl.textContent = total;
+      deltaText.textContent = (delta >= 0 ? `평균보다 ${delta}점 높습니다` : `평균보다 ${Math.abs(delta)}점 낮습니다`);
+      rankText.textContent = `상위 ${Math.round(percentile)}%`;
+
+      let typeName = "넓은 경계형";
+      let detail = "주변과의 간격을 여유 있게 두며 안정감을 추구해요. 특히 터치존에서의 거리 유지가 중요한 편이에요. 마인드존과 디지털존에서는 비교적 유연하지만 상황에 따라 예민해질 수 있어요.";
+      if (avg < 2.3) { typeName = "개방형"; detail = "대체로 유연하며 상황 변화에 강해요. 다만 필요할 때 경계를 분명히 하는 연습이 도움이 됩니다."; }
+      else if (avg < 3.2) { typeName = "균형형"; detail = "상황에 따라 경계를 조절할 줄 알아요. 불편 신호를 조기에 인지해 부드럽게 선을 제시해보세요."; }
+      else if (avg < 4.0) { typeName = "신중형"; detail = "개인적 공간과 감정의 안정이 중요해요. 사전 공지나 거리두기 전략을 사용하면 소진을 줄일 수 있습니다."; }
+
+      typeStrong.textContent = `당신의 퍼스널 스페이스는 ${typeName}이에요.`;
+      insDetail.textContent = detail;
+
+      const partAvg = idxs => {
+        const vals = idxs.map(i => cleaned[i] || 0);
+        return Math.round((sum(vals)/(idxs.length*5))*100);
+      };
+
+      barTouch.style.width = partAvg(TOUCH_IDX) + '%';
+      barMind.style.width = partAvg(MIND_IDX) + '%';
+      barDig.style.width = partAvg(DIGI_IDX) + '%';
+
+      // 인쇄하기 버튼 → B5로 고정, 프레임 꽉차게
+      printBtn.addEventListener('click', () => {
+        frame.style.width = "176mm";
+        frame.style.height = "250mm";
+        frame.style.borderRadius = "0";
+        frame.style.boxShadow = "none";
+        window.print();
+        frame.style.width = "";
+        frame.style.height = "";
+        frame.style.borderRadius = "";
+        frame.style.boxShadow = "";
+      });
+
+      homeBtn.addEventListener('click', () => {
+        localStorage.removeItem('keepod_answers');
+        location.href = 'index.html';
+      });
+    </script>
+  </body>
 </html>

@@ -1,24 +1,60 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>퍼스널 스페이스 테스트</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main class="hero">
-    <figure class="hero-fig left"></figure>
+  <head>
+    <meta charset="utf-8" />
+    <title>나의 팟 발견하기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div id="frame" class="frame">
+        <div class="canvas">
+          <div class="bg"></div>
 
-    <section class="hero-center">
-      <p class="eyebrow">간단한 테스트로 나의 범위를 확인해보세요.</p>
-      <h1 class="title">
-        나의 퍼스널 스페이스 범위는<br />어느 정도일까?
-      </h1>
-      <a class="cta" href="test.html">테스트 시작하기</a>
-    </section>
+          <!-- 제목 -->
+          <h1 class="title">
+            <span>나의 팟</span>
+            <span>발견하기</span>
+          </h1>
 
-    <figure class="hero-fig right"></figure>
-  </main>
-</body>
+          <!-- 부제 -->
+          <p class="subtitle">몇 가지 질문으로 당신의 팟 크기를 알아보세요</p>
+
+          <!-- 하얀 박스 묶음 1줄 -->
+          <div class="box-group box-group1">
+            <div class="box">마인드존이 평균보다 민감해요</div>
+            <div class="box">접촉 빈도가 낮을수록 편안함을 느껴요</div>
+            <div class="box">디지털 피로도가 높아요</div>
+          </div>
+
+          <!-- 하얀 박스 묶음 2줄 -->
+          <div class="box-group box-group2">
+            <div class="box">타인의 시선에 예민해요</div>
+            <div class="box">소음에 쉽게 피로감을 느껴요</div>
+            <div class="box">혼자 있는 시간이 꼭 필요해요</div>
+          </div>
+
+          <!-- CTA 버튼 -->
+<button class="cta" onclick="location.href='test.html'">테스트 시작하기</button>
+
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const dpr = window.devicePixelRatio || 1;
+        const snap = v => Math.round(v * dpr) / dpr;
+        const frame = document.getElementById("frame");
+        function applySnap() {
+          frame.style.width  = snap(564.295) + "px";
+          frame.style.height = snap(900.62)  + "px";
+        }
+        window.addEventListener("resize", applySnap);
+        applySnap();
+      })();
+    </script>
+  </body>
 </html>

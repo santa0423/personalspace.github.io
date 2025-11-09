@@ -1,214 +1,195 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Likert 20 Questions</title>
-  <link rel="stylesheet" href="test.css"/>
-</head>
-<body>
-  <!-- 상단 헤더: sticky -->
-  <header class="top-header">
-    <div class="header">
-      <a class="back" href="index.html">＜ 이전&nbsp;</a>
-      <span class="step" id="stepText">(0/20)</span>
-    </div>
-    <div class="meter">
-      <div class="bar" id="progressBar" style="width:0%"></div>
-    </div>
-  </header>
-  <!-- 본문 -->
-  <main class="content container">
-    <div id="questionList"></div>
-  </main>
+  <head>
+    <meta charset="utf-8" />
+    <title>퍼스널 스페이스 테스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="test.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="frame">
+        <div class="canvas">
+          <!-- 헤더 -->
+          <header class="header">
+            <div class="brand">Keepod</div>
+          </header>
 
-  <!-- 하단 결과 버튼(고정) -->
-  <div class="result-wrap">
-    <button id="resultBtn" disabled>결과보기</button>
-  </div>
+          <!-- divider = 진행바 -->
+          <div class="divider"><div class="fill"></div></div>
 
-  <!-- 결과 계산 로딩 오버레이 -->
-  <div class="loading-layer" id="loadingLayer" aria-hidden="true">
-    <div class="loading-card">
-      <h1 class="loading-title">당신의 퍼스널 스페이스는?</h1>
-      <img src="images/cactus.png" alt="로딩 캐릭터" class="loading-img" />
-      <div class="loading-bar"><div class="loading-fill"></div></div>
-      <p class="loading-sub">결과 나오는 중…</p>
-    </div>
-  </div>
+          <!-- 진행도 -->
+          <div class="progress">1 / 20</div>
 
-  <script>
-    // ===== 문항 정의 =====
-    const QUESTIONS = [
-      { text: "1. 늦은 밤 혹은 휴일에 업무 메신저 알림이 울리면 불쾌하다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "2. SNS에서 상대방이 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "3. SNS에서 내가 지정한 사람만 볼 수 있는 기능으로 게시물을 주로 게시한다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "4. 상대방이 지나치게 자주 메시지를 보내거나 답장을 독촉하면 내 시간을 존중하지 않는다고 느껴진다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "5. 친분과 상관없이 악수나 어깨 두드리기 등 신체 접촉을 최대한 하지 않는 편이다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "6. 쉬는 날 활기찬 놀이공원·백화점 대신 조용한 공원·카페에 가는 편이다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "7. 조용한 카페 등에서 누군가 가까이 앉으면 평소처럼 행동하기 어려워진다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "8. 엘리베이터 계기판 위치 → 왼쪽(구석) vs 오른쪽(중앙)", left: "편안하다", right: "많이 불편하다" },
-      { text: "9. 친분과 상관없이 타인이 나에게 개인적인 질문을 하면 답하기 꺼려진다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "10. 같은 말이라도 상대의 어투에 따라 기분이 달라진다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "11. ”네가 그렇게 하면 내가 얼마나 상처받는 줄 알아?”처럼 감정을 강요하면 부담된다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "12. 갑자기 너무 빠르게 말하거나 침묵이 길어지면 심리적 압박이 느껴진다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "13. 직장에서 사람들과 함께 일하고 난 뒤, 친한 친구와 약속을 잡기보단 혼자 쉬고싶다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "14. 사람이 많다고 느끼거나 불편한 말을 들으면 심장이 두근거린다", left: "그렇지 않다", right: "그렇다" },
-      { text: "15. 사람이 많은 장소에 가면 평소와 다르게 짜증이나 화가 자주 난다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "16. 누군가랑 부딪히거나 불편한 대화를 나누었을때 그날은 괜히 의욕이 없고 무기력해진다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "17. 여러 명이 함께 있는 독서실보다 집에서 혼자 할 일을 할 때 더 수월하게 진행된다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "18. 너무 피곤한 날에는 만원 버스에서 노약자에게 자리를 양보하지 않는다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "19. 아무리 불편함을 표현해도 바뀌지 않으면, ‘그냥 참는 게 낫겠다'고 생각한다.", left: "그렇지 않다", right: "그렇다" },
-      { text: "20. 다른 사람과 너무 가까이 있어야 하는 상황에서 호흡이 어렵고 몸을 긴장하게 된다.", left: "그렇지 않다", right: "그렇다" }
-    ];
+          <!-- 안내문 -->
+          <p class="hint" style="display:none;">
+            [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
+          </p>
 
-    const list = document.getElementById('questionList');
-    const bar = document.getElementById('progressBar');
-    const stepText = document.getElementById('stepText');
-    const resultBtn = document.getElementById('resultBtn');
-    const loadingLayer = document.getElementById('loadingLayer');
+          <!-- 질문 카드 -->
+          <section class="question-card">
+            <p class="question"></p>
+          </section>
 
-    // 문항 DOM 생성 (8번은 이미지 포함)
-    QUESTIONS.forEach((q, idx) => {
-      const qEl = document.createElement('section');
-      qEl.className = 'q';
+          <!-- 5점 척도 -->
+          <div class="scale">
+            <div class="rail"></div>
+            <button class="dot" data-value="1"></button>
+            <button class="dot" data-value="2"></button>
+            <button class="dot" data-value="3"></button>
+            <button class="dot" data-value="4"></button>
+            <button class="dot" data-value="5"></button>
 
-      const imgTag = (idx === 7)
-        ? `<img src="images/elevator.png" alt="엘리베이터 그림" class="q-img">`
-        : "";
-
-      qEl.innerHTML = `
-        <h2 class="q-title">${imgTag} ${q.text}</h2>
-        <div class="likert">
-          <span class="label-left">${q.left || '그렇지 않다'}</span>
-          <div class="track">
-            ${[1,2,3,4,5].map(v => `
-              <label class="dot">
-                <input type="radio" name="q${idx+1}" value="${v}">
-                <span></span>
-              </label>
-            `).join('')}
+            <div class="labels">
+              <span>그렇지<br />않다</span>
+              <span>보통이다</span>
+              <span>그렇다</span>
+            </div>
           </div>
-          <span class="label-right">${q.right || '그렇다'}</span>
+
+          <!-- CTA -->
+          <div class="cta-wrap">
+            <button class="next" disabled>다음</button>
+            <button class="back" type="button">
+              <span class="chev">‹</span> 이전으로 돌아가기
+            </button>
+          </div>
         </div>
-      `;
-      list.appendChild(qEl);
-    });
+      </div>
+    </div>
 
-    const sections = [...document.querySelectorAll('.q')];
+    <script>
+      // ===== 질문 데이터 =====
+      const QUESTIONS = [
+        "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
+        "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
+        "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
+        "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
+        "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
+        "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
+        "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
+        "엘리베이터에서 주로 계기판 근처에 탄다",
+        "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
+        "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
+        "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
+        "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
+        "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
+        "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
+        "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
+        "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
+        "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
+        "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
+        "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
+        "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
+      ];
 
-    // 초기: 1번만 활성, 나머지 비활성
-    sections.forEach((sec, i) => {
-      if (i > 0) setDisabled(sec, true);
-      sec.addEventListener('change', (e) => {
-        if (!e.target.matches('input[type="radio"]')) return;
-        const next = sections[i+1];
-        if (next && next.classList.contains('disabled')) {
-          setDisabled(next, false);
-          next.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else if (!next) {
-          // 마지막 문항도 중앙으로 스크롤(푸터 가림 방지)
-          sections[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-        updateProgress();
-      });
-    });
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const nextBtn = document.querySelector('.next');
+      const backBtn = document.querySelector('.back');
+      const qEl = document.querySelector('.question');
+      const progEl = document.querySelector('.progress');
+      const fillEl = document.querySelector('.fill');
+      const hintEl = document.querySelector('.hint');
 
-    function setDisabled(sectionEl, disabled) {
-      sectionEl.classList.toggle('disabled', disabled);
-      sectionEl.querySelectorAll('input[type="radio"]').forEach(inp => inp.disabled = disabled);
-    }
+      let index = 0;
+      let selectedDot = null;
+      let answers = Array(20).fill(null);
 
-    function updateProgress() {
-      const answered = sections.reduce((acc, sec) =>
-        acc + (sec.querySelector('input[type="radio"]')?.checked || sec.querySelector('input[type="radio"]:checked') ? 1 : (sec.querySelector('input[type="radio"]:checked') ? 1 : 0)), 0);
-      // 위 한 줄이 복잡하면 아래 두 줄을 사용하세요:
-      // const answered = sections.reduce((acc, sec) => acc + (sec.querySelector('input[type="radio"]:checked') ? 1 : 0), 0);
-      const pct = Math.round(answered / sections.length * 100);
-      bar.style.width = pct + '%';
-      stepText.textContent = `(${answered}/${sections.length})`;
-      resultBtn.disabled = answered !== sections.length;
-    }
-
-    // 카테고리 매핑
-    const MAP = {
-      physical:       [5,6,7,8,14,15,20],
-      psychological:  [10,11,12,16,17,19],
-      online:         [1,2,3,4,9,13,18]
-    };
-
-    function collectAnswers(){
-      const answers = [];
-      for(let i=1; i<=20; i++){
-        const checked = document.querySelector(`input[name="q${i}"]:checked`);
-        answers.push( checked ? Number(checked.value) : null );
+      // 전체 초기화
+      function resetAll() {
+        answers = Array(20).fill(null);
+        selectedDot = null;
+        index = 0;
+        fillEl.style.width = '0%';
+        nextBtn.disabled = true;
+        nextBtn.style.background = '#E4E4E4';
+        dots.forEach(d => d.classList.remove('active'));
+        localStorage.removeItem('keepod_answers');
       }
-      return answers;
-    }
 
-    function calcScores(answers){
-      const sum  = (arr)=>arr.reduce((a,b)=>a+(b??0),0);
-      const pick = (idxArr)=>idxArr.map(n=>answers[n-1]??0);
+      // ===== 화면 렌더 =====
+      function renderQuestion(i) {
+        qEl.innerHTML = QUESTIONS[i];
+        progEl.textContent = `${i + 1} / 20`;
+        hintEl.style.display = i >= 12 ? "block" : "none";
+        fillEl.style.width = `${(i / 20) * 100}%`;
 
-      const physicalVals = pick(MAP.physical);
-      const psychVals    = pick(MAP.psychological);
-      const onlineVals   = pick(MAP.online);
+        dots.forEach(d => d.classList.remove('active'));
+        selectedDot = null;
+        if (answers[i] !== null) {
+          const found = dots.find(d => Number(d.dataset.value) === answers[i]);
+          if (found) {
+            found.classList.add('active');
+            selectedDot = found;
+            nextBtn.disabled = false;
+            nextBtn.style.background = '#7CEA54';
+          }
+        } else {
+          nextBtn.disabled = true;
+          nextBtn.style.background = '#E4E4E4';
+        }
 
-      const maxPhysical  = MAP.physical.length     * 5;
-      const maxPsych     = MAP.psychological.length* 5;
-      const maxOnline    = MAP.online.length       * 5;
+        // 1번 문항일 때만 '처음으로 돌아가기'
+        if (i === 0) {
+          backBtn.textContent = "‹ 처음으로 돌아가기";
+        } else {
+          backBtn.innerHTML = '<span class="chev">‹</span> 이전으로 돌아가기';
+        }
+      }
 
-      const sPhysical = sum(physicalVals);
-      const sPsych    = sum(psychVals);
-      const sOnline   = sum(onlineVals);
+      // ===== 선택 시 =====
+      function applySelection(dot) {
+        dots.forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        selectedDot = dot;
+        nextBtn.disabled = false;
+        nextBtn.style.background = '#7CEA54';
+        answers[index] = Number(dot.dataset.value);
+        fillEl.style.width = `${((index + 1) / 20) * 100}%`;
+      }
 
-      const pctPhysical = Math.round(sPhysical / maxPhysical * 100);
-      const pctPsych    = Math.round(sPsych    / maxPsych    * 100);
-      const pctOnline   = Math.round(sOnline   / maxOnline   * 100);
+      // ===== 초기 렌더 =====
+      renderQuestion(index);
 
-      const rank = [
-        {key:'physical',      label:'물리 민감형',   score:pctPhysical},
-        {key:'psychological', label:'심리 민감형',   score:pctPsych},
-        {key:'online',        label:'온라인 민감형', score:pctOnline},
-      ].sort((a,b)=>b.score-a.score);
+      // ===== 점 클릭 (토글) =====
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          if (selectedDot === dot) {
+            dot.classList.remove('active');
+            selectedDot = null;
+            answers[index] = null;
+            nextBtn.disabled = true;
+            nextBtn.style.background = '#E4E4E4';
+            fillEl.style.width = `${(index / 20) * 100}%`;
+            return;
+          }
+          applySelection(dot);
+        });
+      });
 
-      const balanced = Math.abs(rank[0].score - rank[2].score) <= 8;
-      const top = rank[0];
+      // ===== 다음 버튼 =====
+      nextBtn.addEventListener('click', () => {
+        if (!selectedDot) return;
+        if (index < 19) {
+          index++;
+          renderQuestion(index);
+        } else {
+          // ✅ 마지막 문항이면 결과페이지로 이동
+          localStorage.setItem('keepod_answers', JSON.stringify(answers));
+          location.href = "result.html";
+        }
+      });
 
-      return {
-        raw: answers,
-        sum: {physical:sPhysical, psychological:sPsych, online:sOnline},
-        pct: {physical:pctPhysical, psychological:pctPsych, online:pctOnline},
-        max: {physical:maxPhysical, psychological:maxPsych, online:maxOnline},
-        type: balanced ? {key:'balanced', label:'균형형', score:rank[0].score} : top,
-        rank
-      };
-    }
-
-    // 결과보기: 로딩 → 저장 → 이동
-    resultBtn.addEventListener('click', () => {
-      if (resultBtn.disabled) return;
-      loadingLayer.style.display = 'flex';
-      const answers = collectAnswers();
-      setTimeout(()=>{
-        const result = calcScores(answers);
-        sessionStorage.setItem('ps-result', JSON.stringify(result));
-        location.href = 'result.html';
-      }, 1200);
-    });
-
-    updateProgress();
-
-    // ===== 푸터(고정 버튼) 높이를 CSS 변수에 반영해 겹침 방지 =====
-    function syncFooterHeight(){
-      const footer = document.querySelector('.result-wrap');
-      const h = footer ? Math.ceil(footer.getBoundingClientRect().height) : 0;
-      document.documentElement.style.setProperty('--footer-h', h + 'px');
-    }
-    window.addEventListener('load', syncFooterHeight);
-    window.addEventListener('resize', syncFooterHeight);
-    window.addEventListener('orientationchange', syncFooterHeight);
-    setTimeout(syncFooterHeight, 120); // 폰트 로드 등 레이아웃 변동 보정
-  </script>
-</body>
+      // ===== 이전 버튼 =====
+      backBtn.addEventListener('click', () => {
+        if (index === 0) {
+          resetAll();
+          location.href = "index.html";
+        } else {
+          index--;
+          renderQuestion(index);
+        }
+      });
+    </script>
+  </body>
 </html>
