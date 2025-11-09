@@ -42,76 +42,64 @@
     </div>
 
     <script>
-      // ===== 하이브리드 스케일: 세로 꽉 채우기 + 좌우 여백 보존 =====
-      (function () {
-        const BASE_W = 564;
-        const BASE_H = 900;
-        const MAX_SQUISH = 0.97; // 가로 최대 압축 3%
-        const frameEl = document.getElementById("frame");
+     // 세로는 화면 높이에 맞춰 scaleY로 100% 채우고,
+// 가로가 넘치면 scaleX로 딱 맞춰서 "안 잘리게" 보정.
+(function () {
+  const BASE_W = 564;
+  const BASE_H = 900;
+  const frameEl = document.querySelector('.frame') || document.getElementById('frame');
 
-        function vp() {
-          const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-          const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-          return { vw, vh };
-        }
+  function vp() {
+    const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    return { vw, vh };
+  }
 
-        function applyScale() {
-          const { vw, vh } = vp();
-          const isMobile = (vw < 700) || (vh < 900);
+  function applyScale() {
+    const { vw, vh } = vp();
+    const isMobile = (vw < 700) || (vh < 900);
 
-          if (!isMobile) {
-            frameEl.style.position = "static";
-            frameEl.style.transform = "none";
-            frameEl.style.width = BASE_W + "px";
-            frameEl.style.height = BASE_H + "px";
-            return;
-          }
+    if (!isMobile) {
+      // 태블릿/PC: 원본 픽셀 고정
+      Object.assign(frameEl.style, {
+        position: 'static',
+        transform: 'none',
+        width: `${BASE_W}px`,
+        height: `${BASE_H}px`,
+        transformOrigin: 'initial',
+        top: '',
+        left: ''
+      });
+      return;
+    }
 
-          const sH = vh / BASE_H;
-          const needW = BASE_W * sH;
+    // 1) 세로 꽉 채우기 (scaleY)
+    const sY = vh / BASE_H;
+    const needW = BASE_W * sY;
 
-          if (needW <= vw) {
-            const tx = (vw - needW) / 2;
-            frameEl.style.width = BASE_W + "px";
-            frameEl.style.height = BASE_H + "px";
-            frameEl.style.position = "fixed";
-            frameEl.style.top = "0";
-            frameEl.style.left = "0";
-            frameEl.style.transformOrigin = "top left";
-            frameEl.style.transform = `translate(${tx}px, 0) scale(${sH})`;
-            return;
-          }
+    // 2) 가로가 넘치면 scaleX로 정확히 맞추기 (좌우 잘림 방지)
+    const sX = needW > vw ? vw / needW : 1;
 
-          const fitRatio = vw / needW;
-          if (fitRatio >= MAX_SQUISH) {
-            const tx = 0;
-            frameEl.style.width = BASE_W + "px";
-            frameEl.style.height = BASE_H + "px";
-            frameEl.style.position = "fixed";
-            frameEl.style.top = "0";
-            frameEl.style.left = "0";
-            frameEl.style.transformOrigin = "top left";
-            frameEl.style.transform = `translate(${tx}px, 0) scale(${sH}) scaleX(${fitRatio})`;
-            return;
-          }
+    // 중앙 정렬 (수평만 필요; 수직은 꽉 채움)
+    const outW = BASE_W * sY * sX;
+    const tx = (vw - outW) / 2;
 
-          const sW = vw / BASE_W;
-          const s = Math.min(sW, sH);
-          const tx = (vw - BASE_W * s) / 2;
-          const ty = (vh - BASE_H * s) / 2;
-          frameEl.style.width = BASE_W + "px";
-          frameEl.style.height = BASE_H + "px";
-          frameEl.style.position = "fixed";
-          frameEl.style.top = "0";
-          frameEl.style.left = "0";
-          frameEl.style.transformOrigin = "top left";
-          frameEl.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
-        }
+    Object.assign(frameEl.style, {
+      width: `${BASE_W}px`,
+      height: `${BASE_H}px`,
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      transformOrigin: 'top left',
+      transform: `translate(${tx}px, 0) scale(${sY}) scaleX(${sX})`
+    });
+  }
 
-        window.addEventListener("resize", applyScale);
-        window.addEventListener("orientationchange", applyScale);
-        applyScale();
-      })();
+  window.addEventListener('resize', applyScale);
+  window.addEventListener('orientationchange', applyScale);
+  applyScale();
+})();
+
     </script>
   </body>
 </html>
