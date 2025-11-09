@@ -131,3 +131,33 @@ html, body {
   outline: 0;
   box-shadow: 0 0 0 3px rgba(0,0,0,.15), 0 8px 20px rgba(0,0,0,.18);
 }
+/* 모바일에서 스케일링이 안전하게 보이도록 약간의 컨테이너 세팅만 */
+html, body {
+  height: 100%;
+  margin: 0;
+  background: #f3f4f2;
+  overflow: hidden; /* 모바일에서 바깥 스크롤 생기는 것 방지 */
+}
+
+.viewport {
+  min-height: 100dvh; /* 모바일 주소창 변화 대응 */
+  display: grid;
+  place-items: center;
+}
+
+/* 태블릿/PC에선 원래처럼 카드 그림자/둥근모서리 보이도록 유지 */
+@media (min-width: 700px) and (min-height: 900px) {
+  .frame {
+    border-radius: 40px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 24px 60px rgba(0,0,0,.12);
+  }
+}
+
+/* 모바일에선 그림자/둥근모서리는 스케일 적용 후에도 시각적으로 유지되지만,
+   브라우저마다 클리핑 이슈 있을 수 있으니 필요시 아래 주석 해제
+@media (max-width: 699px), (max-height: 899px) {
+  .frame { will-change: transform; }
+}
+*/

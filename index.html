@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
   <head>
@@ -45,16 +46,52 @@
 
     <script>
       (function () {
-        const dpr = window.devicePixelRatio || 1;
-        const snap = v => Math.round(v * dpr) / dpr;
+        // 고정 레이아웃의 기준 크기 (현재 디자인 그대로)
+        const BASE_W = 564.295;
+        const BASE_H = 900.62;
+    
         const frame = document.getElementById("frame");
-        function applySnap() {
-          frame.style.width  = snap(564.295) + "px";
-          frame.style.height = snap(900.62)  + "px";
+    
+        function applyLayout() {
+          const vw = window.innerWidth;
+          const vh = window.innerHeight;
+    
+          // 폰 기준: 폭 700px 미만 또는 높이 900px 미만이면 "모바일 모드"
+          const isMobile = (vw < 700) || (vh < 900);
+    
+          if (!isMobile) {
+            // 태블릿/PC: 기존 px 고정 레이아웃 그대로
+            frame.style.position = "static";
+            frame.style.transform = "none";
+            frame.style.transformOrigin = "initial";
+            frame.style.width  = BASE_W + "px";
+            frame.style.height = BASE_H + "px";
+            return;
+          }
+    
+          // 모바일: 화면 폭/높이 중 더 작은 비율로 축소해서 비율 유지
+          const scale = Math.min(vw / BASE_W, vh / BASE_H);
+    
+          // 프레임은 기준 크기를 유지하고, 스케일로만 줄입니다.
+          frame.style.width  = BASE_W + "px";
+          frame.style.height = BASE_H + "px";
+    
+          // 화면 가운데 정렬(상하/좌우 중앙)
+          const tx = (vw - BASE_W * scale) / 2;
+          const ty = (vh - BASE_H * scale) / 2;
+    
+          frame.style.position = "fixed";
+          frame.style.top = "0";
+          frame.style.left = "0";
+          frame.style.transformOrigin = "top left";
+          frame.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
         }
-        window.addEventListener("resize", applySnap);
-        applySnap();
+    
+        window.addEventListener("resize", applyLayout);
+        window.addEventListener("orientationchange", applyLayout);
+        applyLayout();
       })();
     </script>
+    
   </body>
 </html>
