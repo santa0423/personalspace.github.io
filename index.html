@@ -42,64 +42,93 @@
     </div>
 
     <script>
-     // 세로는 화면 높이에 맞춰 scaleY로 100% 채우고,
-// 가로가 넘치면 scaleX로 딱 맞춰서 "안 잘리게" 보정.
-(function () {
-  const BASE_W = 564;
-  const BASE_H = 900;
-  const frameEl = document.querySelector('.frame') || document.getElementById('frame');
-
-  function vp() {
-    const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    return { vw, vh };
-  }
-
-  function applyScale() {
-    const { vw, vh } = vp();
-    const isMobile = (vw < 700) || (vh < 900);
-
-    if (!isMobile) {
-      // 태블릿/PC: 원본 픽셀 고정
-      Object.assign(frameEl.style, {
-        position: 'static',
-        transform: 'none',
-        width: `${BASE_W}px`,
-        height: `${BASE_H}px`,
-        transformOrigin: 'initial',
-        top: '',
-        left: ''
-      });
-      return;
-    }
-
-    // 1) 세로 꽉 채우기 (scaleY)
-    const sY = vh / BASE_H;
-    const needW = BASE_W * sY;
-
-    // 2) 가로가 넘치면 scaleX로 정확히 맞추기 (좌우 잘림 방지)
-    const sX = needW > vw ? vw / needW : 1;
-
-    // 중앙 정렬 (수평만 필요; 수직은 꽉 채움)
-    const outW = BASE_W * sY * sX;
-    const tx = (vw - outW) / 2;
-
-    Object.assign(frameEl.style, {
-      width: `${BASE_W}px`,
-      height: `${BASE_H}px`,
-      position: 'fixed',
-      top: '0',
-      left: '0',
-      transformOrigin: 'top left',
-      transform: `translate(${tx}px, 0) scale(${sY}) scaleX(${sX})`
-    });
-  }
-
-  window.addEventListener('resize', applyScale);
-  window.addEventListener('orientationchange', applyScale);
-  applyScale();
-})();
-
-    </script>
+      // ===== 균등 스케일 contain: 화면에 전부 보이고, 스크롤/왜곡/잘림 없음 =====
+      (function () {
+        const BASE_W = 564;
+        const BASE_H = 900;
+        const frame = document.querySelector('.frame') || document.getElementById('frame');
+      
+        // 래퍼(stage/scaled) 자동 구성
+        function ensureWrappers() {
+          if (!frame) return {};
+          if (frame.parentElement && frame.parentElement.classList.contains('scaled')) {
+            return {
+              stage: frame.parentElement.parentElement,
+              scaled: frame.parentElement
+            };
+          }
+          const scaled = document.createElement('div');
+          scaled.className = 'scaled';
+          const stage = document.createElement('div');
+          stage.className = 'stage';
+          frame.parentElement.insertBefore(stage, frame);
+          stage.appendChild(scaled);
+          scaled.appendChild(frame);
+          return { stage, scaled };
+        }
+      
+        const { stage, scaled } = ensureWrappers();
+      
+        function vp() {
+          const vw = (window.visualViewport && window.visualViewport.width)  || window.innerWidth;
+          const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+          return { vw, vh };
+        }
+      
+        function apply() {
+          const { vw, vh } = vp();
+          const isMobile = (vw < 700) || (vh < 900);
+      
+          // 데스크톱/태블릿: 원본 고정
+          if (!isMobile) {
+            Object.assign(stage.style, { position:'static', inset:'', overflow:'hidden' });
+            Object.assign(scaled.style, { position:'relative', width:`${BASE_W}px`, height:`${BASE_H}px`, margin:'0 auto' });
+            Object.assign(frame.style, { position:'relative', width:`${BASE_W}px`, height:`${BASE_H}px`, transform:'none', transformOrigin:'top left', left:'0', top:'0' });
+            return;
+          }
+      
+          // 균등 스케일: 화면에 "전부 보이도록" contain
+          const s = Math.min(vw / BASE_W, vh / BASE_H);
+          const outW = BASE_W * s;
+          const outH = BASE_H * s;
+          const tx = (vw - outW) / 2;
+          const ty = (vh - outH) / 2;
+      
+          // stage = 뷰포트 박스(스크롤 금지)
+          Object.assign(stage.style, {
+            position: 'fixed',
+            inset: '0',
+            overflow: 'hidden'
+          });
+      
+          // scaled = 스케일 후 실크기 박스(중앙정렬)
+          Object.assign(scaled.style, {
+            position: 'absolute',
+            left: `${tx}px`,
+            top: `${ty}px`,
+            width: `${outW}px`,
+            height: `${outH}px`,
+            margin: '0'
+          });
+      
+          // frame = 원본을 s배 확대 (좌표 불변, 왜곡 없음)
+          Object.assign(frame.style, {
+            position: 'absolute',
+            left: '0',
+            top: '0',
+            width: `${BASE_W}px`,
+            height: `${BASE_H}px`,
+            transformOrigin: 'top left',
+            transform: `scale(${s})`
+          });
+        }
+      
+        window.addEventListener('resize', apply);
+        window.addEventListener('orientationchange', apply);
+        apply();
+      })();
+      </script>
+      
+      
   </body>
 </html>

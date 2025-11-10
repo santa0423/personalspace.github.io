@@ -161,3 +161,24 @@ html, body {
   .frame { will-change: transform; }
 }
 */
+/* 스크롤 컨테이너(뷰포트 전체) */
+.stage {
+  position: fixed; /* JS에서 모바일 시에만 실제로 고정/스크롤 활성화 */
+  inset: 0;
+  overflow: hidden; /* 기본값: 필요시 JS가 overflowX:auto 로 전환 */
+}
+
+/* 실제 스케일된 박스 */
+.scaled {
+  position: relative;
+  width: 564px;  /* JS가 모바일에서는 outW로 바꿔줌 */
+  height: 900px; /* JS가 모바일에서는 outH로 바꿔줌 */
+  margin: 0 auto; /* 남을 때 중앙정렬 */
+}
+
+/* 안전: 프레임은 원본 사이즈, 변형은 transform으로만 */
+.frame {
+  width: 564px;
+  height: 900px;
+  transform-origin: top left;
+}
