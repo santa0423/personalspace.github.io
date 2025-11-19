@@ -1,312 +1,681 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <title>나의 팟 테스트 결과</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="result.css" />
-    <!-- html2canvas: 모바일에서 이미지 저장용 -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
-  </head>
-  <body>
-    <div class="viewport">
-      <div class="frame" id="printArea">
-        <div class="canvas">
-          <!-- 상단 -->
-          <header class="top">
-            <h1 class="page-title">나의 팟 테스트 결과</h1>
-          </header>
-
-          <!-- 시드 & 레이어 -->
-          <section class="hero">
-            <div class="rings">
-              <div class="ring outer"></div>
-              <div class="ring inner"></div>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>결과 보기</title>
+  <link rel="stylesheet" href="result.css" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+</head>
+<body>
+  <div class="page">
+    <div class="stage" id="stage">
+      <div class="frame-box" id="frameBox">
+        <!-- 섹션 1 : 초록 박스 (보더 메인 비주얼) -->
+        <div class="overlay-box section" id="section-1">
+          <!-- 상단: 이름 + 레전드 -->
+          <div class="overlay-top-row">
+            <!-- 말풍선 이름 박스 -->
+            <div class="name-bubble">
+              <div class="name-ko">보더</div>
+              <div class="name-en">(Border)</div>
             </div>
-            <img class="seed" src="images/seed.png" alt="" onerror="this.classList.add('fallback')" />
-          </section>
 
-          <!-- 범례 -->
-          <div class="legend">
-            <div class="lg"><span class="dot dot-avg"></span>평균</div>
-            <div class="lg"><span class="dot dot-me"></span>나</div>
+            <!-- 평균 / 나 레전드 -->
+            <div class="legend">
+              <div class="legend-item">
+                <span class="legend-dot legend-dot-average"></span>
+                <span>평균</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot legend-dot-me"></span>
+                <span>나</span>
+              </div>
+            </div>
           </div>
 
-          <!-- 요약 -->
-          <section class="summary">
+          <!-- 캐릭터 + 타원 영역 -->
+          <div class="character-area">
+            <div class="ellipse"></div>
+            <img src="images/bulb.png"
+                 alt="보더 캐릭터"
+                 class="character-img" />
+          </div>
+
+          <!-- 타원 아래 흰색 네모 섹션 2개 -->
+          <div class="summary-row">
+            <!-- 왼쪽: 점수 카드 -->
             <div class="score-card">
-              <div class="score-num" id="scoreTotal">--</div>
-              <div class="score-unit">점</div>
-              <div class="score-sub">
-                <span class="badge-up" id="rankText">상위 —%</span><br />
-                <span class="delta"><i>▲</i> <span id="deltaText">평균보다 —점 높습니다</span></span>
+              <div class="score-main">
+                <span class="score-number">100</span>
+                <span class="score-unit">점</span>
+              </div>
+              <div class="score-sub">▲ 평균보다 50점 높아요.</div>
+              <div class="score-desc">* 점수가 높을수록 팟 침범에 민감한 편이에요.</div>
+            </div>
+
+            <!-- 오른쪽: 타입 설명 카드 -->
+            <div class="type-card">
+              <div class="type-title">거리수호형 팟</div>
+              <p class="type-text">
+                당신은 넓은 개인 공간이 필요하며, 타인과의 거리가 가까워지면 불편함을 크게 느끼는 편이에요.
+                또한, 모든 영역에서 명확한 경계가 필요해요. 터치존, 마인드존, 디지털존 침범 모두에 예민하게 반응해요.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 섹션 2~6 : 아래 노란/분홍 박스 -->
+        <div class="yellow-container">
+          <!-- 섹션 2,3,4 : 왼쪽 세 칸 -->
+          <div class="left-column">
+            <!-- ✅ 1번 노란 박스: 터치존 (그대로) -->
+            <div class="yellow-box section" id="section-2">
+              <div class="zone-header">각 영역별 나의 팟은?</div>
+
+              <div class="zone-content">
+                <div class="zone-left">
+                  <div class="zone-title">터치존</div>
+                  <div class="zone-bubble">
+                    주변에 사람들이나 자극이 많아 처리할 정보량이 넘치면 불편함을 느껴요.
+                  </div>
+                </div>
+              
+                <div class="zone-right">
+                  <div class="zone-item">
+                    <span class="zone-label">친분</span>
+                    <div class="zone-bars">
+                      <div class="bar filled"></div>
+                      <div class="bar filled"></div>
+                      <div class="bar empty"></div>
+                      <div class="bar empty"></div>
+                      <div class="bar empty"></div>
+                    </div>
+                  </div>
+              
+                  <div class="zone-item">
+                    <span class="zone-label">정보과잉</span>
+                    <div class="zone-bars">
+                      <div class="bar filled"></div>
+                      <div class="bar filled"></div>
+                      <div class="bar filled"></div>
+                      <div class="bar empty"></div>
+                      <div class="bar empty"></div>
+                    </div>
+                  </div>
+              
+                  <div class="zone-item">
+                    <span class="zone-label">행동제약</span>
+                    <div class="zone-bars">
+                      <div class="bar filled"></div>
+                      <div class="bar filled"></div>
+                      <div class="bar filled"></div>
+                      <div class="bar empty"></div>
+                      <div class="bar empty"></div>
+                    </div>
+                  </div>
+              
+                  <div class="zone-item">
+                    <span class="zone-label">통제력</span>
+                    <div class="zone-bars">
+                      <div class="bar filled"></div>
+                      <div class="bar filled"></div>
+                      <div class="bar empty"></div>
+                      <div class="bar empty"></div>
+                      <div class="bar empty"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <article class="insight-card">
-              <p class="insight-text">
-                <b id="typeStrong">당신의 퍼스널 스페이스는 …</b><br />
-                <span id="insightDetail">결과를 계산하고 있어요.</span>
-              </p>
-            </article>
-          </section>
+            <!-- ✅ 2번 노란 박스 (마인드존 – 동그라미 4개) -->
+            <div class="yellow-box section" id="section-3">
+              <div class="zone2-content">
+                <!-- 왼쪽: 동그라미 4개 -->
+                <div class="zone2-left">
+                  <div class="zone2-circle circle-privacy">사생활</div>
+                  <div class="zone2-circle circle-emotion">감정개입</div>
+                  <div class="zone2-circle circle-nonverbal">비언어</div>
+                  <div class="zone2-circle circle-tone">어투</div>
+                </div>
+            
+                <!-- 오른쪽: 마인드존 설명 -->
+                <div class="zone2-right">
+                  <div class="zone2-title">마인드존</div>
+                  <div class="zone2-bubble">
+                    시선, 표정, 분위기 등 말하지 않아도 전달되는 압박에
+                    불편함을 느껴요.
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- ✅ 3번 노란 박스 (디지털존 – 세로 막대 그래프) -->
+            <div class="yellow-box section" id="section-4">
+              <div class="zone3-content">
+                <!-- 왼쪽: 디지털존 설명 -->
+                <div class="zone3-left">
+                  <div class="zone3-title">디지털존</div>
+                  <div class="zone3-bubble">
+                    알림, 메시지, 온라인 연결 등에서 오는 디지털 압박에
+                    민감하게 반응하는 편이에요.
+                  </div>
+                </div>
 
-          <!-- 영역별 -->
-          <section class="zones">
-            <h2 class="zones-title">나의 팟 영역</h2>
-            <div class="bar">
-              <span class="label">터치존</span>
-              <div class="rail"><div class="fill" id="barTouch"></div></div>
-            </div>
-            <div class="bar">
-              <span class="label">마인드존</span>
-              <div class="rail"><div class="fill" id="barMind"></div></div>
-            </div>
-            <div class="bar">
-              <span class="label">디지털존</span>
-              <div class="rail"><div class="fill" id="barDigital"></div></div>
-            </div>
-          </section>
+                <!-- 오른쪽: 세로 막대 그래프 -->
+                <div class="zone3-right">
+                  <!-- 연락: 2단계 -->
+                  <div class="zone3-bar-group">
+                    <div class="zone3-vert-bar">
+                      <div class="zone3-vert-fill lv2"></div>
+                    </div>
+                    <div class="zone3-bar-label">연락</div>
+                  </div>
 
-          <!-- CTA -->
-          <div class="cta-wrap">
-            <button class="btn primary" id="actionBtn">인쇄해서 자세히 보기</button>
-            <button class="btn ghost" id="homeBtn">
-              <span class="chev">‹</span> 처음으로 돌아가기
-            </button>
+                  <!-- 노출: 3단계 -->
+                  <div class="zone3-bar-group">
+                    <div class="zone3-vert-bar">
+                      <div class="zone3-vert-fill lv3"></div>
+                    </div>
+                    <div class="zone3-bar-label">노출</div>
+                  </div>
+
+                  <!-- 알림: 3단계 -->
+                  <div class="zone3-bar-group">
+                    <div class="zone3-vert-bar">
+                      <div class="zone3-vert-fill lv3"></div>
+                    </div>
+                    <div class="zone3-bar-label">알림</div>
+                  </div>
+
+                  <!-- 속도: 2단계 -->
+                  <div class="zone3-bar-group">
+                    <div class="zone3-vert-bar">
+                      <div class="zone3-vert-fill lv2"></div>
+                    </div>
+                    <div class="zone3-bar-label">속도</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+         <!-- 오른쪽 분홍 박스 2개 -->
+<div class="right-column">
+
+<!-- 🔴 분홍 박스 1 : 네모 8개 배치 -->
+<div class="pink-box section" id="section-5">
+  <div class="pink-header">각 영역별 나의 팟은?</div>
+
+  <div class="pink-box-grid">
+    <div class="pink-cell">사교성 저하</div>
+    <div class="pink-cell">생라적 반응</div>
+    <div class="pink-cell">공격성<br>증가</div>
+    <div class="pink-cell">우울</div>
+    <div class="pink-cell">과업 수행 저하</div>
+    <div class="pink-cell">이타 행동 감소</div>
+    <div class="pink-cell">뷸안</div>
+    <div class="pink-cell">학습된 무기력</div>
+  </div>
+</div>
+
+
+<!-- 🔴 분홍 박스 2 : 큰 말풍선 박스 3줄 -->
+<div class="pink-box section" id="section-6">
+  <div class="pink-item">
+    <div class="pink-item-label">사교성 저하</div>
+    <div class="pink-item-desc">
+      침범 경험으로 대인관계가 부담스러워져 약속을 피하거나, 만나도 깊은 관계 형성을 회피하게 돼요.
+    </div>
+  </div>
+  
+  <div class="pink-item">
+    <div class="pink-item-label">과업 수행 저하</div>
+    <div class="pink-item-desc">
+      침범 경험이 에너지를 소진시켜 업무나 학업에 집중하기 어렵고, 평소보다 능률이 크게 떨어져요.
+    </div>
+  </div>
+  
+  <div class="pink-item">
+    <div class="pink-item-label">학습된 무기력</div>
+    <div class="pink-item-desc">
+      반복된 침범으로 대응의 효과를 느끼지 못해 “어차피 소용없어”라며 경계 세우기 자체를 포기하게 돼요.
+    </div>
+  </div>
+  
+
+</div>
+
+
+</div>
+
         </div>
+
+        <!-- 배경 이미지 (테스트지 전체 배경) -->
+        <div class="frame">
+          <img src="images/테스트지 수정.png" alt="테스트 결과" crossorigin="anonymous" />
+        </div>
+
       </div>
     </div>
 
-    <script>
-      const TOUCH_IDX = [5,7,8,17,20].map(n=>n-1);
-      const MIND_IDX  = [6,9,10,11,12,13,16,15].map(n=>n-1);
-      const DIGI_IDX  = [2,3,4,18,19].map(n=>n-1);
+    <div class="footer">
+      <button class="btn" id="actionBtn">인쇄하기</button>
+    </div>
+  </div>
+  <script>
+    /* ================================
+       1) 답안 불러오기 & 기본 설정
+       ================================ */
 
-      const scoreEl = document.getElementById('scoreTotal');
-      const rankText = document.getElementById('rankText');
-      const deltaText = document.getElementById('deltaText');
-      const barTouch = document.getElementById('barTouch');
-      const barMind = document.getElementById('barMind');
-      const barDig = document.getElementById('barDigital');
-      const typeStrong = document.getElementById('typeStrong');
-      const insDetail = document.getElementById('insightDetail');
+    const W = 560, H = 790, FOOT = 96;
+    const frameBox = document.getElementById('frameBox');
+    const actionBtn = document.getElementById('actionBtn');
 
-      const actionBtn = document.getElementById('actionBtn');
-      const homeBtn = document.getElementById('homeBtn');
-      const frame = document.getElementById('printArea');
-
-      let answers = [];
+    // ── 로컬스토리지에서 답안 가져오기 (없으면 null)
+    function loadAnswers() {
       try {
         const raw = localStorage.getItem('keepod_answers');
-        if (raw) answers = JSON.parse(raw);
-      } catch(e){}
-
-      if (!Array.isArray(answers) || answers.length !== 20) {
-        location.href = 'test.html?reset=1';
+        if (!raw) return null;
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr) || arr.length !== 20) return null;
+        // 숫자 보정 (1~5 아닌 값이 있으면 1로 처리)
+        return arr.map(v => {
+          const n = Number(v);
+          if (!Number.isFinite(n)) return 1;
+          return Math.min(5, Math.max(1, n));
+        });
+      } catch (e) {
+        console.error(e);
+        return null;
       }
+    }
 
-      const cleaned = answers.map(v => (v == null ? 0 : Number(v)));
-      const sum = arr => arr.reduce((a,b)=>a+b,0);
-      const total = sum(cleaned);
-      const avg = total / 20;
+    /* ================================
+       2) 점수 계산 규칙
+       - 인덱스는 0부터 시작 (Q1 = 0)
+       ================================ */
 
-      const refAvg = 68;
-      const delta = total - refAvg;
-      const percentile = Math.max(0, Math.min(100, total));
-
-      scoreEl.textContent = total;
-      deltaText.textContent = (delta >= 0 ? `평균보다 ${delta}점 높습니다` : `평균보다 ${Math.abs(delta)}점 낮습니다`);
-      rankText.textContent = `상위 ${Math.round(percentile)}%`;
-
-      let typeName = "넓은 경계형";
-      let detail = "주변과의 간격을 여유 있게 두며 안정감을 추구해요. 특히 터치존에서의 거리 유지가 중요한 편이에요. 마인드존과 디지털존에서는 비교적 유연하지만 상황에 따라 예민해질 수 있어요.";
-      if (avg < 2.3) { typeName = "개방형"; detail = "대체로 유연하며 상황 변화에 강해요. 다만 필요할 때 경계를 분명히 하는 연습이 도움이 됩니다."; }
-      else if (avg < 3.2) { typeName = "균형형"; detail = "상황에 따라 경계를 조절할 줄 알아요. 불편 신호를 조기에 인지해 부드럽게 선을 제시해보세요."; }
-      else if (avg < 4.0) { typeName = "신중형"; detail = "개인적 공간과 감정의 안정이 중요해요. 사전 공지나 거리두기 전략을 사용하면 소진을 줄일 수 있습니다."; }
-
-      typeStrong.textContent = `당신의 퍼스널 스페이스는 ${typeName}이에요.`;
-      insDetail.textContent = detail;
-
-      const partAvg = idxs => {
-        const vals = idxs.map(i => cleaned[i] || 0);
-        return Math.round((sum(vals)/(idxs.length*5))*100);
-      };
-
-      barTouch.style.width = partAvg(TOUCH_IDX) + '%';
-      barMind.style.width = partAvg(MIND_IDX) + '%';
-      barDig.style.width = partAvg(DIGI_IDX) + '%';
-
-      // 홈
-      homeBtn.addEventListener('click', () => {
-        localStorage.removeItem('keepod_answers');
-        location.href = 'index.html';
-      });
-
-      // ===== 모바일/데스크톱 분기 =====
-      function isMobileView() {
-        const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-        const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-        return (vw < 700) || (vh < 900);
-      }
-
-      // 데스크톱: 인쇄 / 모바일: 이미지 저장
-      function setActionBehavior() {
-        if (!isMobileView()) {
-          actionBtn.textContent = '인쇄해서 자세히 보기';
-          actionBtn.onclick = () => {
-            frame.style.width = "176mm";
-            frame.style.height = "250mm";
-            frame.style.borderRadius = "0";
-            frame.style.boxShadow = "none";
-            window.print();
-            frame.style.width = "";
-            frame.style.height = "";
-            frame.style.borderRadius = "";
-            frame.style.boxShadow = "";
-          };
-        } else {
-          actionBtn.textContent = '이미지로 저장하기';
-          actionBtn.onclick = async () => {
-            // 캡처용 클론을 화면 밖에 만들어 변형(scale) 영향 제거
-            const BASE_W = 564, BASE_H = 900;
-            const clone = frame.cloneNode(true);
-            clone.id = 'capture-clone';
-            Object.assign(clone.style, {
-              position: 'fixed',
-              left: '-99999px',
-              top: '0',
-              width: BASE_W + 'px',
-              height: BASE_H + 'px',
-              transform: 'none',
-              transformOrigin: 'top left',
-              borderRadius: '0',
-              boxShadow: 'none',
-              background: '#f6f6f6',
-              zIndex: '-1'
-            });
-            document.body.appendChild(clone);
-
-            try {
-              const canvas = await html2canvas(clone, {
-                backgroundColor: '#f6f6f6',
-                scale: Math.min(3, (window.devicePixelRatio || 2)), // 적당한 해상도
-                useCORS: true,
-                logging: false
-              });
-              const dataURL = canvas.toDataURL('image/png');
-
-              // iOS 사파리 대응: 새 탭 열기 fallback
-              const a = document.createElement('a');
-              a.href = dataURL;
-              a.download = `keepod_result_${Date.now()}.png`;
-              document.body.appendChild(a);
-              a.click();
-              a.remove();
-              // download 미지원 브라우저는 새창으로
-              if (!('download' in HTMLAnchorElement.prototype)) {
-                window.open(dataURL, '_blank');
-              }
-            } catch (e) {
-              alert('이미지 저장 중 문제가 발생했습니다. 스크린샷을 이용해 주세요.');
-              console.error(e);
-            } finally {
-              clone.remove();
-            }
-          };
+    const SCORE_CONFIG = {
+      // 디지털존: Q1~4
+      digital: {
+        label: '디지털존',
+        sub: {
+          연락:    [0], // 늦은 밤 연락
+          노출:    [1], // SNS 태그/게시
+          알림:    [2], // 특정 사람만 보게 설정
+          속도:    [3]  // 잦은 메시지/재촉
         }
+      },
+      // 터치존: Q5~8
+      touch: {
+        label: '터치존',
+        sub: {
+          친분:      [4], // 가벼운 신체접촉
+          정보과잉:   [5], // 조용한 장소 선호
+          행동제약:   [6], // 옆에 앉으면 행동 어려움
+          통제력:     [7]  // 엘리베이터 계기판 근처
+        }
+      },
+      // 마인드존: Q9~12
+      mind: {
+        label: '마인드존',
+        sub: {
+          사생활:    [8],  // 개인 질문
+          어투:      [9],  // 말투
+          감정개입:   [10], // 감정 강요
+          비언어:    [11]  // 말속도 / 침묵 압박
+        }
+      },
+      // 반응 유형: Q13~20
+      reactions: {
+        '사교성 저하':   [12],
+        '생리적 반응':   [13],
+        '공격성 증가':   [14],
+        '우울':        [15],
+        '과업 수행 저하': [16],
+        '이타 행동 감소': [17],
+        '학습된 무기력': [18],
+        '불안':        [19],
       }
+    };
 
-      window.addEventListener('resize', setActionBehavior);
-      window.addEventListener('orientationchange', setActionBehavior);
+    // 반응 설명 텍스트 (TOP3에 사용)
+    const REACTION_DESC = {
+      '사교성 저하':
+        '침범 경험으로 대인관계가 부담스러워져 약속을 피하거나, 만나도 깊은 관계 형성을 회피하게 돼요.',
+      '생리적 반응':
+        '침범 상황에서 심장이 두근거리거나 땀이 나는 등 몸이 먼저 반응하며, 상황이 지나간 뒤에도 긴장이 쉽게 가라앉지 않아요.',
+      '공격성 증가':
+        '사람이 많은 곳이나 반복되는 침범 상황에서 짜증이나 화가 평소보다 더 쉽게, 더 자주 올라와요.',
+      '우울':
+        '불편한 대화나 갈등 상황이 지나간 뒤, 기운이 빠지고 아무것도 하기 싫어지는 무기력과 우울감을 느끼기 쉬워요.',
+      '과업 수행 저하':
+        '침범 경험이 에너지를 소진시켜 업무나 학업에 집중하기 어렵고, 평소보다 능률이 크게 떨어져요.',
+      '이타 행동 감소':
+        '너무 지치거나 여유가 없을 때는 자리를 양보하거나 도와주는 행동보다, 나를 지키는 데 에너지를 쓰게 돼요.',
+      '학습된 무기력':
+        '반복된 침범으로 대응의 효과를 느끼지 못해 “어차피 소용없어”라며 경계 세우기 자체를 포기하게 돼요.',
+      '불안':
+        '타인과 거리가 너무 가까워지면 호흡이 어려워지거나 몸이 잔뜩 긴장하는 등, 불편함과 불안을 강하게 느껴요.'
+    };
 
-// ===== 균등 스케일 contain: 화면에 전부 보이고, 스크롤/왜곡/잘림 없음 =====
-(function () {
-  const BASE_W = 564;
-  const BASE_H = 900;
-  const frame = document.querySelector('.frame') || document.getElementById('frame');
+    // 유형 이름 (가장 높은 영역 조합)
+    const TYPE_TITLE = {
+      'touch':                '거리수호형 팟',
+      'mind':                 '감정보호형 팟',
+      'digital':              '디지털방패형 팟',
+      'touch+mind':           '섬세수호형 팟',
+      'touch+digital':        '균형방어형 팟',
+      'mind+digital':         '감정집중형 팟',
+      'touch+mind+digital':   '완전경계형 팟'
+    };
 
-  // 래퍼(stage/scaled) 자동 구성
-  function ensureWrappers() {
-    if (!frame) return {};
-    if (frame.parentElement && frame.parentElement.classList.contains('scaled')) {
+    // 영역 설명 (조합용)
+    const ZONE_EXPLAIN = {
+      touch:  '터치존에서 특히 민감해, 물리적인 거리와 신체 접촉에서 불편함을 잘 느껴요.',
+      mind:   '마인드존에서 특히 민감해, 시선·표정·어투 같은 분위기와 감정 개입에 예민한 편이에요.',
+      digital:'디지털존에서 특히 민감해, 연락·알림·온라인 노출에서 오는 압박을 크게 느껴요.'
+    };
+
+    // 전체 점수대별 기본 설명
+    const LEVEL_TEXT = {
+      high: '당신은 넓은 개인 공간이 필요하며, 타인과의 거리가 가까워질 때 불편함을 크게 느끼는 편이에요.',
+      mid:  '상황에 따라 적당한 거리감이 필요하며, 특정 상황에서만 강한 불편함을 느끼는 편이에요.',
+      low:  '대체로 타인과의 거리에서 큰 스트레스를 받지 않는 편이지만, 특정 상황에서는 예민해질 수 있어요.'
+    };
+
+    function levelOf(score) {
+      if (score >= 75) return 'high';
+      if (score >= 47) return 'mid';
+      return 'low';
+    }
+
+    /* ================================
+       3) 점수 계산 함수들
+       ================================ */
+
+    function sumIndices(arr, idxList) {
+      return idxList.reduce((acc, i) => acc + (arr[i] ?? 1), 0);
+    }
+
+    function calcZoneScores(ans) {
+      const digitalTotal = sumIndices(ans, [0,1,2,3]);
+      const touchTotal   = sumIndices(ans, [4,5,6,7]);
+      const mindTotal    = sumIndices(ans, [8,9,10,11]);
+
       return {
-        stage: frame.parentElement.parentElement,
-        scaled: frame.parentElement
+        digital: {
+          label: SCORE_CONFIG.digital.label,
+          total: digitalTotal,
+          sub: {
+            연락:  sumIndices(ans, SCORE_CONFIG.digital.sub.연락),
+            노출:  sumIndices(ans, SCORE_CONFIG.digital.sub.노출),
+            알림:  sumIndices(ans, SCORE_CONFIG.digital.sub.알림),
+            속도:  sumIndices(ans, SCORE_CONFIG.digital.sub.속도),
+          }
+        },
+        touch: {
+          label: SCORE_CONFIG.touch.label,
+          total: touchTotal,
+          sub: {
+            친분:      sumIndices(ans, SCORE_CONFIG.touch.sub.친분),
+            정보과잉:   sumIndices(ans, SCORE_CONFIG.touch.sub.정보과잉),
+            행동제약:   sumIndices(ans, SCORE_CONFIG.touch.sub.행동제약),
+            통제력:     sumIndices(ans, SCORE_CONFIG.touch.sub.통제력),
+          }
+        },
+        mind: {
+          label: SCORE_CONFIG.mind.label,
+          total: mindTotal,
+          sub: {
+            사생활:    sumIndices(ans, SCORE_CONFIG.mind.sub.사생활),
+            어투:      sumIndices(ans, SCORE_CONFIG.mind.sub.어투),
+            감정개입:   sumIndices(ans, SCORE_CONFIG.mind.sub.감정개입),
+            비언어:    sumIndices(ans, SCORE_CONFIG.mind.sub.비언어),
+          }
+        }
       };
     }
-    const scaled = document.createElement('div');
-    scaled.className = 'scaled';
-    const stage = document.createElement('div');
-    stage.className = 'stage';
-    frame.parentElement.insertBefore(stage, frame);
-    stage.appendChild(scaled);
-    scaled.appendChild(frame);
-    return { stage, scaled };
-  }
 
-  const { stage, scaled } = ensureWrappers();
-
-  function vp() {
-    const vw = (window.visualViewport && window.visualViewport.width)  || window.innerWidth;
-    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    return { vw, vh };
-  }
-
-  function apply() {
-    const { vw, vh } = vp();
-    const isMobile = (vw < 700) || (vh < 900);
-
-    // 데스크톱/태블릿: 원본 고정
-    if (!isMobile) {
-      Object.assign(stage.style, { position:'static', inset:'', overflow:'hidden' });
-      Object.assign(scaled.style, { position:'relative', width:`${BASE_W}px`, height:`${BASE_H}px`, margin:'0 auto' });
-      Object.assign(frame.style, { position:'relative', width:`${BASE_W}px`, height:`${BASE_H}px`, transform:'none', transformOrigin:'top left', left:'0', top:'0' });
-      return;
+    function calcReactionScores(ans) {
+      const result = [];
+      for (const [name, idxList] of Object.entries(SCORE_CONFIG.reactions)) {
+        result.push({
+          name,
+          score: sumIndices(ans, idxList)
+        });
+      }
+      // 점수 내림차순, 같으면 원래 순서 유지
+      result.sort((a, b) => b.score - a.score);
+      return result;
     }
 
-    // 균등 스케일: 화면에 "전부 보이도록" contain
-    const s = Math.min(vw / BASE_W, vh / BASE_H);
-    const outW = BASE_W * s;
-    const outH = BASE_H * s;
-    const tx = (vw - outW) / 2;
-    const ty = (vh - outH) / 2;
+    function calcTotalScore(ans) {
+      // 20문항 * 1~5점 → 20~100점 그대로 사용
+      const s = ans.reduce((a, v) => a + v, 0);
+      return s;
+    }
 
-    // stage = 뷰포트 박스(스크롤 금지)
-    Object.assign(stage.style, {
-      position: 'fixed',
-      inset: '0',
-      overflow: 'hidden'
-    });
+    function findPattern(zoneScores) {
+      const entries = [
+        {key:'touch',   score:zoneScores.touch.total},
+        {key:'mind',    score:zoneScores.mind.total},
+        {key:'digital', score:zoneScores.digital.total},
+      ];
+      const max = Math.max(...entries.map(e => e.score));
+      const tops = entries.filter(e => e.score === max).map(e => e.key);
+      tops.sort(); // 조합 정렬
+      const patternKey = tops.join('+') || 'touch';
+      return { tops, patternKey };
+    }
 
-    // scaled = 스케일 후 실크기 박스(중앙정렬)
-    Object.assign(scaled.style, {
-      position: 'absolute',
-      left: `${tx}px`,
-      top: `${ty}px`,
-      width: `${outW}px`,
-      height: `${outH}px`,
-      margin: '0'
-    });
+    /* ================================
+       4) UI 반영
+       ================================ */
 
-    // frame = 원본을 s배 확대 (좌표 불변, 왜곡 없음)
-    Object.assign(frame.style, {
-      position: 'absolute',
-      left: '0',
-      top: '0',
-      width: `${BASE_W}px`,
-      height: `${BASE_H}px`,
-      transformOrigin: 'top left',
-      transform: `scale(${s})`
-    });
-  }
+    function updateSummaryCard(totalScore, zoneScores, patternKey) {
+      const scoreNumberEl = document.querySelector('.score-number');
+      const scoreSubEl    = document.querySelector('.score-sub');
+      const typeTitleEl   = document.querySelector('.type-title');
+      const typeTextEl    = document.querySelector('.type-text');
 
-  window.addEventListener('resize', apply);
-  window.addEventListener('orientationchange', apply);
-  apply();
-})();
-</script>
+      if (!scoreNumberEl) return;
 
-  </body>
+      scoreNumberEl.textContent = totalScore;
+
+      // 평균 기준은 60점으로 가정 (원하면 숫자만 바꾸면 됨)
+      const avg = 60;
+      const diff = totalScore - avg;
+      if (diff > 0) {
+        scoreSubEl.textContent = `▲ 평균보다 ${diff}점 높아요.`;
+      } else if (diff < 0) {
+        scoreSubEl.textContent = `▼ 평균보다 ${Math.abs(diff)}점 낮아요.`;
+      } else {
+        scoreSubEl.textContent = `평균과 비슷한 점수예요.`;
+      }
+
+      const level = levelOf(totalScore);
+      const title = TYPE_TITLE[patternKey] || '나만의 팟';
+      typeTitleEl.textContent = title;
+
+      // 패턴 설명 만들기
+      const zones = patternKey.split('+');
+      const parts = zones.map(z => ZONE_EXPLAIN[z]).filter(Boolean);
+      const patternExplain = parts.join(' ');
+      typeTextEl.textContent = `${LEVEL_TEXT[level]} ${patternExplain}`;
+    }
+
+    function updateTouchBars(touchSub) {
+      // 순서: 친분, 정보과잉, 행동제약, 통제력
+      const items = document.querySelectorAll('#section-2 .zone-item');
+      const keys  = ['친분','정보과잉','행동제약','통제력'];
+
+      items.forEach((item, idx) => {
+        const key  = keys[idx];
+        const val  = Math.round(touchSub[key] ?? 1); // 1~5
+        const bars = item.querySelectorAll('.bar');
+        bars.forEach((bar, i) => {
+          bar.classList.remove('filled','empty');
+          if (i < val) bar.classList.add('filled');
+          else bar.classList.add('empty');
+        });
+      });
+    }
+
+    function updateMindCircles(mindSub) {
+      const sizeMap = {1:28, 2:38, 3:48, 4:60, 5:72};
+
+      const circleMap = [
+        { sel: '.circle-privacy',  key:'사생활' },
+        { sel: '.circle-emotion',  key:'감정개입' },
+        { sel: '.circle-nonverbal',key:'비언어' },
+        { sel: '.circle-tone',     key:'어투' },
+      ];
+
+      circleMap.forEach(({sel,key}) => {
+        const el = document.querySelector(sel);
+        if (!el) return;
+        const v = Math.round(mindSub[key] ?? 1);
+        const size = sizeMap[v] || sizeMap[1];
+        el.style.width  = size + 'px';
+        el.style.height = size + 'px';
+      });
+    }
+
+    function updateDigitalBars(digitalSub) {
+      const groups = document.querySelectorAll('#section-4 .zone3-bar-group');
+      const keys   = ['연락','노출','알림','속도'];
+
+      groups.forEach((g, idx) => {
+        const key = keys[idx];
+        const v   = Math.round(digitalSub[key] ?? 1);
+        const fill = g.querySelector('.zone3-vert-fill');
+        if (!fill) return;
+        const h = (v / 5) * 100;
+        fill.style.height = h + '%';
+      });
+    }
+
+    function highlightReactionGrid(top3) {
+      const cells = document.querySelectorAll('#section-5 .pink-cell');
+      const names = top3.map(r => r.name);
+
+      const order = [
+        '사교성 저하','생리적 반응','공격성 증가','우울',
+        '과업 수행 저하','이타 행동 감소','불안','학습된 무기력'
+      ];
+
+      cells.forEach((cell, idx) => {
+        const name = order[idx];
+        cell.textContent = name;
+        cell.classList.toggle('active', names.includes(name));
+      });
+    }
+
+    function updateReactionDetails(top3) {
+      const items = document.querySelectorAll('#section-6 .pink-item');
+      top3.slice(0, 3).forEach((r, i) => {
+        const item = items[i];
+        if (!item) return;
+        const labelEl = item.querySelector('.pink-item-label');
+        const descEl  = item.querySelector('.pink-item-desc');
+        labelEl.textContent = r.name;
+        descEl.textContent  = REACTION_DESC[r.name] || '';
+      });
+    }
+
+    /* ================================
+       5) 화면 리사이즈/인쇄 버튼
+       ================================ */
+
+    function scale() {
+      const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      const usableH = Math.max(100, vh - FOOT);
+      const s = Math.min(vw / W, usableH / H);
+      // 현재는 transform 스케일링 제거된 상태(원래 크기 유지)
+    }
+
+    function isMobile() {
+      const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      return (vw < 700) || (vh < 900);
+    }
+
+    function setAction() {
+      if (!isMobile()) {
+        actionBtn.textContent = '인쇄하기';
+        actionBtn.onclick = () => window.print();
+      } else {
+        actionBtn.textContent = '이미지로 저장하기';
+        actionBtn.onclick = async () => {
+          const clone = frameBox.cloneNode(true);
+          clone.id = 'capture';
+          Object.assign(clone.style, {
+            position:'fixed', left:'-9999px', top:'0',
+            width:`${W}px`, height:`${H}px`,
+            transform:'none'
+          });
+          document.body.appendChild(clone);
+
+          try {
+            const canvas = await html2canvas(clone, {
+              backgroundColor: '#ffffff',
+              scale: Math.min(3, (window.devicePixelRatio || 2)),
+              useCORS: true,
+              logging: false
+            });
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `keepod_result_${Date.now()}.png`;
+            link.click();
+          } catch(e) {
+            alert('이미지 저장 중 문제가 발생했습니다. 스크린샷을 이용해주세요.');
+            console.error(e);
+          } finally {
+            clone.remove();
+          }
+        };
+      }
+    }
+
+    function initResults() {
+      const answers = loadAnswers();
+      if (!answers) {
+        console.warn('답안을 찾을 수 없어 기본 값으로 표시합니다.');
+        return;
+      }
+
+      const zoneScores    = calcZoneScores(answers);
+      const reactionScores = calcReactionScores(answers);
+      const totalScore    = calcTotalScore(answers);
+      const { patternKey } = findPattern(zoneScores);
+
+      updateSummaryCard(totalScore, zoneScores, patternKey);
+      updateTouchBars(zoneScores.touch.sub);
+      updateMindCircles(zoneScores.mind.sub);
+      updateDigitalBars(zoneScores.digital.sub);
+
+      const top3 = reactionScores.slice(0, 3);
+      highlightReactionGrid(top3);
+      updateReactionDetails(top3);
+    }
+
+    function init() {
+      scale();
+      setAction();
+      initResults();
+    }
+
+    window.addEventListener('resize', () => { scale(); setAction(); });
+    window.addEventListener('orientationchange', () => { scale(); setAction(); });
+    window.addEventListener('DOMContentLoaded', init);
+    init();
+  </script>
+</body>
+</html>
+
+</body>
 </html>
