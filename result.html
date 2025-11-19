@@ -37,7 +37,7 @@
           <!-- 캐릭터 + 타원 영역 -->
           <div class="character-area">
             <div class="ellipse"></div>
-            <img src="images/보더 테스트지 .png"
+            <img src="images/보더.png"
                  alt="보더 캐릭터"
                  class="character-img" />
           </div>
@@ -286,27 +286,25 @@
 
     /* =========================
        1. 질문 → 영역 매핑
-       (필요시 여기 숫자만 수정하면 됨)
        ========================= */
     const QUESTION_ZONE_MAP = {
       touch: {
-        // 신체적 거리 / 환경 관련
-        "친분":     [4, 6, 19],          // 신체접촉 회피, 가까이 앉기, 가까이 있으면 긴장
-        "정보과잉": [5, 12, 16],        // 시끄러운 곳보다 조용, 사람과 일 후 혼자 쉬기, 집이 더 잘됨
-        "행동제약": [6, 7, 17],         // 가까이 앉으면 행동어려움, 엘베 위치, 자리를 양보 안함
-        "통제력":   [7, 17, 18]         // 계기판 근처, 자리, 표현해도 안 바뀌면 참음
+        "친분":     [4, 6, 19],
+        "정보과잉": [5, 12, 16],
+        "행동제약": [6, 7, 17],
+        "통제력":   [7, 17, 18]
       },
       mind: {
-        "사생활":  [8, 2],              // 개인적인 질문, 게시물 공개 범위
-        "감정개입":[10, 18],            // 공감 강요, 표현해도 안 바뀜
-        "비언어":  [11, 13],            // 말 빠름/침묵, 불편한 말/분위기
-        "어투":    [9, 14]              // 어투, 사람 많을 때 짜증/화
+        "사생활":  [8, 2],
+        "감정개입":[10, 18],
+        "비언어":  [11, 13],
+        "어투":    [9, 14]
       },
       digital: {
-        "연락": [0, 3, 11],             // 늦은 밤 연락, 자주 메시지, 말 빠름/속도감
-        "노출": [1, 2],                 // 태그, 게시물 공개
-        "알림": [3, 9],                 // 재촉, 어투 포함 메시지 압박
-        "속도": [3, 11]                 // 재촉, 말 속도/침묵
+        "연락": [0, 3, 11],
+        "노출": [1, 2],
+        "알림": [3, 9],
+        "속도": [3, 11]
       }
     };
 
@@ -314,14 +312,14 @@
        2. 반응 유형 매핑 (8개)
        ========================= */
     const REACTION_QUESTION_MAP = {
-      "사교성 저하":   [12, 16, 0],      // 혼자 쉬고싶다, 혼자일 때 잘됨, 늦은 연락
-      "생리적 반응":   [13, 19],         // 심장 두근, 호흡 어려움/긴장
-      "공격성 증가":   [14],             // 짜증/화
-      "우울":         [15],             // 무기력
-      "과업 수행 저하":[12, 16],        // 일/공부 집중 어려움쪽 해석
-      "이타 행동 감소":[17],            // 자리 양보 안함
-      "불안":         [0, 1, 3, 13, 19], // 연락/태그/재촉/심장 두근/긴장
-      "학습된 무기력":[15, 18]          // 무기력, 표현해도 안바뀌면 참음
+      "사교성 저하":   [12, 16, 0],
+      "생리적 반응":   [13, 19],
+      "공격성 증가":   [14],
+      "우울":         [15],
+      "과업 수행 저하":[12, 16],
+      "이타 행동 감소":[17],
+      "불안":         [0, 1, 3, 13, 19],
+      "학습된 무기력":[15, 18]
     };
 
     const REACTION_TEXT = {
@@ -367,7 +365,6 @@
         const max = indices.length * 5;
         arr.push({ key, label: key, score, max });
       }
-      // 높은 순으로 정렬
       arr.sort((a, b) => b.score - a.score);
       return arr;
     }
@@ -380,7 +377,7 @@
     }
 
     /* =========================
-       4. 패턴/메인존 → 타입/캐릭터
+       4. 패턴/타입 (요약 텍스트용)
        ========================= */
     function findPattern(zoneScores) {
       const entries = [
@@ -392,11 +389,9 @@
       const max = Math.max(...entries.map(e => e.score));
       const tops = entries.filter(e => e.score === max).map(e => e.key);
 
-      // 동점일 때 우선순위: 터치 > 마인드 > 디지털
       const priority = ['touch', 'mind', 'digital'];
       const mainZone = priority.find(z => tops.includes(z)) || tops[0];
 
-      // 타입 구분용 패턴키 (예: "touch+mind")
       const patternKey = [...tops].sort().join('+') || mainZone;
 
       return { tops, patternKey, mainZone };
@@ -441,7 +436,6 @@
 
       if (numEl) numEl.textContent = totalScore.toString();
 
-      // 기준 평균(대략 60점)을 가정해서 차이 표현
       const avg = 60;
       const diff = totalScore - avg;
       if (subEl) {
@@ -459,23 +453,49 @@
       if (descEl) descEl.textContent = typeInfo.desc;
     }
 
-    function updateCharacter(mainZone) {
+    /* =========================
+       4-1. 캐릭터용 단순 존 계산
+       (1~4: 디지털, 5~8: 터치, 9~12: 마인드)
+       ========================= */
+    function decideZoneForCharacter(answers) {
+      let digital = 0, touch = 0, mind = 0;
+      answers.forEach((v, i) => {
+        if (i >= 0 && i <= 3) digital += v;
+        else if (i >= 4 && i <= 7) touch += v;
+        else if (i >= 8 && i <= 11) mind += v;
+      });
+
+      let best = 'touch';
+      let bestScore = touch;
+
+      if (mind > bestScore) {
+        best = 'mind';
+        bestScore = mind;
+      }
+      if (digital > bestScore) {
+        best = 'digital';
+        bestScore = digital;
+      }
+      return best; // 'touch' | 'mind' | 'digital'
+    }
+
+    function updateCharacter(zone) {
       const imgEl  = document.querySelector('.character-img');
       const nameKo = document.querySelector('.name-ko');
       const nameEn = document.querySelector('.name-en');
       if (!imgEl || !nameKo || !nameEn) return;
 
-      if (mainZone === 'touch') {
-        imgEl.src = 'images/보더.png';            // 파일명 맞게 수정 가능
+      if (zone === 'touch') {
+        imgEl.src = 'images/보더.png';
         imgEl.alt = '보더 캐릭터';
         nameKo.textContent = '보더';
         nameEn.textContent = '(Border)';
-      } else if (mainZone === 'mind') {
+      } else if (zone === 'mind') {
         imgEl.src = 'images/리스니.png';
         imgEl.alt = '리스니 캐릭터';
         nameKo.textContent = '리스니';
         nameEn.textContent = '(Lisni)';
-      } else if (mainZone === 'digital') {
+      } else if (zone === 'digital') {
         imgEl.src = 'images/네티.png';
         imgEl.alt = '네티 캐릭터';
         nameKo.textContent = '네티';
@@ -493,7 +513,7 @@
         const info = subScores[key];
         if (!info) return;
         const ratio = info.max ? info.score / info.max : 0;
-        const fillCount = Math.round(ratio * 5); // 0~5칸
+        const fillCount = Math.round(ratio * 5);
         const bars = item.querySelectorAll('.bar');
         bars.forEach((bar, idx) => {
           bar.classList.remove('filled', 'empty');
@@ -505,7 +525,6 @@
 
     function updateMindCircles(subScores) {
       const circles = document.querySelectorAll('#section-3 .zone2-circle');
-      // 가장 높은 값 찾기
       let maxScore = 0;
       circles.forEach(c => {
         const key = c.getAttribute('data-mind-key');
@@ -518,10 +537,9 @@
         const info = subScores[key];
         if (!info) return;
         const ratio = maxScore ? info.score / maxScore : 0;
-        // 비율에 따라 밝기/투명도 살짝 조절
-        const brightness = 0.7 + ratio * 0.3; // 0.7~1.0
+        const brightness = 0.7 + ratio * 0.3;
         c.style.filter = `brightness(${brightness})`;
-        c.style.opacity = 0.6 + ratio * 0.4;  // 0.6~1.0
+        c.style.opacity = 0.6 + ratio * 0.4;
       });
     }
 
@@ -532,7 +550,7 @@
         const info = subScores[key];
         if (!info) return;
         const ratio = info.max ? info.score / info.max : 0;
-        const h = 20 + ratio * 60; // 20~80%
+        const h = 20 + ratio * 60;
         const fill = g.querySelector('.zone3-vert-fill');
         if (fill) {
           fill.style.height = h + '%';
@@ -581,10 +599,14 @@
       const zoneScores     = calcZoneScores(answers);
       const reactionScores = calcReactionScores(answers);
       const totalScore     = calcTotalScore(answers);
-      const { patternKey, mainZone } = findPattern(zoneScores);
+      const { patternKey } = findPattern(zoneScores);
 
       updateSummaryCard(totalScore, zoneScores, patternKey);
-      updateCharacter(mainZone);
+
+      // 캐릭터용 메인 존은 단순 1~12번 합계 기준으로 별도 계산
+      const charZone = decideZoneForCharacter(answers);
+      updateCharacter(charZone);
+
       updateTouchBars(zoneScores.touch.sub);
       updateMindCircles(zoneScores.mind.sub);
       updateDigitalBars(zoneScores.digital.sub);
@@ -641,12 +663,11 @@
     }
 
     function scale() {
-      // 지금은 고정 레이아웃로 사용 (필요하면 여기서 스케일 조절)
       const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
       const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
       const usableH = Math.max(100, vh - FOOT);
       const s = Math.min(vw / W, usableH / H);
-      // transform 스케일을 사용하지 않고 원본 크기 유지
+      // 현재는 transform 스케일 사용 안 함 (원본 크기 유지)
     }
 
     function init() {

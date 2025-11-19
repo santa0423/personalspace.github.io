@@ -495,8 +495,10 @@ html,body{
   gap:8px;
   padding:8px 10px 10px;
 }
+
+/* 기본 = 회색(선택 안된 것) */
 .pink-cell{
-  background:#d9e883;
+  background:#e9e9e9;          /* 회색 */
   border-radius:8px;
 
   display:flex;
@@ -506,9 +508,18 @@ html,body{
   padding:4px;
   font-size:10px;
   font-weight:800;
-  color:#111;
+  color:#777;                  /* 글자도 살짝 연하게 */
   line-height:1.3;
 }
+
+/* 상위 3개 반응 = 초록색 */
+.pink-cell.active{
+  background:#d9e883;          /* 연두색 */
+  color:#111;
+  outline:2px solid #ffffff;
+  box-shadow:0 0 0 2px #ffffff, 0 0 0 4px #c1da70;
+}
+
 /* -------------------------
    분홍 박스 높이 비율 조정
    ------------------------- */
