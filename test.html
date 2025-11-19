@@ -1,663 +1,260 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>결과 보기</title>
-  <link rel="stylesheet" href="result.css" />
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
-</head>
-<body>
-  <div class="page">
-    <div class="stage" id="stage">
-      <div class="frame-box" id="frameBox">
-        <!-- 섹션 1 : 초록 박스 (메인 비주얼) -->
-        <div class="overlay-box section" id="section-1">
-          <!-- 상단: 이름 + 레전드 -->
-          <div class="overlay-top-row">
-            <!-- 말풍선 이름 박스 -->
-            <div class="name-bubble">
-              <div class="name-ko">보더</div>
-              <div class="name-en">(Border)</div>
-            </div>
+  <head>
+    <meta charset="utf-8" />
+    <title>퍼스널 스페이스 테스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="test.css" />
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="frame">
+        <div class="canvas">
+          <!-- 헤더 -->
+          <header class="header">
+            <div class="brand">Keepod</div>
+          </header>
 
-            <!-- 평균 / 나 레전드 -->
-            <div class="legend">
-              <div class="legend-item">
-                <span class="legend-dot legend-dot-average"></span>
-                <span>평균</span>
-              </div>
-              <div class="legend-item">
-                <span class="legend-dot legend-dot-me"></span>
-                <span>나</span>
-              </div>
+          <!-- divider = 진행바 -->
+          <div class="divider"><div class="fill"></div></div>
+
+          <!-- 진행도 -->
+          <div class="progress">1 / 20</div>
+
+          <!-- 안내문 -->
+          <p class="hint" style="display:none;">
+            [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
+          </p>
+
+          <!-- 질문 카드 -->
+          <section class="question-card">
+            <p class="question"></p>
+          </section>
+
+          <!-- 5점 척도 -->
+          <div class="scale">
+            <div class="rail"></div>
+            <button class="dot" data-value="1"></button>
+            <button class="dot" data-value="2"></button>
+            <button class="dot" data-value="3"></button>
+            <button class="dot" data-value="4"></button>
+            <button class="dot" data-value="5"></button>
+
+            <div class="labels">
+              <span>그렇지<br />않다</span>
+              <span>보통이다</span>
+              <span>그렇다</span>
             </div>
           </div>
 
-          <!-- 캐릭터 + 타원 영역 -->
-          <div class="character-area">
-            <div class="ellipse"></div>
-            <img src="images/보더 테스트지 .png"
-                 alt="보더 캐릭터"
-                 class="character-img" />
-          </div>
-
-          <!-- 타원 아래 흰색 네모 섹션 2개 -->
-          <div class="summary-row">
-            <!-- 왼쪽: 점수 카드 -->
-            <div class="score-card">
-              <div class="score-main">
-                <span class="score-number">100</span>
-                <span class="score-unit">점</span>
-              </div>
-              <div class="score-sub">▲ 평균보다 50점 높아요.</div>
-              <div class="score-desc">* 점수가 높을수록 팟 침범에 민감한 편이에요.</div>
-            </div>
-
-            <!-- 오른쪽: 타입 설명 카드 -->
-            <div class="type-card">
-              <div class="type-title">거리수호형 팟</div>
-              <p class="type-text">
-                당신은 넓은 개인 공간이 필요하며, 타인과의 거리가 가까워지면 불편함을 크게 느끼는 편이에요.
-                또한, 모든 영역에서 명확한 경계가 필요해요. 터치존, 마인드존, 디지털존 침범 모두에 예민하게 반응해요.
-              </p>
-            </div>
+          <!-- CTA -->
+          <div class="cta-wrap">
+            <button class="next" disabled>다음</button>
+            <button class="back" type="button">
+              <span class="chev">‹</span> 이전으로 돌아가기
+            </button>
           </div>
         </div>
-
-        <!-- 섹션 2~6 : 아래 노란/분홍 박스 -->
-        <div class="yellow-container">
-          <!-- 왼쪽: 노란 3박스 -->
-          <div class="left-column">
-            <!-- 1번 노란 박스: 터치존 -->
-            <div class="yellow-box section" id="section-2">
-              <div class="zone-header">각 영역별 나의 팟은?</div>
-
-              <div class="zone-content">
-                <!-- 왼쪽 설명 -->
-                <div class="zone-left">
-                  <div class="zone-title">터치존</div>
-                  <div class="zone-bubble">
-                    주변에 사람들이나 자극이 많아 처리할 정보량이 넘치면 불편함을 느껴요.
-                  </div>
-                </div>
-              
-                <!-- 오른쪽: 4개 요인 바 그래프 -->
-                <div class="zone-right">
-                  <div class="zone-item" data-touch-key="친분">
-                    <span class="zone-label">친분</span>
-                    <div class="zone-bars">
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                    </div>
-                  </div>
-              
-                  <div class="zone-item" data-touch-key="정보과잉">
-                    <span class="zone-label">정보과잉</span>
-                    <div class="zone-bars">
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                    </div>
-                  </div>
-              
-                  <div class="zone-item" data-touch-key="행동제약">
-                    <span class="zone-label">행동제약</span>
-                    <div class="zone-bars">
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                    </div>
-                  </div>
-              
-                  <div class="zone-item" data-touch-key="통제력">
-                    <span class="zone-label">통제력</span>
-                    <div class="zone-bars">
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                      <div class="bar"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 2번 노란 박스: 마인드존 -->
-            <div class="yellow-box section" id="section-3">
-              <div class="zone2-content">
-                <!-- 왼쪽: 동그라미 4개 -->
-                <div class="zone2-left">
-                  <div class="zone2-circle circle-privacy" data-mind-key="사생활">사생활</div>
-                  <div class="zone2-circle circle-emotion" data-mind-key="감정개입">감정개입</div>
-                  <div class="zone2-circle circle-nonverbal" data-mind-key="비언어">비언어</div>
-                  <div class="zone2-circle circle-tone" data-mind-key="어투">어투</div>
-                </div>
-            
-                <!-- 오른쪽: 설명 -->
-                <div class="zone2-right">
-                  <div class="zone2-title">마인드존</div>
-                  <div class="zone2-bubble">
-                    시선, 표정, 분위기 등 말하지 않아도 전달되는 압박에
-                    불편함을 느껴요.
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- 3번 노란 박스: 디지털존 -->
-            <div class="yellow-box section" id="section-4">
-              <div class="zone3-content">
-                <!-- 왼쪽: 설명 -->
-                <div class="zone3-left">
-                  <div class="zone3-title">디지털존</div>
-                  <div class="zone3-bubble">
-                    알림, 메시지, 온라인 연결 등에서 오는 디지털 압박에
-                    민감하게 반응하는 편이에요.
-                  </div>
-                </div>
-
-                <!-- 오른쪽: 세로 막대 그래프 -->
-                <div class="zone3-right">
-                  <div class="zone3-bar-group" data-digital-key="연락">
-                    <div class="zone3-vert-bar">
-                      <div class="zone3-vert-fill"></div>
-                    </div>
-                    <div class="zone3-bar-label">연락</div>
-                  </div>
-
-                  <div class="zone3-bar-group" data-digital-key="노출">
-                    <div class="zone3-vert-bar">
-                      <div class="zone3-vert-fill"></div>
-                    </div>
-                    <div class="zone3-bar-label">노출</div>
-                  </div>
-
-                  <div class="zone3-bar-group" data-digital-key="알림">
-                    <div class="zone3-vert-bar">
-                      <div class="zone3-vert-fill"></div>
-                    </div>
-                    <div class="zone3-bar-label">알림</div>
-                  </div>
-
-                  <div class="zone3-bar-group" data-digital-key="속도">
-                    <div class="zone3-vert-bar">
-                      <div class="zone3-vert-fill"></div>
-                    </div>
-                    <div class="zone3-bar-label">속도</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 오른쪽: 분홍 2박스 -->
-          <div class="right-column">
-
-            <!-- 분홍 박스 1 : 네모 8개 배치 -->
-            <div class="pink-box section" id="section-5">
-              <div class="pink-header">침범 후 나의 반응은?</div>
-
-              <div class="pink-box-grid">
-                <div class="pink-cell" data-reaction-key="사교성 저하">사교성<br>저하</div>
-                <div class="pink-cell" data-reaction-key="생리적 반응">생리적<br>반응</div>
-                <div class="pink-cell" data-reaction-key="공격성 증가">공격성<br>증가</div>
-                <div class="pink-cell" data-reaction-key="우울">우울</div>
-                <div class="pink-cell" data-reaction-key="과업 수행 저하">과업 수행 저하</div>
-                <div class="pink-cell" data-reaction-key="이타 행동 감소">이타 행동 감소</div>
-                <div class="pink-cell" data-reaction-key="불안">불안</div>
-                <div class="pink-cell" data-reaction-key="학습된 무기력">학습된<br>무기력</div>
-              </div>
-            </div>
-
-            <!-- 분홍 박스 2 : 큰 말풍선 3줄 (상위 3개 반응 설명) -->
-            <div class="pink-box section" id="section-6">
-              <div class="pink-item">
-                <div class="pink-item-label">사교성 저하</div>
-                <div class="pink-item-desc">
-                  침범 경험으로 대인관계가 부담스러워져 약속을 피하거나, 만나도 깊은 관계 형성을 회피하게 돼요.
-                </div>
-              </div>
-              
-              <div class="pink-item">
-                <div class="pink-item-label">과업 수행 저하</div>
-                <div class="pink-item-desc">
-                  침범 경험이 에너지를 소진시켜 업무나 학업에 집중하기 어렵고, 평소보다 능률이 크게 떨어져요.
-                </div>
-              </div>
-              
-              <div class="pink-item">
-                <div class="pink-item-label">학습된 무기력</div>
-                <div class="pink-item-desc">
-                  반복된 침범으로 대응의 효과를 느끼지 못해 “어차피 소용없어”라며 경계 세우기 자체를 포기하게 돼요.
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- 배경 이미지 (테스트지 전체 배경) -->
-        <div class="frame">
-          <img src="images/테스트지 수정.png" alt="테스트 결과" crossorigin="anonymous" />
-        </div>
-
       </div>
     </div>
 
-    <div class="footer">
-      <button class="btn" id="actionBtn">인쇄하기</button>
-    </div>
-  </div>
-
-  <script>
-    const W = 560, H = 790, FOOT = 96;
-    const frameBox = document.getElementById('frameBox');
-    const actionBtn = document.getElementById('actionBtn');
-
-    /* =========================
-       0. 공통 유틸
-       ========================= */
-    function loadAnswers() {
-      try {
-        const raw = localStorage.getItem('keepod_answers');
-        if (!raw) return null;
-        const arr = JSON.parse(raw);
-        if (!Array.isArray(arr) || arr.length !== 20) return null;
-        return arr.map(v => Number(v) || 0);
-      } catch (e) {
-        console.error('답안 로딩 오류', e);
-        return null;
-      }
-    }
-
-    // 문항 인덱스로 합계 구하는 유틸
-    function sumByIndex(answers, indices) {
-      return indices.reduce((sum, i) => sum + (answers[i] || 0), 0);
-    }
-
-    /* =========================
-       1. 질문 → 영역 매핑
-       (필요시 여기 숫자만 수정하면 됨)
-       ========================= */
-    const QUESTION_ZONE_MAP = {
-      touch: {
-        // 신체적 거리 / 환경 관련
-        "친분":     [4, 6, 19],          // 신체접촉 회피, 가까이 앉기, 가까이 있으면 긴장
-        "정보과잉": [5, 12, 16],        // 시끄러운 곳보다 조용, 사람과 일 후 혼자 쉬기, 집이 더 잘됨
-        "행동제약": [6, 7, 17],         // 가까이 앉으면 행동어려움, 엘베 위치, 자리를 양보 안함
-        "통제력":   [7, 17, 18]         // 계기판 근처, 자리, 표현해도 안 바뀌면 참음
-      },
-      mind: {
-        "사생활":  [8, 2],              // 개인적인 질문, 게시물 공개 범위
-        "감정개입":[10, 18],            // 공감 강요, 표현해도 안 바뀜
-        "비언어":  [11, 13],            // 말 빠름/침묵, 불편한 말/분위기
-        "어투":    [9, 14]              // 어투, 사람 많을 때 짜증/화
-      },
-      digital: {
-        "연락": [0, 3, 11],             // 늦은 밤 연락, 자주 메시지, 말 빠름/속도감
-        "노출": [1, 2],                 // 태그, 게시물 공개
-        "알림": [3, 9],                 // 재촉, 어투 포함 메시지 압박
-        "속도": [3, 11]                 // 재촉, 말 속도/침묵
-      }
-    };
-
-    /* =========================
-       2. 반응 유형 매핑 (8개)
-       ========================= */
-    const REACTION_QUESTION_MAP = {
-      "사교성 저하":   [12, 16, 0],      // 혼자 쉬고싶다, 혼자일 때 잘됨, 늦은 연락
-      "생리적 반응":   [13, 19],         // 심장 두근, 호흡 어려움/긴장
-      "공격성 증가":   [14],             // 짜증/화
-      "우울":         [15],             // 무기력
-      "과업 수행 저하":[12, 16],        // 일/공부 집중 어려움쪽 해석
-      "이타 행동 감소":[17],            // 자리 양보 안함
-      "불안":         [0, 1, 3, 13, 19], // 연락/태그/재촉/심장 두근/긴장
-      "학습된 무기력":[15, 18]          // 무기력, 표현해도 안바뀌면 참음
-    };
-
-    const REACTION_TEXT = {
-      "사교성 저하": "침범 경험으로 대인관계가 부담스러워져 약속을 피하거나, 만나도 깊은 관계 형성을 회피하게 돼요.",
-      "생리적 반응": "심장이 두근거리거나 호흡이 가빠지는 등 몸이 먼저 반응하여, 머리로는 괜찮다고 생각해도 쉽게 긴장이 풀리지 않아요.",
-      "공격성 증가": "불편함이 쌓이면 짜증이나 분노로 터져 나오기 쉽고, 사소한 자극에도 예민하게 반응하게 돼요.",
-      "우울": "에너지가 급격히 떨어지고 의욕이 사라져, 평소에 즐기던 활동도 부담스럽게 느껴질 수 있어요.",
-      "과업 수행 저하": "침범 경험이 에너지를 소진시켜 업무나 학업에 집중하기 어렵고, 평소보다 능률이 크게 떨어져요.",
-      "이타 행동 감소": "나 스스로도 지치다 보니, 타인을 위해 배려하거나 양보하는 행동이 점점 줄어들 수 있어요.",
-      "불안": "언제 또 침범이 일어날지 모른다는 생각에 긴장이 유지되고, 상황을 지나치게 예측하거나 걱정하게 돼요.",
-      "학습된 무기력": "반복된 침범으로 대응의 효과를 느끼지 못해 “어차피 소용없어”라며 경계 세우기 자체를 포기하게 돼요."
-    };
-
-    /* =========================
-       3. 점수 계산
-       ========================= */
-    function calcZoneScores(answers) {
-      const result = {
-        touch:   { total: 0, sub: {} },
-        mind:    { total: 0, sub: {} },
-        digital: { total: 0, sub: {} }
-      };
-
-      // 터치, 마인드, 디지털 각각 서브 요인 합계
-      for (const [zoneKey, subMap] of Object.entries(QUESTION_ZONE_MAP)) {
-        let zoneTotal = 0;
-        const subScores = {};
-        for (const [subKey, indices] of Object.entries(subMap)) {
-          const s = sumByIndex(answers, indices);
-          subScores[subKey] = { score: s, max: indices.length * 5 };
-          zoneTotal += s;
-        }
-        result[zoneKey].total = zoneTotal;
-        result[zoneKey].sub = subScores;
-      }
-      return result;
-    }
-
-    function calcReactionScores(answers) {
-      const arr = [];
-      for (const [key, indices] of Object.entries(REACTION_QUESTION_MAP)) {
-        const score = sumByIndex(answers, indices);
-        const max = indices.length * 5;
-        arr.push({ key, label: key, score, max });
-      }
-      // 높은 순으로 정렬
-      arr.sort((a, b) => b.score - a.score);
-      return arr;
-    }
-
-    function calcTotalScore(answers) {
-      const sum = answers.reduce((s, v) => s + (v || 0), 0);
-      const max = answers.length * 5;
-      if (!max) return 0;
-      return Math.round((sum / max) * 100);
-    }
-
-    /* =========================
-       4. 패턴/메인존 → 타입/캐릭터
-       ========================= */
-    function findPattern(zoneScores) {
-      const entries = [
-        { key: 'touch',   score: zoneScores.touch.total },
-        { key: 'mind',    score: zoneScores.mind.total },
-        { key: 'digital', score: zoneScores.digital.total },
+    <script>
+      const QUESTIONS = [
+        "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
+        "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
+        "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
+        "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
+        "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
+        "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
+        "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
+        "엘리베이터에서 주로 계기판 근처에 탄다",
+        "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
+        "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
+        "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
+        "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
+        "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
+        "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
+        "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
+        "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
+        "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
+        "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
+        "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
+        "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
       ];
 
-      const max = Math.max(...entries.map(e => e.score));
-      const tops = entries.filter(e => e.score === max).map(e => e.key);
+      const dots = Array.from(document.querySelectorAll('.dot'));
+      const nextBtn = document.querySelector('.next');
+      const backBtn = document.querySelector('.back');
+      const qEl = document.querySelector('.question');
+      const progEl = document.querySelector('.progress');
+      const fillEl = document.querySelector('.fill');
+      const hintEl = document.querySelector('.hint');
 
-      // 동점일 때 우선순위: 터치 > 마인드 > 디지털
-      const priority = ['touch', 'mind', 'digital'];
-      const mainZone = priority.find(z => tops.includes(z)) || tops[0];
+      let index = 0;
+      let selectedDot = null;
+      let answers = Array(20).fill(null);
 
-      // 타입 구분용 패턴키 (예: "touch+mind")
-      const patternKey = [...tops].sort().join('+') || mainZone;
-
-      return { tops, patternKey, mainZone };
-    }
-
-    const TYPE_TEXT = {
-      "touch": {
-        title: "거리수호형 팟",
-        desc: "넓은 신체적 거리가 필요하고, 예상치 못한 접촉이나 밀집된 공간에서 특히 예민해지는 타입이에요. 물리적인 거리를 지킬 수 있을 때 가장 편안함을 느껴요."
-      },
-      "mind": {
-        title: "감정방어형 팟",
-        desc: "사생활 질문, 감정 강요, 어투와 분위기 같은 보이지 않는 압박에 민감한 타입이에요. 존중받는 대화 방식과 안전한 관계에서 안정감을 느껴요."
-      },
-      "digital": {
-        title: "디지털과부하형 팟",
-        desc: "알림, 메시지, 태그 등 디지털 채널을 통한 침범에 민감한 타입이에요. 연락 속도와 노출 범위를 스스로 조절할 수 있을 때 마음이 한결 편안해져요."
-      },
-      "touch+mind": {
-        title: "경계선 예민형 팟",
-        desc: "몸의 거리와 마음의 거리 모두에 예민한 타입이에요. 물리적인 간격과 언어·시선·분위기까지 모두 존중받을 때 비로소 안전함을 느껴요."
-      },
-      "touch+digital": {
-        title: "공간·디지털 과부하형 팟",
-        desc: "사람이 많은 공간과 끊임없는 디지털 알림 모두에 쉽게 피로해지는 타입이에요. 온·오프라인 모두에서 ‘나만의 여백’을 확보하는 것이 중요해요."
-      },
-      "mind+digital": {
-        title: "관계선 민감형 팟",
-        desc: "말투·감정표현과 온라인 소통 방식 모두에서 경계를 중요하게 여기는 타입이에요. 과한 질문이나 빠른 반응을 요구받을 때 부담을 크게 느껴요."
-      },
-      "touch+mind+digital": {
-        title: "풀가드형 팟",
-        desc: "터치존, 마인드존, 디지털존 전반에서 침범에 예민한 타입이에요. 하지만 그만큼 자신의 경계를 잘 인식하고 있다는 뜻이기도 해요. 나에게 맞는 보호 전략을 세우는 것이 핵심이에요."
+      function resetAll() {
+        answers = Array(20).fill(null);
+        selectedDot = null;
+        index = 0;
+        fillEl.style.width = '0%';
+        nextBtn.disabled = true;
+        nextBtn.style.background = '#E4E4E4';
+        dots.forEach(d => d.classList.remove('active'));
+        localStorage.removeItem('keepod_answers');
       }
-    };
 
-    function updateSummaryCard(totalScore, zoneScores, patternKey) {
-      const numEl  = document.querySelector('.score-number');
-      const subEl  = document.querySelector('.score-sub');
-      const typeEl = document.querySelector('.type-title');
-      const descEl = document.querySelector('.type-text');
+      function renderQuestion(i) {
+        qEl.innerHTML = QUESTIONS[i];
+        progEl.textContent = `${i + 1} / 20`;
+        hintEl.style.display = i >= 12 ? "block" : "none";
+        fillEl.style.width = `${(i / 20) * 100}%`;
 
-      if (numEl) numEl.textContent = totalScore.toString();
-
-      // 기준 평균(대략 60점)을 가정해서 차이 표현
-      const avg = 60;
-      const diff = totalScore - avg;
-      if (subEl) {
-        if (diff > 3) {
-          subEl.textContent = `▲ 평균보다 ${Math.abs(diff)}점 높아요.`;
-        } else if (diff < -3) {
-          subEl.textContent = `▼ 평균보다 ${Math.abs(diff)}점 낮아요.`;
+        dots.forEach(d => d.classList.remove('active'));
+        selectedDot = null;
+        if (answers[i] !== null) {
+          const found = dots.find(d => Number(d.dataset.value) === answers[i]);
+          if (found) {
+            found.classList.add('active');
+            selectedDot = found;
+            nextBtn.disabled = false;
+            nextBtn.style.background = '#7CEA54';
+          }
         } else {
-          subEl.textContent = `■ 평균과 비슷한 수준이에요.`;
+          nextBtn.disabled = true;
+          nextBtn.style.background = '#E4E4E4';
         }
+
+        backBtn.innerHTML = i === 0 ? "처음으로 돌아가기" : '<span class="chev">‹</span> 이전으로 돌아가기';
       }
 
-      const typeInfo = TYPE_TEXT[patternKey] || TYPE_TEXT["touch"];
-      if (typeEl) typeEl.textContent = typeInfo.title;
-      if (descEl) descEl.textContent = typeInfo.desc;
-    }
-
-    function updateCharacter(mainZone) {
-      const imgEl  = document.querySelector('.character-img');
-      const nameKo = document.querySelector('.name-ko');
-      const nameEn = document.querySelector('.name-en');
-      if (!imgEl || !nameKo || !nameEn) return;
-
-      if (mainZone === 'touch') {
-        imgEl.src = 'images/보더.png';            // 파일명 맞게 수정 가능
-        imgEl.alt = '보더 캐릭터';
-        nameKo.textContent = '보더';
-        nameEn.textContent = '(Border)';
-      } else if (mainZone === 'mind') {
-        imgEl.src = 'images/리스니.png';
-        imgEl.alt = '리스니 캐릭터';
-        nameKo.textContent = '리스니';
-        nameEn.textContent = '(Lisni)';
-      } else if (mainZone === 'digital') {
-        imgEl.src = 'images/네티.png';
-        imgEl.alt = '네티 캐릭터';
-        nameKo.textContent = '네티';
-        nameEn.textContent = '(Neti)';
+      function applySelection(dot) {
+        dots.forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        selectedDot = dot;
+        nextBtn.disabled = false;
+        nextBtn.style.background = '#7CEA54';
+        answers[index] = Number(dot.dataset.value);
+        fillEl.style.width = `${((index + 1) / 20) * 100}%`;
       }
-    }
 
-    /* =========================
-       5. 영역별 그래픽 업데이트
-       ========================= */
-    function updateTouchBars(subScores) {
-      const items = document.querySelectorAll('#section-2 .zone-item');
-      items.forEach(item => {
-        const key = item.getAttribute('data-touch-key');
-        const info = subScores[key];
-        if (!info) return;
-        const ratio = info.max ? info.score / info.max : 0;
-        const fillCount = Math.round(ratio * 5); // 0~5칸
-        const bars = item.querySelectorAll('.bar');
-        bars.forEach((bar, idx) => {
-          bar.classList.remove('filled', 'empty');
-          if (idx < fillCount) bar.classList.add('filled');
-          else bar.classList.add('empty');
+      renderQuestion(index);
+
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          if (selectedDot === dot) {
+            dot.classList.remove('active');
+            selectedDot = null;
+            answers[index] = null;
+            nextBtn.disabled = true;
+            nextBtn.style.background = '#E4E4E4';
+            fillEl.style.width = `${(index / 20) * 100}%`;
+            return;
+          }
+          applySelection(dot);
         });
       });
-    }
 
-    function updateMindCircles(subScores) {
-      const circles = document.querySelectorAll('#section-3 .zone2-circle');
-      // 가장 높은 값 찾기
-      let maxScore = 0;
-      circles.forEach(c => {
-        const key = c.getAttribute('data-mind-key');
-        const info = subScores[key];
-        if (info && info.score > maxScore) maxScore = info.score;
-      });
-
-      circles.forEach(c => {
-        const key = c.getAttribute('data-mind-key');
-        const info = subScores[key];
-        if (!info) return;
-        const ratio = maxScore ? info.score / maxScore : 0;
-        // 비율에 따라 밝기/투명도 살짝 조절
-        const brightness = 0.7 + ratio * 0.3; // 0.7~1.0
-        c.style.filter = `brightness(${brightness})`;
-        c.style.opacity = 0.6 + ratio * 0.4;  // 0.6~1.0
-      });
-    }
-
-    function updateDigitalBars(subScores) {
-      const groups = document.querySelectorAll('#section-4 .zone3-bar-group');
-      groups.forEach(g => {
-        const key = g.getAttribute('data-digital-key');
-        const info = subScores[key];
-        if (!info) return;
-        const ratio = info.max ? info.score / info.max : 0;
-        const h = 20 + ratio * 60; // 20~80%
-        const fill = g.querySelector('.zone3-vert-fill');
-        if (fill) {
-          fill.style.height = h + '%';
+      nextBtn.addEventListener('click', () => {
+        if (!selectedDot) return;
+        if (index < 19) {
+          index++;
+          renderQuestion(index);
+        } else {
+          localStorage.setItem('keepod_answers', JSON.stringify(answers));
+          location.href = "result.html";
         }
       });
-    }
 
-    /* =========================
-       6. 반응 박스 업데이트
-       ========================= */
-    function highlightReactionGrid(top3) {
-      const cells = document.querySelectorAll('.pink-box-grid .pink-cell');
-      cells.forEach(c => c.classList.remove('active'));
-      top3.forEach(item => {
-        const cell = document.querySelector(`.pink-cell[data-reaction-key="${item.key}"]`);
-        if (cell) cell.classList.add('active');
-      });
-    }
-
-    function updateReactionDetails(top3) {
-      const items = document.querySelectorAll('#section-6 .pink-item');
-      items.forEach((item, idx) => {
-        const labelEl = item.querySelector('.pink-item-label');
-        const descEl  = item.querySelector('.pink-item-desc');
-        const data = top3[idx];
-        if (!data) {
-          if (labelEl) labelEl.textContent = '-';
-          if (descEl)  descEl.textContent  = '해당 반응은 상대적으로 덜 나타나는 편이에요.';
-          return;
+      backBtn.addEventListener('click', () => {
+        if (index === 0) {
+          resetAll();
+          location.href = "index.html";
+        } else {
+          index--;
+          renderQuestion(index);
         }
-        if (labelEl) labelEl.textContent = data.label;
-        if (descEl)  descEl.textContent  = REACTION_TEXT[data.key] || '';
       });
+
+    // ===== 하이브리드 스케일: 세로 꽉 채우기 + 좌우 안전(최대 3%만 가로 압축) =====
+(function () {
+  const BASE_W = 564;
+  const BASE_H = 900;
+  const MAX_SQUISH = 0.97; // 가로 최소 비율(=최대 3% 압축). 0.97~1 사이만 허용
+  const frameEl = document.querySelector('.frame');
+
+  function vp() {
+    const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
+    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+    return { vw, vh };
+  }
+
+  function applyScale() {
+    const { vw, vh } = vp();
+    const isMobile = (vw < 700) || (vh < 900);
+
+    if (!isMobile) {
+      // 태블릿/PC: 원본 픽셀 고정
+      frameEl.style.position = 'static';
+      frameEl.style.transform = 'none';
+      frameEl.style.width  = BASE_W + 'px';
+      frameEl.style.height = BASE_H + 'px';
+      return;
     }
 
-    /* =========================
-       7. 결과 초기화
-       ========================= */
-    function initResults() {
-      const answers = loadAnswers();
-      if (!answers) {
-        console.warn('답안을 찾을 수 없어 기본 값으로 표시합니다.');
-        return;
-      }
+    // 1) 기본: 세로 꽉 채우기
+    const sH = vh / BASE_H;
+    const needW = BASE_W * sH;
 
-      const zoneScores     = calcZoneScores(answers);
-      const reactionScores = calcReactionScores(answers);
-      const totalScore     = calcTotalScore(answers);
-      const { patternKey, mainZone } = findPattern(zoneScores);
-
-      updateSummaryCard(totalScore, zoneScores, patternKey);
-      updateCharacter(mainZone);
-      updateTouchBars(zoneScores.touch.sub);
-      updateMindCircles(zoneScores.mind.sub);
-      updateDigitalBars(zoneScores.digital.sub);
-
-      const top3 = reactionScores.slice(0, 3);
-      highlightReactionGrid(top3);
-      updateReactionDetails(top3);
+    if (needW <= vw) {
+      // 가로가 화면 안에 들어오면 그대로(위아래 빈 공간 0)
+      const tx = (vw - needW) / 2;
+      frameEl.style.width  = BASE_W + 'px';
+      frameEl.style.height = BASE_H + 'px';
+      frameEl.style.position = 'fixed';
+      frameEl.style.top = '0';
+      frameEl.style.left = '0';
+      frameEl.style.transformOrigin = 'top left';
+      frameEl.style.transform = `translate(${tx}px, 0) scale(${sH})`;
+      return;
     }
 
-    /* =========================
-       8. 인쇄/이미지 저장 버튼
-       ========================= */
-    function isMobile() {
-      const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-      return (vw < 700) || (vh < 900);
+    // 2) 살짝만 가로 압축해서 폭 맞추기 (최대 3%)
+    const fitRatio = vw / needW; // 1보다 작으면 넘침
+    if (fitRatio >= MAX_SQUISH) {
+      // 세로 스케일은 유지하고, 가로만 fitRatio 만큼 압축
+      const tx = 0; // 가로 꽉 채웠으니 좌표는 0
+      frameEl.style.width  = BASE_W + 'px';
+      frameEl.style.height = BASE_H + 'px';
+      frameEl.style.position = 'fixed';
+      frameEl.style.top = '0';
+      frameEl.style.left = '0';
+      frameEl.style.transformOrigin = 'top left';
+      // scaleY는 sH, scaleX는 sH*fitRatio 와 동일 효과: scale(sH) 후 scaleX(fitRatio)
+      frameEl.style.transform = `translate(${tx}px, 0) scale(${sH}) scaleX(${fitRatio})`;
+      return;
     }
 
-    function setAction() {
-      if (!isMobile()) {
-        actionBtn.textContent = '인쇄하기';
-        actionBtn.onclick = () => window.print();
-      } else {
-        actionBtn.textContent = '이미지로 저장하기';
-        actionBtn.onclick = async () => {
-          const clone = frameBox.cloneNode(true);
-          clone.id = 'capture';
-          Object.assign(clone.style, {
-            position:'fixed', left:'-9999px', top:'0',
-            width:`${W}px`, height:`${H}px`,
-            transform:'none'
-          });
-          document.body.appendChild(clone);
+    // 3) 그래도 넘치면 어쩔 수 없이 contain (좌우/상하 모두 안전, 중앙 정렬)
+    const sW = vw / BASE_W;
+    const s = Math.min(sW, sH);
+    const tx = (vw - BASE_W * s) / 2;
+    const ty = (vh - BASE_H * s) / 2;
+    frameEl.style.width  = BASE_W + 'px';
+    frameEl.style.height = BASE_H + 'px';
+    frameEl.style.position = 'fixed';
+    frameEl.style.top = '0';
+    frameEl.style.left = '0';
+    frameEl.style.transformOrigin = 'top left';
+    frameEl.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
+  }
 
-          try {
-            const canvas = await html2canvas(clone, {
-              backgroundColor: '#ffffff',
-              scale: Math.min(3, (window.devicePixelRatio || 2)),
-              useCORS: true,
-              logging: false
-            });
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = `keepod_result_${Date.now()}.png`;
-            link.click();
-          } catch(e) {
-            alert('이미지 저장 중 문제가 발생했습니다. 스크린샷을 이용해주세요.');
-            console.error(e);
-          } finally {
-            clone.remove();
-          }
-        };
-      }
-    }
+  window.addEventListener('resize', applyScale);
+  window.addEventListener('orientationchange', applyScale);
+  applyScale();
+})();
 
-    function scale() {
-      // 지금은 고정 레이아웃로 사용 (필요하면 여기서 스케일 조절)
-      const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-      const usableH = Math.max(100, vh - FOOT);
-      const s = Math.min(vw / W, usableH / H);
-      // transform 스케일을 사용하지 않고 원본 크기 유지
-    }
-
-    function init() {
-      scale();
-      setAction();
-      initResults();
-    }
-
-    window.addEventListener('resize', () => { scale(); setAction(); });
-    window.addEventListener('orientationchange', () => { scale(); setAction(); });
-    window.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
+    </script>
+  </body>
 </html>
