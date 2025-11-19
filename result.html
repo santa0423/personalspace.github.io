@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>결과 보기</title>
   <link rel="stylesheet" href="result.css" />
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 </head>
 <body>
   <div class="page">
@@ -253,7 +252,9 @@
       </div>
     </div>
 
-
+    <div class="footer">
+      <button class="btn" id="actionBtn">처음으로 돌아가기</button>
+    </div>
   </div>
 
   <script>
@@ -341,7 +342,6 @@
         digital: { total: 0, sub: {} }
       };
 
-      // 터치, 마인드, 디지털 각각 서브 요인 합계
       for (const [zoneKey, subMap] of Object.entries(QUESTION_ZONE_MAP)) {
         let zoneTotal = 0;
         const subScores = {};
@@ -474,7 +474,7 @@
         best = 'digital';
         bestScore = digital;
       }
-      return best; // 'touch' | 'mind' | 'digital'
+      return best;
     }
 
     function updateCharacter(zone) {
@@ -601,7 +601,6 @@
 
       updateSummaryCard(totalScore, zoneScores, patternKey);
 
-      // 캐릭터용 메인 존은 단순 1~12번 합계 기준으로 별도 계산
       const charZone = decideZoneForCharacter(answers);
       updateCharacter(charZone);
 
@@ -615,67 +614,35 @@
     }
 
     /* =========================
-       8. 인쇄/이미지 저장 버튼
+       8. 레이아웃 스케일 (현재는 고정)
        ========================= */
-    function isMobile() {
-      const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-      const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-      return (vw < 700) || (vh < 900);
-    }
-
-    function setAction() {
-      if (!isMobile()) {
-        actionBtn.textContent = '인쇄하기';
-        actionBtn.onclick = () => window.print();
-      } else {
-        actionBtn.textContent = '이미지로 저장하기';
-        actionBtn.onclick = async () => {
-          const clone = frameBox.cloneNode(true);
-          clone.id = 'capture';
-          Object.assign(clone.style, {
-            position:'fixed', left:'-9999px', top:'0',
-            width:`${W}px`, height:`${H}px`,
-            transform:'none'
-          });
-          document.body.appendChild(clone);
-
-          try {
-            const canvas = await html2canvas(clone, {
-              backgroundColor: '#ffffff',
-              scale: Math.min(3, (window.devicePixelRatio || 2)),
-              useCORS: true,
-              logging: false
-            });
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = `keepod_result_${Date.now()}.png`;
-            link.click();
-          } catch(e) {
-            alert('이미지 저장 중 문제가 발생했습니다. 스크린샷을 이용해주세요.');
-            console.error(e);
-          } finally {
-            clone.remove();
-          }
-        };
-      }
-    }
-
     function scale() {
       const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
       const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
       const usableH = Math.max(100, vh - FOOT);
       const s = Math.min(vw / W, usableH / H);
-      // 현재는 transform 스케일 사용 안 함 (원본 크기 유지)
+      // 현재는 transform 스케일 사용 안 함
+    }
+
+    /* =========================
+       9. 처음으로 돌아가기 버튼
+       ========================= */
+    function initActionButton() {
+      actionBtn.addEventListener('click', () => {
+        // 이전 결과 초기화 후 처음 화면으로 이동
+        localStorage.removeItem('keepod_answers');
+        location.href = 'index.html';
+      });
     }
 
     function init() {
       scale();
-      setAction();
       initResults();
+      initActionButton();
     }
 
-    window.addEventListener('resize', () => { scale(); setAction(); });
-    window.addEventListener('orientationchange', () => { scale(); setAction(); });
+    window.addEventListener('resize', scale);
+    window.addEventListener('orientationchange', scale);
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
