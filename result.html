@@ -33,13 +33,16 @@
             </div>
           </div>
 
-          <!-- 캐릭터 + 타원 영역 -->
           <div class="character-area">
-            <div class="ellipse"></div>
+            <div class="ellipse">
+              <!-- 👉 내 점수용 원 -->
+              <div class="ellipse-me"></div>
+            </div>
             <img src="images/보더.png"
                  alt="보더 캐릭터"
                  class="character-img" />
           </div>
+          
 
           <!-- 타원 아래 흰색 네모 섹션 2개 -->
           <div class="summary-row">
@@ -278,7 +281,6 @@
       }
     }
 
-    // 문항 인덱스로 합계 구하는 유틸
     function sumByIndex(answers, indices) {
       return indices.reduce((sum, i) => sum + (answers[i] || 0), 0);
     }
@@ -308,17 +310,17 @@
     };
 
     /* =========================
-       2. 반응 유형 매핑 (8개)
+       2. 반응 유형 매핑
        ========================= */
     const REACTION_QUESTION_MAP = {
-      "사교성 저하":   [12, 16, 0],
-      "생리적 반응":   [13, 19],
-      "공격성 증가":   [14],
-      "우울":         [15],
-      "과업 수행 저하":[12, 16],
+      "사교성 저하":   [4, 8, 12],
+      "생리적 반응":   [6, 13, 19],
+      "공격성 증가":   [3, 9, 14],
+      "우울":         [10, 15],
+      "과업 수행 저하":[5, 16],
       "이타 행동 감소":[17],
-      "불안":         [0, 1, 3, 13, 19],
-      "학습된 무기력":[15, 18]
+      "불안":         [0, 1, 7, 11],
+      "학습된 무기력":[18]
     };
 
     const REACTION_TEXT = {
@@ -375,7 +377,7 @@
     }
 
     /* =========================
-       4. 패턴/타입 (요약 텍스트용)
+       4. 패턴/타입
        ========================= */
     function findPattern(zoneScores) {
       const entries = [
@@ -388,43 +390,75 @@
       const tops = entries.filter(e => e.score === max).map(e => e.key);
 
       const priority = ['touch', 'mind', 'digital'];
-      const mainZone = priority.find(z => tops.includes(z)) || tops[0];
+      const topsSorted = [...tops].sort(
+        (a, b) => priority.indexOf(a) - priority.indexOf(b)
+      );
 
-      const patternKey = [...tops].sort().join('+') || mainZone;
+      const mainZone = priority.find(z => tops.includes(z)) || tops[0];
+      const patternKey = topsSorted.length > 0 ? topsSorted.join('+') : mainZone;
 
       return { tops, patternKey, mainZone };
     }
 
+    const SCORE_LEVEL_TEXT = {
+      high: "당신은 넓은 개인 공간이 필요하며, 타인과의 거리가 가까워지면 불편함을 크게 느끼는 편이에요.",
+      mid:  "당신은 상황에 따라 필요한 거리가 달라지며, 적절한 경계를 유연하게 조절할 수 있어요.",
+      low:  "당신은 가까운 거리에서도 편안하지만, 특정 상황에서는 경계가 필요한 편이에요."
+    };
+
     const TYPE_TEXT = {
       "touch": {
         title: "거리수호형 팟",
-        desc: "넓은 신체적 거리가 필요하고, 예상치 못한 접촉이나 밀집된 공간에서 특히 예민해지는 타입이에요. 물리적인 거리를 지킬 수 있을 때 가장 편안함을 느껴요."
+        area:  "또한, 터치존에 민감해요. 누군가 가까이 다가오거나 신체 접촉이 일어날 때 불편함을 느껴요."
       },
       "mind": {
         title: "감정방어형 팟",
-        desc: "사생활 질문, 감정 강요, 어투와 분위기 같은 보이지 않는 압박에 민감한 타입이에요. 존중받는 대화 방식과 안전한 관계에서 안정감을 느껴요."
+        area:  "또한 마인드존에 민감해요. 불편한 질문이나 어투, 시선 등으로 정서적 침범을 느낄 때가 많아요."
       },
       "digital": {
         title: "디지털과부하형 팟",
-        desc: "알림, 메시지, 태그 등 디지털 채널을 통한 침범에 민감한 타입이에요. 연락 속도와 노출 범위를 스스로 조절할 수 있을 때 마음이 한결 편안해져요."
+        area:  "또한 디지털존에 민감해요. 메시지, 알림 등 과도한 온라인 연결 요구에 부담을 느껴요."
       },
       "touch+mind": {
-        title: "경계선 예민형 팟",
-        desc: "몸의 거리와 마음의 거리 모두에 예민한 타입이에요. 물리적인 간격과 언어·시선·분위기까지 모두 존중받을 때 비로소 안전함을 느껴요."
-      },
-      "touch+digital": {
-        title: "공간·디지털 과부하형 팟",
-        desc: "사람이 많은 공간과 끊임없는 디지털 알림 모두에 쉽게 피로해지는 타입이에요. 온·오프라인 모두에서 ‘나만의 여백’을 확보하는 것이 중요해요."
+        title: "현실보호형 팟",
+        area:  "또한 오프라인 상호작용 전반에서 경계가 필요해요. 터치존과 마인드존 모두에서 침범을 쉽게 감지해요."
       },
       "mind+digital": {
-        title: "관계선 민감형 팟",
-        desc: "말투·감정표현과 온라인 소통 방식 모두에서 경계를 중요하게 여기는 타입이에요. 과한 질문이나 빠른 반응을 요구받을 때 부담을 크게 느껴요."
+        title: "심리수호형 팟",
+        area:  "또한 오프라인과 온라인의 침범에 민감해요. 마인드존과 디지털존 모두에서 부담을 크게 느껴요."
+      },
+      "touch+digital": {
+        title: "공간·디지털 수호형 팟",
+        area:  "또한 사람이 많은 공간과 디지털 알림 모두에 쉽게 피로해져요. 물리적 공간과 디지털 환경 모두에 여백이 필요해요."
       },
       "touch+mind+digital": {
-        title: "풀가드형 팟",
-        desc: "터치존, 마인드존, 디지털존 전반에서 침범에 예민한 타입이에요. 하지만 그만큼 자신의 경계를 잘 인식하고 있다는 뜻이기도 해요. 나에게 맞는 보호 전략을 세우는 것이 핵심이에요."
+        title: "완벽수호형 팟",
+        area:  "또한 모든 영역에서 경계가 필요해요. 터치존, 마인드존, 디지털존 침범 모두에 예민하게 반응해요."
       }
     };
+
+    /* =========================
+       4-0. 점수에 따라 타원 크기 조절
+       ========================= */
+       function updateEllipseByScore(totalScore) {
+  const ellipseMe = document.querySelector('.ellipse-me'); // ✅ 바뀐 부분
+  if (!ellipseMe) return;
+
+  const clamped = Math.min(100, Math.max(0, totalScore || 0));
+  const t = clamped / 100;
+
+  // 점수 차이 더 세게 주고 싶으면 숫자 키우면 됨
+  const scale = 0.5 + 1.2 * t; // 예: 0점=0.5배, 100점=1.7배
+
+  ellipseMe.style.transform = `scale(${scale})`;
+}
+
+
+    function getScoreLevel(totalScore) {
+      if (totalScore >= 75) return 'high';
+      if (totalScore >= 47) return 'mid';
+      return 'low';
+    }
 
     function updateSummaryCard(totalScore, zoneScores, patternKey) {
       const numEl  = document.querySelector('.score-number');
@@ -448,12 +482,21 @@
 
       const typeInfo = TYPE_TEXT[patternKey] || TYPE_TEXT["touch"];
       if (typeEl) typeEl.textContent = typeInfo.title;
-      if (descEl) descEl.textContent = typeInfo.desc;
+
+      const levelKey = getScoreLevel(totalScore);
+      const scoreSentence = SCORE_LEVEL_TEXT[levelKey];
+      const areaSentence  = typeInfo.area;
+
+      if (descEl) {
+        descEl.textContent = `${scoreSentence} ${areaSentence}`;
+      }
+
+      // ✅ 점수에 맞춰 타원 크기 조절
+      updateEllipseByScore(totalScore);
     }
 
     /* =========================
-       4-1. 캐릭터용 단순 존 계산
-       (1~4: 디지털, 5~8: 터치, 9~12: 마인드)
+       4-1. 캐릭터 존 결정
        ========================= */
     function decideZoneForCharacter(answers) {
       let digital = 0, touch = 0, mind = 0;
@@ -502,7 +545,7 @@
     }
 
     /* =========================
-       5. 영역별 그래픽 업데이트
+       5. 영역별 그래픽
        ========================= */
     function updateTouchBars(subScores) {
       const items = document.querySelectorAll('#section-2 .zone-item');
@@ -523,21 +566,46 @@
 
     function updateMindCircles(subScores) {
       const circles = document.querySelectorAll('#section-3 .zone2-circle');
-      let maxScore = 0;
+      if (!circles.length) return;
+
+      let maxRatio = 0;
       circles.forEach(c => {
         const key = c.getAttribute('data-mind-key');
         const info = subScores[key];
-        if (info && info.score > maxScore) maxScore = info.score;
+        if (!info || !info.max) return;
+        const ratio = info.score / info.max;
+        if (ratio > maxRatio) maxRatio = ratio;
       });
+      if (maxRatio === 0) maxRatio = 1;
+
+      function lerp(a, b, t) {
+        return Math.round(a + (b - a) * t);
+      }
+
+      const MIN_COLOR = { r: 244, g: 247, b: 207 };
+      const MAX_COLOR = { r: 150, g: 189, b: 61 };
 
       circles.forEach(c => {
         const key = c.getAttribute('data-mind-key');
         const info = subScores[key];
-        if (!info) return;
-        const ratio = maxScore ? info.score / maxScore : 0;
-        const brightness = 0.7 + ratio * 0.3;
-        c.style.filter = `brightness(${brightness})`;
-        c.style.opacity = 0.6 + ratio * 0.4;
+        if (!info || !info.max) return;
+
+        const ratioRaw = info.score / info.max;
+        const ratio = ratioRaw / maxRatio;
+
+        const level = Math.max(1, Math.round(ratio * 5));
+        const t = (level - 1) / 4;
+
+        const minSize = 20;
+        const maxSize = 68;
+        const size = minSize + (maxSize - minSize) * t;
+        c.style.width = `${size}px`;
+        c.style.height = `${size}px`;
+
+        const r = lerp(MIN_COLOR.r, MAX_COLOR.r, t);
+        const g = lerp(MIN_COLOR.g, MAX_COLOR.g, t);
+        const b = lerp(MIN_COLOR.b, MAX_COLOR.b, t);
+        c.style.background = `rgb(${r}, ${g}, ${b})`;
       });
     }
 
@@ -557,30 +625,38 @@
     }
 
     /* =========================
-       6. 반응 박스 업데이트
+       6. 반응 박스
        ========================= */
     function highlightReactionGrid(top3) {
       const cells = document.querySelectorAll('.pink-box-grid .pink-cell');
-      cells.forEach(c => c.classList.remove('active'));
-      top3.forEach(item => {
-        const cell = document.querySelector(`.pink-cell[data-reaction-key="${item.key}"]`);
-        if (cell) cell.classList.add('active');
+      const topKeys = top3.map(item => item.key);
+
+      cells.forEach(cell => {
+        const key = cell.getAttribute('data-reaction-key');
+        if (topKeys.includes(key)) {
+          cell.classList.add('active');
+        } else {
+          cell.classList.remove('active');
+        }
       });
     }
 
     function updateReactionDetails(top3) {
       const items = document.querySelectorAll('#section-6 .pink-item');
+
       items.forEach((item, idx) => {
         const labelEl = item.querySelector('.pink-item-label');
         const descEl  = item.querySelector('.pink-item-desc');
         const data = top3[idx];
+
         if (!data) {
-          if (labelEl) labelEl.textContent = '-';
-          if (descEl)  descEl.textContent  = '해당 반응은 상대적으로 덜 나타나는 편이에요.';
+          labelEl.textContent = '-';
+          descEl.textContent  = '해당 반응은 상대적으로 덜 나타나는 편이에요.';
           return;
         }
-        if (labelEl) labelEl.textContent = data.label;
-        if (descEl)  descEl.textContent  = REACTION_TEXT[data.key] || '';
+
+        labelEl.textContent = data.label;
+        descEl.textContent  = REACTION_TEXT[data.key];
       });
     }
 
@@ -614,22 +690,21 @@
     }
 
     /* =========================
-       8. 레이아웃 스케일 (현재는 고정)
+       8. 레이아웃 스케일
        ========================= */
     function scale() {
       const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
       const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
       const usableH = Math.max(100, vh - FOOT);
       const s = Math.min(vw / W, usableH / H);
-      // 현재는 transform 스케일 사용 안 함
+      // transform 스케일은 현재 사용 안 함
     }
 
     /* =========================
-       9. 처음으로 돌아가기 버튼
+       9. 버튼
        ========================= */
     function initActionButton() {
       actionBtn.addEventListener('click', () => {
-        // 이전 결과 초기화 후 처음 화면으로 이동
         localStorage.removeItem('keepod_answers');
         location.href = 'index.html';
       });
