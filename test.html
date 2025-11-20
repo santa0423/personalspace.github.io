@@ -58,203 +58,277 @@
       </div>
     </div>
 
-    <script>
-      const QUESTIONS = [
-        "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
-        "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
-        "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
-        "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
-        "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
-        "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
-        "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
-        "엘리베이터에서 주로 계기판 근처에 탄다",
-        "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
-        "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
-        "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
-        "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
-        "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
-        "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
-        "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
-        "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
-        "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
-        "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
-        "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
-        "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
-      ];
-
-      const dots = Array.from(document.querySelectorAll('.dot'));
-      const nextBtn = document.querySelector('.next');
-      const backBtn = document.querySelector('.back');
-      const qEl = document.querySelector('.question');
-      const progEl = document.querySelector('.progress');
-      const fillEl = document.querySelector('.fill');
-      const hintEl = document.querySelector('.hint');
-
-      let index = 0;
-      let selectedDot = null;
-      let answers = Array(20).fill(null);
-
-      function resetAll() {
-        answers = Array(20).fill(null);
-        selectedDot = null;
-        index = 0;
-        fillEl.style.width = '0%';
-        nextBtn.disabled = true;
-        nextBtn.style.background = '#E4E4E4';
-        dots.forEach(d => d.classList.remove('active'));
-        localStorage.removeItem('keepod_answers');
-      }
-
-      function renderQuestion(i) {
-        qEl.innerHTML = QUESTIONS[i];
-        progEl.textContent = `${i + 1} / 20`;
-        hintEl.style.display = i >= 12 ? "block" : "none";
-        fillEl.style.width = `${(i / 20) * 100}%`;
-
-        dots.forEach(d => d.classList.remove('active'));
-        selectedDot = null;
-        if (answers[i] !== null) {
-          const found = dots.find(d => Number(d.dataset.value) === answers[i]);
-          if (found) {
-            found.classList.add('active');
-            selectedDot = found;
-            nextBtn.disabled = false;
-            nextBtn.style.background = '#7CEA54';
-          }
-        } else {
-          nextBtn.disabled = true;
-          nextBtn.style.background = '#E4E4E4';
-        }
-
-        backBtn.innerHTML = i === 0 ? "처음으로 돌아가기" : '<span class="chev">‹</span> 이전으로 돌아가기';
-      }
-
-      function applySelection(dot) {
-        dots.forEach(d => d.classList.remove('active'));
-        dot.classList.add('active');
-        selectedDot = dot;
-        nextBtn.disabled = false;
-        nextBtn.style.background = '#7CEA54';
-        answers[index] = Number(dot.dataset.value);
-        fillEl.style.width = `${((index + 1) / 20) * 100}%`;
-      }
-
-      renderQuestion(index);
-
-      dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          if (selectedDot === dot) {
-            dot.classList.remove('active');
+    <!DOCTYPE html>
+    <html lang="ko">
+      <head>
+        <meta charset="utf-8" />
+        <title>퍼스널 스페이스 테스트</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="test.css" />
+      </head>
+    
+      <body>
+        <div class="viewport">
+          <div class="frame">
+            <div class="canvas">
+              
+              <!-- 헤더 -->
+              <header class="header">
+                <div class="brand">Keepod</div>
+              </header>
+    
+              <!-- divider -->
+              <div class="divider"><div class="fill"></div></div>
+    
+              <!-- 진행도 -->
+              <div class="progress">1 / 20</div>
+    
+              <!-- 안내문 -->
+              <p class="hint" style="display:none;">
+                [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
+              </p>
+    
+              <!-- 질문 카드 -->
+              <section class="question-card">
+                <p class="question"></p>
+              </section>
+    
+              <!-- 5점 척도 -->
+              <div class="scale">
+                <div class="rail"></div>
+                <button class="dot" data-value="1"></button>
+                <button class="dot" data-value="2"></button>
+                <button class="dot" data-value="3"></button>
+                <button class="dot" data-value="4"></button>
+                <button class="dot" data-value="5"></button>
+    
+                <div class="labels">
+                  <span>그렇지<br>않다</span>
+                  <span>보통이다</span>
+                  <span>그렇다</span>
+                </div>
+              </div>
+    
+              <!-- CTA -->
+              <div class="cta-wrap">
+                <button class="next" disabled>다음</button>
+                <button class="back" type="button">
+                  <span class="chev">‹</span> 이전으로 돌아가기
+                </button>
+              </div>
+    
+            </div>
+          </div>
+        </div>
+    
+    
+        <!-- ===================== 질문 및 테스트 로직 ====================== -->
+        <script>
+          const QUESTIONS = [
+            "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
+            "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
+            "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
+            "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
+            "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
+            "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
+            "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
+            "엘리베이터에서 주로 계기판 근처에 탄다",
+            "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
+            "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
+            "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
+            "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
+            "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
+            "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
+            "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
+            "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
+            "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
+            "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
+            "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
+            "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
+          ];
+    
+          const dots = Array.from(document.querySelectorAll('.dot'));
+          const nextBtn = document.querySelector('.next');
+          const backBtn = document.querySelector('.back');
+          const qEl = document.querySelector('.question');
+          const progEl = document.querySelector('.progress');
+          const fillEl = document.querySelector('.fill');
+          const hintEl = document.querySelector('.hint');
+    
+          let index = 0;
+          let selectedDot = null;
+          let answers = Array(20).fill(null);
+    
+          function resetAll() {
+            answers = Array(20).fill(null);
             selectedDot = null;
-            answers[index] = null;
+            index = 0;
+            fillEl.style.width = '0%';
             nextBtn.disabled = true;
             nextBtn.style.background = '#E4E4E4';
-            fillEl.style.width = `${(index / 20) * 100}%`;
-            return;
+            dots.forEach(d => d.classList.remove('active'));
+            localStorage.removeItem('keepod_answers');
           }
-          applySelection(dot);
-        });
-      });
-
-      nextBtn.addEventListener('click', () => {
-        if (!selectedDot) return;
-        if (index < 19) {
-          index++;
+    
+          function renderQuestion(i) {
+            qEl.innerHTML = QUESTIONS[i];
+            progEl.textContent = `${i + 1} / 20`;
+    
+            hintEl.style.display = i >= 12 ? "block" : "none";
+    
+            fillEl.style.width = `${(i / 20) * 100}%`;
+    
+            dots.forEach(d => d.classList.remove('active'));
+            selectedDot = null;
+            if (answers[i] !== null) {
+              const found = dots.find(d => Number(d.dataset.value) === answers[i]);
+              if (found) {
+                found.classList.add('active');
+                selectedDot = found;
+                nextBtn.disabled = false;
+                nextBtn.style.background = '#7CEA54';
+              }
+            } else {
+              nextBtn.disabled = true;
+              nextBtn.style.background = '#E4E4E4';
+            }
+    
+            backBtn.innerHTML = (i === 0)
+              ? "처음으로 돌아가기"
+              : '<span class="chev">‹</span> 이전으로 돌아가기';
+          }
+    
+          function applySelection(dot) {
+            dots.forEach(d => d.classList.remove('active'));
+            dot.classList.add('active');
+            selectedDot = dot;
+            nextBtn.disabled = false;
+            nextBtn.style.background = '#7CEA54';
+            answers[index] = Number(dot.dataset.value);
+            fillEl.style.width = `${((index + 1) / 20) * 100}%`;
+          }
+    
           renderQuestion(index);
-        } else {
-          localStorage.setItem('keepod_answers', JSON.stringify(answers));
-          location.href = "result.html";
-        }
-      });
-
-      backBtn.addEventListener('click', () => {
-        if (index === 0) {
-          resetAll();
-          location.href = "index.html";
-        } else {
-          index--;
-          renderQuestion(index);
-        }
-      });
-
-    // ===== 하이브리드 스케일: 세로 꽉 채우기 + 좌우 안전(최대 3%만 가로 압축) =====
-(function () {
-  const BASE_W = 564;
-  const BASE_H = 900;
-  const MAX_SQUISH = 0.97; // 가로 최소 비율(=최대 3% 압축). 0.97~1 사이만 허용
-  const frameEl = document.querySelector('.frame');
-
-  function vp() {
-    const vw = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-    const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    return { vw, vh };
-  }
-
-  function applyScale() {
-    const { vw, vh } = vp();
-    const isMobile = (vw < 700) || (vh < 900);
-
-    if (!isMobile) {
-      // 태블릿/PC: 원본 픽셀 고정
-      frameEl.style.position = 'static';
-      frameEl.style.transform = 'none';
-      frameEl.style.width  = BASE_W + 'px';
-      frameEl.style.height = BASE_H + 'px';
-      return;
-    }
-
-    // 1) 기본: 세로 꽉 채우기
-    const sH = vh / BASE_H;
-    const needW = BASE_W * sH;
-
-    if (needW <= vw) {
-      // 가로가 화면 안에 들어오면 그대로(위아래 빈 공간 0)
-      const tx = (vw - needW) / 2;
-      frameEl.style.width  = BASE_W + 'px';
-      frameEl.style.height = BASE_H + 'px';
-      frameEl.style.position = 'fixed';
-      frameEl.style.top = '0';
-      frameEl.style.left = '0';
-      frameEl.style.transformOrigin = 'top left';
-      frameEl.style.transform = `translate(${tx}px, 0) scale(${sH})`;
-      return;
-    }
-
-    // 2) 살짝만 가로 압축해서 폭 맞추기 (최대 3%)
-    const fitRatio = vw / needW; // 1보다 작으면 넘침
-    if (fitRatio >= MAX_SQUISH) {
-      // 세로 스케일은 유지하고, 가로만 fitRatio 만큼 압축
-      const tx = 0; // 가로 꽉 채웠으니 좌표는 0
-      frameEl.style.width  = BASE_W + 'px';
-      frameEl.style.height = BASE_H + 'px';
-      frameEl.style.position = 'fixed';
-      frameEl.style.top = '0';
-      frameEl.style.left = '0';
-      frameEl.style.transformOrigin = 'top left';
-      // scaleY는 sH, scaleX는 sH*fitRatio 와 동일 효과: scale(sH) 후 scaleX(fitRatio)
-      frameEl.style.transform = `translate(${tx}px, 0) scale(${sH}) scaleX(${fitRatio})`;
-      return;
-    }
-
-    // 3) 그래도 넘치면 어쩔 수 없이 contain (좌우/상하 모두 안전, 중앙 정렬)
-    const sW = vw / BASE_W;
-    const s = Math.min(sW, sH);
-    const tx = (vw - BASE_W * s) / 2;
-    const ty = (vh - BASE_H * s) / 2;
-    frameEl.style.width  = BASE_W + 'px';
-    frameEl.style.height = BASE_H + 'px';
-    frameEl.style.position = 'fixed';
-    frameEl.style.top = '0';
-    frameEl.style.left = '0';
-    frameEl.style.transformOrigin = 'top left';
-    frameEl.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
-  }
-
-  window.addEventListener('resize', applyScale);
-  window.addEventListener('orientationchange', applyScale);
-  applyScale();
-})();
-
-    </script>
+    
+          dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+              if (selectedDot === dot) {
+                dot.classList.remove('active');
+                selectedDot = null;
+                answers[index] = null;
+                nextBtn.disabled = true;
+                nextBtn.style.background = '#E4E4E4';
+                fillEl.style.width = `${(index / 20) * 100}%`;
+                return;
+              }
+              applySelection(dot);
+            });
+          });
+    
+          nextBtn.addEventListener('click', () => {
+            if (!selectedDot) return;
+            if (index < 19) {
+              index++;
+              renderQuestion(index);
+            } else {
+              localStorage.setItem('keepod_answers', JSON.stringify(answers));
+              location.href = "result.html";
+            }
+          });
+    
+          backBtn.addEventListener('click', () => {
+            if (index === 0) {
+              resetAll();
+              location.href = "index.html";
+            } else {
+              index--;
+              renderQuestion(index);
+            }
+          });
+        </script>
+    
+    
+        <!-- ===================== 갤탭 S5e 전체화면 스케일 ====================== -->
+        <script>
+          (function () {
+            const BASE_W = 564;
+            const BASE_H = 900;
+            const frame =
+              document.querySelector(".frame") || document.getElementById("frame");
+    
+            function ensureWrappers() {
+              if (!frame) return {};
+              if (
+                frame.parentElement &&
+                frame.parentElement.classList.contains("scaled")
+              ) {
+                return {
+                  stage: frame.parentElement.parentElement,
+                  scaled: frame.parentElement,
+                };
+              }
+              const scaled = document.createElement("div");
+              scaled.className = "scaled";
+              const stage = document.createElement("div");
+              stage.className = "stage";
+              frame.parentElement.insertBefore(stage, frame);
+              stage.appendChild(scaled);
+              scaled.appendChild(frame);
+              return { stage, scaled };
+            }
+    
+            const { stage, scaled } = ensureWrappers();
+    
+            function vp() {
+              const vw = window.visualViewport?.width || window.innerWidth;
+              const vh = window.visualViewport?.height || window.innerHeight;
+              return { vw, vh };
+            }
+    
+            function apply() {
+              const { vw, vh } = vp();
+    
+              const s = vh / BASE_H;
+              const outW = BASE_W * s;
+              const outH = BASE_H * s;
+    
+              const tx = (vw - outW) / 2;
+              const ty = 0;
+    
+              Object.assign(stage.style, {
+                position: "fixed",
+                inset: "0",
+                overflow: "hidden",
+              });
+    
+              Object.assign(scaled.style, {
+                position: "absolute",
+                left: `${tx}px`,
+                top: `${ty}px`,
+                width: `${outW}px`,
+                height: `${outH}px`,
+                margin: "0",
+              });
+    
+              Object.assign(frame.style, {
+                position: "absolute",
+                left: "0",
+                top: "0",
+                width: `${BASE_W}px`,
+                height: `${BASE_H}px`,
+                transformOrigin: "top left",
+                transform: `scale(${s})`,
+              });
+            }
+    
+            window.addEventListener("resize", apply);
+            window.addEventListener("orientationchange", apply);
+            apply();
+          })();
+        </script>
+    
+      </body>
+    </html>
+    
   </body>
 </html>
