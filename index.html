@@ -6,8 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8" />
+  <title>Keepod Test</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- 여기 추가 -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#ffffff">
   </head>
   <body>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/service-worker.js')
+            .catch((err) => console.error('SW 등록 실패:', err));
+        });
+      }
+    </script>
     <div class="viewport">
       <div id="frame" class="frame">
         <div class="canvas">
