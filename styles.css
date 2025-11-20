@@ -2,10 +2,11 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 
 /* ===== 메인 프레임 크기 (갤럭시탭 기준 16:10) ===== */
-:root{
-  --W: 800;   /* 가로 */
-  --H: 500;   /* 세로 */
+:root {
+  --W: 1600;
+  --H: 1000;
 }
+
 
 /* 기본 */
 * { box-sizing: border-box; }
