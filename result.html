@@ -256,9 +256,12 @@
     </div>
 
     <div class="footer">
-      <button class="btn" id="actionBtn">처음으로 돌아가기</button>
+      <div class="btn-wrap">
+        <button class="btn" id="actionBtn">처음으로 돌아가기</button>
+        <button class="btn btn-print" id="printBtn">인쇄하기</button>
+      </div>
     </div>
-  </div>
+    
 
   <script>
     const W = 560, H = 790, FOOT = 96;
@@ -709,11 +712,21 @@
         location.href = 'index.html';
       });
     }
+    // 인쇄 버튼 동작
+function initPrintButton() {
+  const printBtn = document.getElementById('printBtn');
+  if (!printBtn) return;
+
+  printBtn.addEventListener('click', () => {
+    window.print();
+  });
+}
 
     function init() {
       scale();
       initResults();
       initActionButton();
+      initPrintButton();
     }
 
     window.addEventListener('resize', scale);

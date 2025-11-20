@@ -619,6 +619,17 @@ html,body{
   cursor:pointer;
 }
 .btn:active{ transform:translateY(1px); }
+/* 버튼 2개 나란히 */
+.btn-wrap{
+  display:flex;
+  gap:12px;
+}
+
+/* 인쇄 버튼 색 구분 */
+.btn-print{
+  background:#f0e48a;
+  color:#222;
+}
 
 /* 인쇄 */
 @media print{
@@ -636,8 +647,8 @@ html,body{
     justify-content:center;
   }
   .stage{
-    width:176mm;
-    height:250mm;
+    width:190mm;
+    height:300mm;
     overflow:hidden;
   }
   .frame{
@@ -652,8 +663,4 @@ html,body{
     background:#fff;
   }
 
-  .overlay-box,
-  .yellow-container{
-    display:none !important;
-  }
 }
