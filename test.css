@@ -2,36 +2,38 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 
 * { box-sizing: border-box; }
+
+/* 배경 + 가운데 정렬 */
 html, body {
-  height: 100%;
   margin: 0;
+  height: 100%;
   background: #f3f4f2;
   overflow: hidden;
 }
 
 .viewport {
-  min-height: 100vh;
-  display: grid;
-  place-items: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ------------------------------
-   메인 프레임 (여기만 바꾸면 크기 조절됨)
--------------------------------- */
-:root {
-  --W: 2560;   /* 가로 */
-  --H: 1600;   /* 세로 */
-}
-
+/* ✅ 여기서부터가 핵심: 16:10 비율 유지 + 화면 안에 최대한 크게 */
 .frame {
-  width: var(--W);
-  height: var(--H);
+  /* 16:10 비율 유지 */
+  aspect-ratio: 16 / 10;
+
+  /* 화면 차지 방식: 가로·세로 중 작은 쪽에 맞춰서 꽉 차게 */
+  width: min(100vw, 1.6 * 100vh);
+  max-height: 100vh;
+
   background: #f6f6f6;
   border-radius: 40px;
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0,0,0,.12);
 }
 
+/* 그대로 둬도 되는 부분들 */
 .canvas {
   position: relative;
   width: 100%;
@@ -40,29 +42,25 @@ html, body {
   color: #2b2b2b;
 }
 
-/* ------------------------------
-   헤더
--------------------------------- */
-.header {
-  height: 150px;
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  background: #fff;
+
+/* 헤더 */
+.header{
+  height:150px;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  background:#fff;
+}
+.brand{
+  padding-top:40px;
+  font-family:"Black Han Sans",sans-serif;
+  font-weight:800;
+  font-size:26px;
+  letter-spacing:.2px;
 }
 
-.brand {
-  padding-top: 40px;
-  font-family: "Black Han Sans", sans-serif;
-  font-weight: 800;
-  font-size: 26px;
-  letter-spacing: .2px;
-}
-
-/* ------------------------------
-   진행바
--------------------------------- */
+/* divider → 진행바 */
 .divider {
   position: relative;
   height: 14px;
@@ -79,183 +77,167 @@ html, body {
   transition: width .35s ease;
 }
 
-.progress {
-  position: absolute;
-  top: 170px;
-  right: 20px;
-  color: #7a7a7a;
-  font-size: 12px;
+/* 진행도 */
+.progress{
+  position:absolute;
+  top:170px;
+  right:20px;
+  color:#7a7a7a;
+  font-size:12px;
 }
 
-/* ------------------------------
-   선택 가이드
--------------------------------- */
-.hint {
-  position: absolute;
-  top: 150px;
-  left: 30px;
-  right: 30px;
-  margin: 0;
-  text-align: center;
-  font-size: 13px;
-  color: #7a7a7a;
+/* 선택 가이드(13번부터) */
+.hint{
+  position:absolute;
+  top:150px;
+  left:30px;
+  right:30px;
+  margin:0;
+  text-align:center;
+  font-size:13px;
+  color:#7a7a7a;
 }
 
-/* ------------------------------
-   질문 카드
--------------------------------- */
-.question-card {
-  position: absolute;
-  left: 30px;
-  right: 30px;
-  top: 300px;
-  background: #fff;
-  border-radius: 24px;
-  padding: 32px 24px;
-  box-shadow: 0 0 3px rgba(0,0,0,.06);
-  min-height: 140px;
-  max-height: 140px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+/* 질문 카드 */
+.question-card{
+  position:absolute;
+  left:30px;
+  right:30px;
+  top:300px;
+  background:#fff;
+  border-radius:24px;
+  padding:32px 24px;
+  box-shadow:0 0 3px rgba(0,0,0,.06);
+  min-height:140px;
+  max-height:140px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.question{
+  margin:0;
+  font-weight:600;
+  font-size:20px;
+  line-height:1.5;
+  letter-spacing:-.2px;
+  color:#3f3f3f;
+  word-break:keep-all;
+  white-space:normal;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:geometricPrecision;
 }
 
-.question {
-  margin: 0;
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 1.5;
-  letter-spacing: -.2px;
-  color: #3f3f3f;
-  word-break: keep-all;
+/* 5점 척도 */
+.scale{
+  position:absolute;
+  left:24px;
+  right:24px;
+  top:480px;
+  height:80px;
+}
+.scale .rail{
+  position:absolute;
+  left:32px;
+  right:32px;
+  top:18px;
+  height:8px;
+  background:#e6e6e6;
+  border-radius:8px;
+  z-index:0;
+}
+.dot{
+  position:absolute;
+  top:12px;
+  width:22px;
+  height:22px;
+  border:none;
+  border-radius:50%;
+  background:#e0e0e0;
+  cursor:pointer;
+  transition:transform .08s ease, background .12s ease;
+  z-index:2;
+}
+.dot:hover{ transform:scale(1.05); }
+.dot[data-value="1"]{ left:calc(30px - 14px); }
+.dot[data-value="2"]{ left:calc(27% - 14px); }
+.dot[data-value="3"]{ left:calc(50% - 14px); }
+.dot[data-value="4"]{ left:calc(73% - 14px); }
+.dot[data-value="5"]{ right:calc(30px - 14px); }
+.dot.active{
+  top:11px;
+  background:#7CEA54;
+  width:24px;
+  height:24px;
+}
+.dot.active::after{
+  content:"";
+  position:absolute;
+  inset:-16px;
+  border-radius:50%;
+  background:rgba(124,234,84,.28);
+  z-index:1;
+  pointer-events:none;
 }
 
-/* ------------------------------
-   5점 척도
--------------------------------- */
-.scale {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  top: 480px;
-  height: 80px;
+/* 라벨 */
+.labels{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  font-size:14px;
+  color:#7a7a7a;
+  text-align:center;
+  line-height:1.2;
+}
+.labels span:first-child{
+  text-align:left;
+  padding-left:18px;
+}
+.labels span:nth-child(2){
+  text-align:center;
+}
+.labels span:last-child{
+  text-align:right;
+  padding-right:18px;
 }
 
-.scale .rail {
-  position: absolute;
-  left: 32px;
-  right: 32px;
-  top: 18px;
-  height: 8px;
-  background: #e6e6e6;
-  border-radius: 8px;
-  z-index: 0;
+/* CTA */
+.cta-wrap{
+  position:absolute;
+  left:24px;
+  right:24px;
+  bottom:80px;
+  display:grid;
+  gap:14px;
+  justify-items:center;
 }
-
-.dot {
-  position: absolute;
-  top: 12px;
-  width: 22px;
-  height: 22px;
-  border: none;
-  border-radius: 50%;
-  background: #e0e0e0;
-  cursor: pointer;
-  transition: transform .08s ease, background .12s ease;
-  z-index: 2;
+.next{
+  width:100%;
+  height:56px;
+  border:none;
+  border-radius:20px;
+  font-weight:700;
+  font-size:18px;
+  color:#fff;
+  background:#E4E4E4;
+  cursor:pointer;
+  transition:transform .06s ease, opacity .12s ease;
 }
+.next:active{ transform:scale(.98); }
+.next:disabled{ opacity:.35; cursor:default; }
 
-.dot:hover { transform: scale(1.05); }
-
-.dot[data-value="1"] { left: calc(30px - 14px); }
-.dot[data-value="2"] { left: calc(27% - 14px); }
-.dot[data-value="3"] { left: calc(50% - 14px); }
-.dot[data-value="4"] { left: calc(73% - 14px); }
-.dot[data-value="5"] { right: calc(30px - 14px); }
-
-.dot.active {
-  top: 11px;
-  background: #7CEA54;
-  width: 24px;
-  height: 24px;
+.back{
+  background:transparent;
+  border:none;
+  color:#9a9a9a;
+  font-size:15px;
+  cursor:pointer;
 }
-
-.dot.active::after {
-  content: "";
-  position: absolute;
-  inset: -16px;
-  border-radius: 50%;
-  background: rgba(124,234,84,.28);
-  pointer-events: none;
-}
-
-/* ------------------------------
-   5점 라벨
--------------------------------- */
-.labels {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  font-size: 14px;
-  color: #7a7a7a;
-  text-align: center;
-  line-height: 1.2;
-}
-
-.labels span:first-child {
-  text-align: left;
-  padding-left: 18px;
-}
-.labels span:nth-child(2) {
-  text-align: center;
-}
-.labels span:last-child {
-  text-align: right;
-  padding-right: 18px;
-}
-
-/* ------------------------------
-   CTA 버튼
--------------------------------- */
-.cta-wrap {
-  position: absolute;
-  left: 24px;
-  right: 24px;
-  top: calc((173px + 88px * 2 - 14px) + 22px + 110px + 90px + 140px);
-  display: grid;
-  gap: 14px;
-  justify-items: center;
-}
-
-.next {
-  width: 100%;
-  height: 56px;
-  border: none;
-  border-radius: 20px;
-  font-weight: 700;
-  font-size: 18px;
-  color: #fff;
-  background: #E4E4E4;
-  cursor: pointer;
-  transition: transform .06s ease, opacity .12s ease;
-}
-
-.next:active { transform: scale(.98); }
-.next:disabled { opacity: .35; cursor: default; }
-
-.back {
-  background: transparent;
-  border: none;
-  color: #9a9a9a;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-.back .chev {
-  font-size: 20px;
-  margin-right: 2px;
+.back .chev{
+  font-size:20px;
+  margin-right:2px;
 }
