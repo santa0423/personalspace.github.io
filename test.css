@@ -7,8 +7,6 @@ html,body{height:100%;margin:0;background:#f3f4f2;overflow:hidden;}
 
 /* 프레임: 16:10 비율 (800 × 500) */
 .frame{
-  width:800px;
-  height:500px;
   background:#f6f6f6;
   border-radius:40px;
   overflow:hidden;
