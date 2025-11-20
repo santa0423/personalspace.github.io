@@ -18,14 +18,10 @@ html, body {
   justify-content: center;
 }
 
-/* ✅ 여기서부터가 핵심: 16:10 비율 유지 + 화면 안에 최대한 크게 */
+/* ✅ 첫 번째 정상 코드와 동일한 카드 사이즈 (564 × 900) */
 .frame {
-  /* 16:10 비율 유지 */
-  aspect-ratio: 16 / 10;
-
-  /* 화면 차지 방식: 가로·세로 중 작은 쪽에 맞춰서 꽉 차게 */
-  width: min(100vw, 1.6 * 100vh);
-  max-height: 100vh;
+  width: 564px;
+  height: 900px;
 
   background: #f6f6f6;
   border-radius: 40px;
@@ -41,7 +37,6 @@ html, body {
   font-family: "Pretendard", sans-serif;
   color: #2b2b2b;
 }
-
 
 /* 헤더 */
 .header{
