@@ -1,6 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap");
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
 
+/* ===== 메인 프레임 크기 (갤럭시탭 기준 16:10) ===== */
+:root{
+  --W: 800;   /* 가로 */
+  --H: 500;   /* 세로 */
+  --FOOT: 110;
+}
+
 /* 기본 */
 * { box-sizing: border-box; }
 html, body {
@@ -8,11 +15,20 @@ html, body {
   margin: 0;
   background: #f3f4f2;
   overflow: hidden;
+  font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
-.viewport { min-height: 100vh; display: grid; place-items: center; }
 
-/* 프레임 */
+/* 화면 중앙에 프레임 하나 */
+.viewport {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+/* 프레임(카드) */
 .frame {
+  width: calc(var(--W) * 1px);
+  height: calc(var(--H) * 1px);
   border-radius: 40px;
   overflow: hidden;
   background: #fff;
@@ -20,7 +36,11 @@ html, body {
 }
 
 /* 캔버스 */
-.canvas { position: relative; width: 100%; height: 100%; }
+.canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
 
 /* 배경 */
 .bg {
@@ -33,7 +53,8 @@ html, body {
 .title {
   position: absolute;
   top: 173px;
-  left: 0; right: 0;
+  left: 0; 
+  right: 0;
   width: max-content;
   margin: 0 auto;
   font-family: "Black Han Sans", sans-serif;
@@ -43,12 +64,14 @@ html, body {
   color: #2b2b2b;
   text-align: center;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: geometricPrecision;
-  font-synthesis: none;
 }
-.title > span { display:block; height:88px; }
-.title > span + span { margin-top:10px; }
+.title > span { 
+  display:block; 
+  height:88px; 
+}
+.title > span + span { 
+  margin-top:10px; 
+}
 
 /* 부제 */
 .subtitle {
@@ -79,7 +102,7 @@ html, body {
   top: calc((173px + 88px * 2 - 14px) + 22px + 110px);
 }
 
-/* 두 번째 줄 — 첫 번째 줄 아래로 90px 간격 */
+/* 두 번째 줄 */
 .box-group2 {
   top: calc((173px + 88px * 2 - 14px) + 22px + 110px + 90px);
 }
@@ -106,14 +129,12 @@ html, body {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  /* 두 번째 줄에서 90px 더 아래 (필요시 미세조정) */
   top: calc((173px + 88px * 2 - 14px) + 22px + 110px + 90px + 140px);
-
   height: 70px;
   padding: 0 100px;
   border: none;
-  border-radius: 100px;        /* 모서리 100 */
-  background: #111;            /* 검은색 */
+  border-radius: 100px;
+  background: #111;
   color: #fff;
   font-family: "Pretendard", sans-serif;
   font-weight: 700;
@@ -121,64 +142,11 @@ html, body {
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-
   transition: transform .06s ease, box-shadow .12s ease, opacity .12s ease;
 }
-
 .cta:hover { box-shadow: 0 10px 24px rgba(0,0,0,.22); }
 .cta:active { transform: translateX(-50%) scale(0.98); }
 .cta:focus-visible {
   outline: 0;
   box-shadow: 0 0 0 3px rgba(0,0,0,.15), 0 8px 20px rgba(0,0,0,.18);
-}
-/* 모바일에서 스케일링이 안전하게 보이도록 약간의 컨테이너 세팅만 */
-html, body {
-  height: 100%;
-  margin: 0;
-  background: #f3f4f2;
-  overflow: hidden; /* 모바일에서 바깥 스크롤 생기는 것 방지 */
-}
-
-.viewport {
-  min-height: 100dvh; /* 모바일 주소창 변화 대응 */
-  display: grid;
-  place-items: center;
-}
-
-/* 태블릿/PC에선 원래처럼 카드 그림자/둥근모서리 보이도록 유지 */
-@media (min-width: 700px) and (min-height: 900px) {
-  .frame {
-    border-radius: 40px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 24px 60px rgba(0,0,0,.12);
-  }
-}
-
-/* 모바일에선 그림자/둥근모서리는 스케일 적용 후에도 시각적으로 유지되지만,
-   브라우저마다 클리핑 이슈 있을 수 있으니 필요시 아래 주석 해제
-@media (max-width: 699px), (max-height: 899px) {
-  .frame { will-change: transform; }
-}
-*/
-/* 스크롤 컨테이너(뷰포트 전체) */
-.stage {
-  position: fixed; /* JS에서 모바일 시에만 실제로 고정/스크롤 활성화 */
-  inset: 0;
-  overflow: hidden; /* 기본값: 필요시 JS가 overflowX:auto 로 전환 */
-}
-
-/* 실제 스케일된 박스 */
-.scaled {
-  position: relative;
-  width: 564px;  /* JS가 모바일에서는 outW로 바꿔줌 */
-  height: 900px; /* JS가 모바일에서는 outH로 바꿔줌 */
-  margin: 0 auto; /* 남을 때 중앙정렬 */
-}
-
-/* 안전: 프레임은 원본 사이즈, 변형은 transform으로만 */
-.frame {
-  width: 564px;
-  height: 900px;
-  transform-origin: top left;
 }
