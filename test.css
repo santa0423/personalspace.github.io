@@ -18,11 +18,10 @@ html, body {
   justify-content: center;
 }
 
-/* ✅ 첫 번째 정상 코드와 동일한 카드 사이즈 (564 × 900) */
+/* ✅ 첫 번째 정상 코드랑 동일한 고정 크기 카드 */
 .frame {
-  width: 5px;
-  height: 90px;
-
+  width: 564px;
+  height: 900px;
   background: #f6f6f6;
   border-radius: 40px;
   overflow: hidden;
