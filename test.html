@@ -1,127 +1,70 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
-    <meta charset="utf-8" />
-    <title>퍼스널 스페이스 테스트</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="test.css" />
-  </head>
-  <body>
-    <div class="viewport">
-      <div class="frame">
-        <div class="canvas">
-          <!-- 헤더 -->
-          <header class="header">
-            <div class="brand">Keepod</div>
-          </header>
+<head>
+  <meta charset="utf-8" />
+  <title>퍼스널 스페이스 테스트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="test.css" />
+</head>
+<body>
+  <!-- 전체 화면을 채우는 컨테이너 -->
+  <div class="stage">
+    <!-- 실제 디자인 프레임 (기준 사이즈 564×900) -->
+    <div class="frame">
+      <div class="canvas">
+        <!-- 헤더 -->
+        <header class="header">
+          <div class="brand">Keepod</div>
+        </header>
 
-          <!-- divider = 진행바 -->
-          <div class="divider"><div class="fill"></div></div>
+        <!-- 진행 바 -->
+        <div class="divider">
+          <div class="fill" id="progressFill"></div>
+        </div>
 
-          <!-- 진행도 -->
-          <div class="progress">1 / 20</div>
+        <!-- 진행도 텍스트 -->
+        <div class="progress" id="progressText">1 / 20</div>
 
-          <!-- 안내문 -->
-          <p class="hint" style="display:none;">
-            [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
-          </p>
+        <!-- 안내 문구 (필요한 질문에서만 JS로 show/hide) -->
+        <p class="hint" id="hint">
+          [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
+        </p>
 
-          <!-- 질문 카드 -->
-          <section class="question-card">
-            <p class="question"></p>
-          </section>
+        <!-- 질문 카드 -->
+        <section class="question-card">
+          <p class="question" id="questionText"></p>
+        </section>
 
-          <!-- 5점 척도 -->
-          <div class="scale">
-            <div class="rail"></div>
-            <button class="dot" data-value="1"></button>
-            <button class="dot" data-value="2"></button>
-            <button class="dot" data-value="3"></button>
-            <button class="dot" data-value="4"></button>
-            <button class="dot" data-value="5"></button>
+        <!-- 5점 척도 -->
+        <div class="scale">
+          <div class="rail"></div>
 
-            <div class="labels">
-              <span>그렇지<br />않다</span>
-              <span>보통이다</span>
-              <span>그렇다</span>
-            </div>
+          <button class="dot" data-value="1"></button>
+          <button class="dot" data-value="2"></button>
+          <button class="dot" data-value="3"></button>
+          <button class="dot" data-value="4"></button>
+          <button class="dot" data-value="5"></button>
+
+          <div class="labels">
+            <span>그렇지 않다</span>
+            <span>보통이다</span>
+            <span>그렇다</span>
           </div>
+        </div>
 
-          <!-- CTA -->
-          <div class="cta-wrap">
-            <button class="next" disabled>다음</button>
-            <button class="back" type="button">
-              <span class="chev">‹</span> 이전으로 돌아가기
-            </button>
-          </div>
+        <!-- 버튼 영역 -->
+        <div class="cta-wrap">
+          <button class="next" id="nextBtn" disabled>다음</button>
+          <button class="back" id="backBtn">
+            <span class="chev">‹</span> 이전으로 돌아가기
+          </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!DOCTYPE html>
-    <html lang="ko">
-      <head>
-        <meta charset="utf-8" />
-        <title>퍼스널 스페이스 테스트</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="test.css" />
-      </head>
-    
-      <body>
-        <div class="viewport">
-          <div class="frame">
-            <div class="canvas">
-              
-              <!-- 헤더 -->
-              <header class="header">
-                <div class="brand">Keepod</div>
-              </header>
-    
-              <!-- divider -->
-              <div class="divider"><div class="fill"></div></div>
-    
-              <!-- 진행도 -->
-              <div class="progress">1 / 20</div>
-    
-              <!-- 안내문 -->
-              <p class="hint" style="display:none;">
-                [자신이 퍼스널 스페이스 침범을 당했을 때의 상황을 생각하며 답을 선택해주세요]
-              </p>
-    
-              <!-- 질문 카드 -->
-              <section class="question-card">
-                <p class="question"></p>
-              </section>
-    
-              <!-- 5점 척도 -->
-              <div class="scale">
-                <div class="rail"></div>
-                <button class="dot" data-value="1"></button>
-                <button class="dot" data-value="2"></button>
-                <button class="dot" data-value="3"></button>
-                <button class="dot" data-value="4"></button>
-                <button class="dot" data-value="5"></button>
-    
-                <div class="labels">
-                  <span>그렇지<br>않다</span>
-                  <span>보통이다</span>
-                  <span>그렇다</span>
-                </div>
-              </div>
-    
-              <!-- CTA -->
-              <div class="cta-wrap">
-                <button class="next" disabled>다음</button>
-                <button class="back" type="button">
-                  <span class="chev">‹</span> 이전으로 돌아가기
-                </button>
-              </div>
-    
-            </div>
-          </div>
-        </div>
-    
-    
+  <!-- ✅ 여기에는 기존에 쓰던 질문/저장/로직 스크립트를 그대로 붙여 넣으면 돼요 -->
+
         <!-- ===================== 질문 및 테스트 로직 ====================== -->
         <script>
           const QUESTIONS = [
@@ -326,9 +269,26 @@
             apply();
           })();
         </script>
-    
-      </body>
-    </html>
-    
-  </body>
+
+  <!-- 🔍 화면 크기에 맞춰 프레임을 확대/축소하는 스크립트 -->
+  <script>
+    function resizeFrame() {
+      const baseW = 564;  // 디자인 기준 가로
+      const baseH = 900;  // 디자인 기준 세로
+
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      const scale = Math.min(vw / baseW, vh / baseH);
+      const frame = document.querySelector('.frame');
+
+      if (frame) {
+        frame.style.transform = `scale(${scale})`;
+      }
+    }
+
+    window.addEventListener('load', resizeFrame);
+    window.addEventListener('resize', resizeFrame);
+  </script>
+</body>
 </html>
