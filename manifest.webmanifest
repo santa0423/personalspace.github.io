@@ -1,0 +1,17 @@
+{
+    "name": "나의 팟 발견하기 - Keepod",
+    "short_name": "나의팟",
+    "start_url": "./index.html",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "icons": [
+      {
+        "src": "./images/앱 UX/보더.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ]
+  }
+  

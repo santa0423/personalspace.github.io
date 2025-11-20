@@ -5,26 +5,15 @@
     <title>나의 팟 발견하기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- 스타일 파일: 여기서는 styles.css 하나만 사용 -->
     <link rel="stylesheet" href="styles.css" />
-    <meta charset="UTF-8" />
-  <title>Keepod Test</title>
 
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- 여기 추가 -->
-  <link rel="manifest" href="/manifest.webmanifest">
-  <meta name="theme-color" content="#ffffff">
+    <!-- PWA 설정 -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#ffffff" />
   </head>
   <body>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('/service-worker.js')
-            .catch((err) => console.error('SW 등록 실패:', err));
-        });
-      }
-    </script>
     <div class="viewport">
       <div id="frame" class="frame">
         <div class="canvas">
@@ -53,99 +42,135 @@
           </div>
 
           <!-- CTA 버튼 -->
-          <button class="cta" onclick="location.href='test.html'">테스트 시작하기</button>
+          <button class="cta" onclick="location.href='test.html'">
+            테스트 시작하기
+          </button>
         </div>
       </div>
     </div>
 
+    <!-- 화면 비율 맞추는 스케일 스크립트 (그대로 유지) -->
     <script>
-      // ===== 균등 스케일 contain: 화면에 전부 보이고, 스크롤/왜곡/잘림 없음 =====
       (function () {
         const BASE_W = 564;
         const BASE_H = 900;
-        const frame = document.querySelector('.frame') || document.getElementById('frame');
-      
+        const frame =
+          document.querySelector(".frame") || document.getElementById("frame");
+
         // 래퍼(stage/scaled) 자동 구성
         function ensureWrappers() {
           if (!frame) return {};
-          if (frame.parentElement && frame.parentElement.classList.contains('scaled')) {
+          if (
+            frame.parentElement &&
+            frame.parentElement.classList.contains("scaled")
+          ) {
             return {
               stage: frame.parentElement.parentElement,
-              scaled: frame.parentElement
+              scaled: frame.parentElement,
             };
           }
-          const scaled = document.createElement('div');
-          scaled.className = 'scaled';
-          const stage = document.createElement('div');
-          stage.className = 'stage';
+          const scaled = document.createElement("div");
+          scaled.className = "scaled";
+          const stage = document.createElement("div");
+          stage.className = "stage";
           frame.parentElement.insertBefore(stage, frame);
           stage.appendChild(scaled);
           scaled.appendChild(frame);
           return { stage, scaled };
         }
-      
+
         const { stage, scaled } = ensureWrappers();
-      
+
         function vp() {
-          const vw = (window.visualViewport && window.visualViewport.width)  || window.innerWidth;
-          const vh = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+          const vw =
+            (window.visualViewport && window.visualViewport.width) ||
+            window.innerWidth;
+          const vh =
+            (window.visualViewport && window.visualViewport.height) ||
+            window.innerHeight;
           return { vw, vh };
         }
-      
+
         function apply() {
           const { vw, vh } = vp();
-          const isMobile = (vw < 700) || (vh < 900);
-      
+          const isMobile = vw < 700 || vh < 900;
+
           // 데스크톱/태블릿: 원본 고정
           if (!isMobile) {
-            Object.assign(stage.style, { position:'static', inset:'', overflow:'hidden' });
-            Object.assign(scaled.style, { position:'relative', width:`${BASE_W}px`, height:`${BASE_H}px`, margin:'0 auto' });
-            Object.assign(frame.style, { position:'relative', width:`${BASE_W}px`, height:`${BASE_H}px`, transform:'none', transformOrigin:'top left', left:'0', top:'0' });
+            Object.assign(stage.style, {
+              position: "static",
+              inset: "",
+              overflow: "hidden",
+            });
+            Object.assign(scaled.style, {
+              position: "relative",
+              width: `${BASE_W}px`,
+              height: `${BASE_H}px`,
+              margin: "0 auto",
+            });
+            Object.assign(frame.style, {
+              position: "relative",
+              width: `${BASE_W}px`,
+              height: `${BASE_H}px`,
+              transform: "none",
+              transformOrigin: "top left",
+              left: "0",
+              top: "0",
+            });
             return;
           }
-      
+
           // 균등 스케일: 화면에 "전부 보이도록" contain
           const s = Math.min(vw / BASE_W, vh / BASE_H);
           const outW = BASE_W * s;
           const outH = BASE_H * s;
           const tx = (vw - outW) / 2;
           const ty = (vh - outH) / 2;
-      
+
           // stage = 뷰포트 박스(스크롤 금지)
           Object.assign(stage.style, {
-            position: 'fixed',
-            inset: '0',
-            overflow: 'hidden'
+            position: "fixed",
+            inset: "0",
+            overflow: "hidden",
           });
-      
+
           // scaled = 스케일 후 실크기 박스(중앙정렬)
           Object.assign(scaled.style, {
-            position: 'absolute',
+            position: "absolute",
             left: `${tx}px`,
             top: `${ty}px`,
             width: `${outW}px`,
             height: `${outH}px`,
-            margin: '0'
+            margin: "0",
           });
-      
+
           // frame = 원본을 s배 확대 (좌표 불변, 왜곡 없음)
           Object.assign(frame.style, {
-            position: 'absolute',
-            left: '0',
-            top: '0',
+            position: "absolute",
+            left: "0",
+            top: "0",
             width: `${BASE_W}px`,
             height: `${BASE_H}px`,
-            transformOrigin: 'top left',
-            transform: `scale(${s})`
+            transformOrigin: "top left",
+            transform: `scale(${s})`,
           });
         }
-      
-        window.addEventListener('resize', apply);
-        window.addEventListener('orientationchange', apply);
+
+        window.addEventListener("resize", apply);
+        window.addEventListener("orientationchange", apply);
         apply();
       })();
-      </script>
-      
-      
+    </script>
+
+    <!-- 서비스 워커 등록 -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./service-worker.js")
+            .catch((err) => console.error("SW 등록 실패:", err));
+        });
+      }
+    </script>
   </body>
 </html>
