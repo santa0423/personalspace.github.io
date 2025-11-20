@@ -20,8 +20,8 @@ html, body {
 
 /* ✅ 첫 번째 정상 코드와 동일한 카드 사이즈 (564 × 900) */
 .frame {
-  width: 564px;
-  height: 900px;
+  width: 5px;
+  height: 90px;
 
   background: #f6f6f6;
   border-radius: 40px;
