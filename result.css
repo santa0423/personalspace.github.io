@@ -274,7 +274,8 @@ html,body{
   font-weight:900;
   text-decoration:underline;
   text-underline-position:under;
-  padding:2px 6px;
+  padding: 0px 6px 10px;
+
 }
 .zone-bubble{
   font-size:10px;
@@ -629,38 +630,26 @@ html,body{
 .btn-print{
   background:#f0e48a;
   color:#222;
-}
+}/* 인쇄용 스타일 */
+@media print {
 
-/* 인쇄 */
-@media print{
-  @page{ size:B5 portrait; margin:0; }
-  html,body{
-    background:#ffffff;
-    margin:0; padding:0;
-    -webkit-print-color-adjust:exact !important;
-    print-color-adjust:exact !important;
-  }
-
-  .footer{ display:none !important; }
-  .page{
-    align-items:center;
-    justify-content:center;
-  }
-  .stage{
-    width:190mm;
-    height:300mm;
-    overflow:hidden;
-  }
-  .frame{
-    width:100%; height:100%;
-    border-radius:0;
-    box-shadow:none;
-  }
-  .frame > img{
-    position:static;
-    width:100%; height:100%;
-    object-fit:contain;
-    background:#fff;
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+      transform: scale(1.26);  /* ← 여기 숫자만 조정해서 전체 크기 키우기 */
   }
 
+
+  /* 버튼은 인쇄에서 숨기기 */
+  .footer {
+    display: none !important;
+  }
+  .page,
+.stage,
+.frame {
+  border-radius: 0 !important;
+}ㄴ
 }
