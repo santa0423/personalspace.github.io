@@ -10,6 +10,8 @@ html, body {
   background: #f3f4f2;
   overflow: hidden;
 }
+
+/* stage: 화면 한가운데 프레임 정렬 */
 .stage {
   height: 100vh;
   display: flex;
@@ -17,14 +19,7 @@ html, body {
   justify-content: center;
 }
 
-.viewport {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ✅ 첫 번째 정상 코드랑 동일한 고정 크기 카드 */
+/* 첫 번째 정상 코드와 동일한 고정 크기 카드 */
 .frame {
   width: 564px;
   height: 900px;
@@ -34,7 +29,7 @@ html, body {
   box-shadow: 0 24px 60px rgba(0,0,0,.12);
 }
 
-/* 그대로 둬도 되는 부분들 */
+/* 내부 캔버스 */
 .canvas {
   position: relative;
   width: 100%;

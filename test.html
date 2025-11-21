@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <!-- ✅ 질문/저장/로직 스크립트만 남기기 -->
+  <!-- ===================== 질문 및 테스트 로직 ====================== -->
   <script>
     const QUESTIONS = [
       "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
@@ -116,7 +116,6 @@
       progEl.textContent = `${i + 1} / 20`;
 
       hintEl.style.display = i >= 12 ? "block" : "none";
-
       fillEl.style.width = `${(i / 20) * 100}%`;
 
       dots.forEach(d => d.classList.remove('active'));
@@ -187,6 +186,5 @@
       }
     });
   </script>
-
 </body>
 </html>
