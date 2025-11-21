@@ -10,6 +10,12 @@ html, body {
   background: #f3f4f2;
   overflow: hidden;
 }
+.stage {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .viewport {
   height: 100vh;

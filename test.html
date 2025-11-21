@@ -63,232 +63,130 @@
     </div>
   </div>
 
-  <!-- ✅ 여기에는 기존에 쓰던 질문/저장/로직 스크립트를 그대로 붙여 넣으면 돼요 -->
-
-        <!-- ===================== 질문 및 테스트 로직 ====================== -->
-        <script>
-          const QUESTIONS = [
-            "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
-            "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
-            "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
-            "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
-            "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
-            "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
-            "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
-            "엘리베이터에서 주로 계기판 근처에 탄다",
-            "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
-            "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
-            "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
-            "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
-            "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
-            "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
-            "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
-            "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
-            "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
-            "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
-            "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
-            "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
-          ];
-    
-          const dots = Array.from(document.querySelectorAll('.dot'));
-          const nextBtn = document.querySelector('.next');
-          const backBtn = document.querySelector('.back');
-          const qEl = document.querySelector('.question');
-          const progEl = document.querySelector('.progress');
-          const fillEl = document.querySelector('.fill');
-          const hintEl = document.querySelector('.hint');
-    
-          let index = 0;
-          let selectedDot = null;
-          let answers = Array(20).fill(null);
-    
-          function resetAll() {
-            answers = Array(20).fill(null);
-            selectedDot = null;
-            index = 0;
-            fillEl.style.width = '0%';
-            nextBtn.disabled = true;
-            nextBtn.style.background = '#E4E4E4';
-            dots.forEach(d => d.classList.remove('active'));
-            localStorage.removeItem('keepod_answers');
-          }
-    
-          function renderQuestion(i) {
-            qEl.innerHTML = QUESTIONS[i];
-            progEl.textContent = `${i + 1} / 20`;
-    
-            hintEl.style.display = i >= 12 ? "block" : "none";
-    
-            fillEl.style.width = `${(i / 20) * 100}%`;
-    
-            dots.forEach(d => d.classList.remove('active'));
-            selectedDot = null;
-            if (answers[i] !== null) {
-              const found = dots.find(d => Number(d.dataset.value) === answers[i]);
-              if (found) {
-                found.classList.add('active');
-                selectedDot = found;
-                nextBtn.disabled = false;
-                nextBtn.style.background = '#7CEA54';
-              }
-            } else {
-              nextBtn.disabled = true;
-              nextBtn.style.background = '#E4E4E4';
-            }
-    
-            backBtn.innerHTML = (i === 0)
-              ? "처음으로 돌아가기"
-              : '<span class="chev">‹</span> 이전으로 돌아가기';
-          }
-    
-          function applySelection(dot) {
-            dots.forEach(d => d.classList.remove('active'));
-            dot.classList.add('active');
-            selectedDot = dot;
-            nextBtn.disabled = false;
-            nextBtn.style.background = '#7CEA54';
-            answers[index] = Number(dot.dataset.value);
-            fillEl.style.width = `${((index + 1) / 20) * 100}%`;
-          }
-    
-          renderQuestion(index);
-    
-          dots.forEach(dot => {
-            dot.addEventListener('click', () => {
-              if (selectedDot === dot) {
-                dot.classList.remove('active');
-                selectedDot = null;
-                answers[index] = null;
-                nextBtn.disabled = true;
-                nextBtn.style.background = '#E4E4E4';
-                fillEl.style.width = `${(index / 20) * 100}%`;
-                return;
-              }
-              applySelection(dot);
-            });
-          });
-    
-          nextBtn.addEventListener('click', () => {
-            if (!selectedDot) return;
-            if (index < 19) {
-              index++;
-              renderQuestion(index);
-            } else {
-              localStorage.setItem('keepod_answers', JSON.stringify(answers));
-              location.href = "result.html";
-            }
-          });
-    
-          backBtn.addEventListener('click', () => {
-            if (index === 0) {
-              resetAll();
-              location.href = "index.html";
-            } else {
-              index--;
-              renderQuestion(index);
-            }
-          });
-        </script>
-    
-    
-        <!-- ===================== 갤탭 S5e 전체화면 스케일 ====================== -->
-        <script>
-          (function () {
-            const BASE_W = 564;
-            const BASE_H = 900;
-            const frame =
-              document.querySelector(".frame") || document.getElementById("frame");
-    
-            function ensureWrappers() {
-              if (!frame) return {};
-              if (
-                frame.parentElement &&
-                frame.parentElement.classList.contains("scaled")
-              ) {
-                return {
-                  stage: frame.parentElement.parentElement,
-                  scaled: frame.parentElement,
-                };
-              }
-              const scaled = document.createElement("div");
-              scaled.className = "scaled";
-              const stage = document.createElement("div");
-              stage.className = "stage";
-              frame.parentElement.insertBefore(stage, frame);
-              stage.appendChild(scaled);
-              scaled.appendChild(frame);
-              return { stage, scaled };
-            }
-    
-            const { stage, scaled } = ensureWrappers();
-    
-            function vp() {
-              const vw = window.visualViewport?.width || window.innerWidth;
-              const vh = window.visualViewport?.height || window.innerHeight;
-              return { vw, vh };
-            }
-    
-            function apply() {
-              const { vw, vh } = vp();
-    
-              const s = vh / BASE_H;
-              const outW = BASE_W * s;
-              const outH = BASE_H * s;
-    
-              const tx = (vw - outW) / 2;
-              const ty = 0;
-    
-              Object.assign(stage.style, {
-                position: "fixed",
-                inset: "0",
-                overflow: "hidden",
-              });
-    
-              Object.assign(scaled.style, {
-                position: "absolute",
-                left: `${tx}px`,
-                top: `${ty}px`,
-                width: `${outW}px`,
-                height: `${outH}px`,
-                margin: "0",
-              });
-    
-              Object.assign(frame.style, {
-                position: "absolute",
-                left: "0",
-                top: "0",
-                width: `${BASE_W}px`,
-                height: `${BASE_H}px`,
-                transformOrigin: "top left",
-                transform: `scale(${s})`,
-              });
-            }
-    
-            window.addEventListener("resize", apply);
-            window.addEventListener("orientationchange", apply);
-            apply();
-          })();
-        </script>
-
-  <!-- 🔍 화면 크기에 맞춰 프레임을 확대/축소하는 스크립트 -->
+  <!-- ✅ 질문/저장/로직 스크립트만 남기기 -->
   <script>
-    function resizeFrame() {
-      const baseW = 564;  // 디자인 기준 가로
-      const baseH = 900;  // 디자인 기준 세로
+    const QUESTIONS = [
+      "늦은 밤이나 휴일에 타인에게 연락이 오면 불쾌하다",
+      "SNS에서 동의 없이 나를 태그하거나, 내가 포함된 사진을 게시하면 불쾌하다.",
+      "SNS 게시물을 주로 특정 사람만 볼 수 있게 설정한다",
+      "상대가 지나치게 자주 메시지를 보내거나 답장을 재촉하면 불편하다",
+      "친분과 관계없이 가벼운 신체접촉 (악수, 하이파이브 등)을 피한다",
+      "쉬는 날 활기찬 곳보다 조용한 장소를 선호한다",
+      "공공장소에서 누군가 가까이 앉으면 평소처럼 행동하기 어렵다",
+      "엘리베이터에서 주로 계기판 근처에 탄다",
+      "타인에게 개인적인 질문을 받으면 답하기 꺼려진다",
+      "같은 말이라도 상대의 어투에 따라 기분이 달라진다",
+      "“너 왜 공감을 안해줘?” 처럼 감정을 강요당하면 부담된다",
+      "상대가 너무 빠르게 말하거나 침묵이 길어지면 압박감을 느낀다",
+      "직장에서 사람들과 일한 뒤, 친구를 만나기보다 혼자 쉬고싶다",
+      "사람이 많거나 불편한 말을 들으면 심장이 두근거린다",
+      "사람이 많은 곳에서 평소보다 짜증이나 화가 자주 난다",
+      "누군가와 부딪히거나 불편한 대화를 나누면 무기력해진다.",
+      "여럿이 있는 독서실보다 집에서 혼자 할 때 일이 더 잘된다",
+      "너무 피곤한 날엔 만원 버스에서 자리를 양보하지 않는다",
+      "불편함을 표현해도 바뀌지 않으면 그냥 참는다",
+      "타인과 너무 가까이 있으면 호흡이 어렵고 몸이 긴장된다"
+    ];
 
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const nextBtn = document.querySelector('.next');
+    const backBtn = document.querySelector('.back');
+    const qEl = document.querySelector('.question');
+    const progEl = document.querySelector('.progress');
+    const fillEl = document.querySelector('.fill');
+    const hintEl = document.querySelector('.hint');
 
-      const scale = Math.min(vw / baseW, vh / baseH);
-      const frame = document.querySelector('.frame');
+    let index = 0;
+    let selectedDot = null;
+    let answers = Array(20).fill(null);
 
-      if (frame) {
-        frame.style.transform = `scale(${scale})`;
-      }
+    function resetAll() {
+      answers = Array(20).fill(null);
+      selectedDot = null;
+      index = 0;
+      fillEl.style.width = '0%';
+      nextBtn.disabled = true;
+      nextBtn.style.background = '#E4E4E4';
+      dots.forEach(d => d.classList.remove('active'));
+      localStorage.removeItem('keepod_answers');
     }
 
-    window.addEventListener('load', resizeFrame);
-    window.addEventListener('resize', resizeFrame);
+    function renderQuestion(i) {
+      qEl.innerHTML = QUESTIONS[i];
+      progEl.textContent = `${i + 1} / 20`;
+
+      hintEl.style.display = i >= 12 ? "block" : "none";
+
+      fillEl.style.width = `${(i / 20) * 100}%`;
+
+      dots.forEach(d => d.classList.remove('active'));
+      selectedDot = null;
+      if (answers[i] !== null) {
+        const found = dots.find(d => Number(d.dataset.value) === answers[i]);
+        if (found) {
+          found.classList.add('active');
+          selectedDot = found;
+          nextBtn.disabled = false;
+          nextBtn.style.background = '#7CEA54';
+        }
+      } else {
+        nextBtn.disabled = true;
+        nextBtn.style.background = '#E4E4E4';
+      }
+
+      backBtn.innerHTML = (i === 0)
+        ? "처음으로 돌아가기"
+        : '<span class="chev">‹</span> 이전으로 돌아가기';
+    }
+
+    function applySelection(dot) {
+      dots.forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+      selectedDot = dot;
+      nextBtn.disabled = false;
+      nextBtn.style.background = '#7CEA54';
+      answers[index] = Number(dot.dataset.value);
+      fillEl.style.width = `${((index + 1) / 20) * 100}%`;
+    }
+
+    renderQuestion(index);
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        if (selectedDot === dot) {
+          dot.classList.remove('active');
+          selectedDot = null;
+          answers[index] = null;
+          nextBtn.disabled = true;
+          nextBtn.style.background = '#E4E4E4';
+          fillEl.style.width = `${(index / 20) * 100}%`;
+          return;
+        }
+        applySelection(dot);
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (!selectedDot) return;
+      if (index < 19) {
+        index++;
+        renderQuestion(index);
+      } else {
+        localStorage.setItem('keepod_answers', JSON.stringify(answers));
+        location.href = "result.html";
+      }
+    });
+
+    backBtn.addEventListener('click', () => {
+      if (index === 0) {
+        resetAll();
+        location.href = "index.html";
+      } else {
+        index--;
+        renderQuestion(index);
+      }
+    });
   </script>
+
 </body>
 </html>
