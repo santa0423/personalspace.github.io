@@ -84,7 +84,7 @@ html, body {
 /* 선택 가이드(13번부터) */
 .hint{
   position:absolute;
-  top:150px;
+  top:250px;
   left:30px;
   right:30px;
   margin:0;
